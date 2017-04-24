@@ -9,10 +9,15 @@ module.exports.login = function (event, context, callback) {
     data = event;
   }
 
-  var email = data.email;
-  var password = data.password;
+  if (!data.user) {
+    callback(new Error('[422] User is required.'));
+    return;
+  }
+
+  var email = data.user.email;
+  var password = data.user.password;
   if (!email || !password) {
-    callback(null, { statusCode: 422, errors: { body: ["Email and password are required."] } });
+    callback(new Error('[422] Email and password are required.'));
     return;
   }
 
@@ -28,7 +33,7 @@ module.exports.login = function (event, context, callback) {
     // handle potential errors
     if (error) {
       console.error(error);
-      callback(null, { statusCode: 422, errors: { body: [error] } });
+      callback(new Error('[422] Error vlaidating user.'));
       return;
     }
 
@@ -38,14 +43,18 @@ module.exports.login = function (event, context, callback) {
       callback(null, {
         statusCode: 200,
         body: JSON.stringify({
-          email: result.Item.email,
-          username: result.Item.username,
-          image: result.Item.image,
-          bio: result.Item.bio,
+          user: {
+            id: 'todo',
+            token: 'todo',
+            email: result.Item.email,
+            username: result.Item.username,
+            image: result.Item.image,
+            bio: result.Item.bio,
+          }
         }),
       });
     } else {
-      callback(null, { statusCode: 422, errors: { body: ["Wrong password."] } });
+      callback(new Error('[422] Wrong password.'));
     }
   });
 }
