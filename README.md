@@ -1,6 +1,6 @@
 **Work in progress!**
 
-# ![RealWorld Example App](logo.png)
+# ![RealWorld Example App](lambda-node-logo.png)
 
 > ### AWS DynamoDB + Lambda codebase containing real world examples (CRUD, auth, advanced patterns, etc) that adheres to the [RealWorld](https://github.com/gothinkster/realworld-example-apps) spec and API.
 
