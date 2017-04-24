@@ -10,14 +10,14 @@ module.exports.login = function (event, context, callback) {
   }
 
   if (!data.user) {
-    callback(new Error('[422] User is required.'));
+    callback(null, { statusCode: 422, body: JSON.stringify({ "errors": { "body": ["User is required."] } }) });
     return;
   }
 
   var email = data.user.email;
   var password = data.user.password;
   if (!email || !password) {
-    callback(new Error('[422] Email and password are required.'));
+    callback(null, { statusCode: 422, body: JSON.stringify({ "errors": { "body": ["Email and password are required."] } }) });
     return;
   }
 
@@ -30,14 +30,11 @@ module.exports.login = function (event, context, callback) {
 
   // fetch user from the database and validate
   dynamoDb.get(params, function (error, result) {
-    // handle potential errors
     if (error) {
       console.error(error);
-      callback(new Error('[422] Error vlaidating user.'));
+      callback(null, { statusCode: 422, body: JSON.stringify({ "errors": { "body": ["Error validating user."] } }) });
       return;
     }
-
-    console.log('result = [' + JSON.stringify(result) + '], password = [' + password + ']');
 
     if (result.Item.password === password) {
       callback(null, {
@@ -54,7 +51,7 @@ module.exports.login = function (event, context, callback) {
         }),
       });
     } else {
-      callback(new Error('[422] Wrong password.'));
+      callback(null, { statusCode: 422, body: JSON.stringify({ "errors": { "body": ["Wrong password."] } }) });
     }
   });
 }
