@@ -55,3 +55,30 @@ module.exports.login = function (event, context, callback) {
     }
   });
 }
+
+module.exports.register = function (event, context, callback) {
+  callback(null, {
+    statusCode: 200,
+    body: JSON.stringify({
+      event: event
+    }),
+  });
+}
+
+module.exports.getUser = function (event, context, callback) {
+  callback(null, {
+    statusCode: 200,
+    body: JSON.stringify({
+      event: event
+    }),
+  });
+}
+
+module.exports.updateUser = function (event, context, callback) {
+  callback(null, {
+    statusCode: 200,
+    body: JSON.stringify({
+      event: event
+    }),
+  });
+}

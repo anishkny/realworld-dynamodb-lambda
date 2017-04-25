@@ -15,17 +15,39 @@ provider:
       Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/*"
 
 functions:
-  hello:
+  ping:
     handler: ping.ping
     events:
       - http:
           path: ping
           method: get
 
+# Auth API
   login:
-    handler: users/login.login
+    handler: users.login
     events:
       - http:
           path: users/login
           method: post
+
+  register:
+    handler: users.register
+    events:
+      - http:
+          path: users
+          method: post
+
+  getUser:
+    handler: users.getUser
+    events:
+      - http:
+          path: users
+          method: get
+
+  updateUser:
+    handler: users.updateUser
+    events:
+      - http:
+          path: users
+          method: put
 
