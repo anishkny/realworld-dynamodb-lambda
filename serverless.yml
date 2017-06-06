@@ -24,30 +24,19 @@ functions:
 
 # Auth API
   login:
-    handler: users.login
+    handler: api/users/login/handler.handler
     events:
       - http:
           path: users/login
           method: post
+          cors: true
 
   register:
-    handler: users.register
+    handler: api/users/register/handler.handler
     events:
       - http:
           path: users
           method: post
+          cors: true
 
-  getUser:
-    handler: users.getUser
-    events:
-      - http:
-          path: users
-          method: get
-
-  updateUser:
-    handler: users.updateUser
-    events:
-      - http:
-          path: users
-          method: put
-
+resources: ${file(./resources.yml):resources}
