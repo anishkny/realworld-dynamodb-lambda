@@ -4,7 +4,7 @@
   "description": "**Work in progress!**",
   "main": "",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -17,7 +17,9 @@
     "url": "https://github.com/anishkny/realworld-dynamodb-lambda/issues"
   },
   "homepage": "https://github.com/anishkny/realworld-dynamodb-lambda#readme",
-  "dependencies": {
-    "aws-sdk": "^2.45.0"
+  "dependencies": {},
+  "devDependencies": {
+    "aws-sdk": "^2.62.0",
+    "jest": "^20.0.4"
   }
 }
