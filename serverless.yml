@@ -46,4 +46,14 @@ functions:
           method: post
           cors: true
 
+  # User API
+  user:
+    handler: api/users/profile/handler.handler
+    events:
+     - http:
+         path: user
+         method: get
+         cors: true
+         authorizer: ${self:provider.authorizer}
+  
 resources: ${file(./resources.yml):resources}
