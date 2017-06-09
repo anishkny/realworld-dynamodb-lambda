@@ -13,6 +13,10 @@ provider:
         - dynamodb:UpdateItem
         - dynamodb:DeleteItem
       Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/*"
+  authorizer:
+    name: authorizerFunc
+    identitySource: method.request.header.Authorization
+    identityValidationExpression: Token .*
 
 functions:
   ping:
@@ -23,6 +27,9 @@ functions:
           method: get
 
 # Auth API
+  authorizerFunc:
+    handler: api/users/authorizer/handler.handler
+
   login:
     handler: api/users/login/handler.handler
     events:
