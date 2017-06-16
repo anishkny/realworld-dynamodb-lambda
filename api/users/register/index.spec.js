@@ -4,7 +4,7 @@ test('register fails - empty credentials', done => {
   let callback = (data) => {
     expect(data.errors.User).toEqual(['is required.']);
     done();
-  }
+  };
 
   login.respond({}, callback);
 });

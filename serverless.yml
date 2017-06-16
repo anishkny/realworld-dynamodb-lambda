@@ -46,9 +46,10 @@ functions:
           method: post
           cors: true
 
-  # User API
+
+# User API
   user:
-    handler: api/users/profile/handler.handler
+    handler: api/users/get-user/handler.handler
     events:
      - http:
          path: user

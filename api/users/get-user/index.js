@@ -5,7 +5,6 @@ aws.config.update({
 });
 const dynamoDb = new aws.DynamoDB.DocumentClient();
 const jwt = require('jsonwebtoken');
-const { computeHash } = require('../../../lib/helpers');
 
 module.exports.respond = function (email, cb) {
   var params = {
@@ -17,7 +16,7 @@ module.exports.respond = function (email, cb) {
 
   dynamoDb.get(params, function (error, result) {
     if (error || !result.Item) {
-      cb({ statusCode: 422, errors: { Error: ["validating user."] } });
+      cb({ statusCode: 422, errors: { Error: ['validating user.'] } });
       return;
     }
 
@@ -32,4 +31,4 @@ module.exports.respond = function (email, cb) {
       }
     });
   });
-}
+};

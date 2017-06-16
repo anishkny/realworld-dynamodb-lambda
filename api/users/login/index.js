@@ -5,20 +5,20 @@ aws.config.update({
 });
 const dynamoDb = new aws.DynamoDB.DocumentClient();
 const jwt = require('jsonwebtoken');
-const { computeHash } = require('../../../lib/helpers');
+const computeHash = require('../../../lib/helpers').computeHash;
 
 module.exports.respond = function (event, cb) {
   var data = event.body ? JSON.parse(event.body) : event;
 
   if (!data.user) {
-    cb({ statusCode: 422, errors: { User: ["is required."] } });
+    cb({ statusCode: 422, errors: { User: ['is required.'] } });
     return;
   }
 
   var email = data.user.email;
   var password = data.user.password;
   if (!email || !password) {
-    cb({ statusCode: 422, errors: { "Email and password": ["are required."] } });
+    cb({ statusCode: 422, errors: { 'Email and password': ['are required.'] } });
     return;
   }
 
@@ -31,7 +31,7 @@ module.exports.respond = function (event, cb) {
 
   dynamoDb.get(params, function (error, result) {
     if (error || !result.Item) {
-      cb({ statusCode: 422, errors: { Error: ["validating user."] } });
+      cb({ statusCode: 422, errors: { Error: ['validating user.'] } });
       return;
     }
 
@@ -49,7 +49,7 @@ module.exports.respond = function (event, cb) {
         }
       });
     } else {
-      cb({ statusCode: 422, errors: { '': ["Wrong password."] } });
+      cb({ statusCode: 422, errors: { '': ['Wrong password.'] } });
     }
   });
-}
+};

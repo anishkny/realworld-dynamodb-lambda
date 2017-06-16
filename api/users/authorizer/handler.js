@@ -4,7 +4,7 @@ const config = require('../../../config');
 module.exports.handler = function(event, context, cb) {
   const token = /Token (.*)/.exec(event.authorizationToken)[1];
 
-  let decodedToken = ''
+  let decodedToken = '';
   try {
     decodedToken = jwt.verify(token, config.JWT_SECRET);
   } catch(e) {
