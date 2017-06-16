@@ -56,5 +56,14 @@ functions:
          method: get
          cors: true
          authorizer: ${self:provider.authorizer}
+
+  update-user:
+    handler: api/users/update-user/handler.handler
+    events:
+     - http:
+         path: user
+         method: put
+         cors: true
+         authorizer: ${self:provider.authorizer}
   
 resources: ${file(./resources.yml):resources}
