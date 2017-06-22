@@ -2,7 +2,7 @@ machine:
   node:
     version: 6
   environment:
-    TEST_REPORT_PATH: $CIRCLE_TEST_REPORTS/reports
+    TEST_REPORT_PATH: $CIRCLE_TEST_REPORTS
 
 notify:
   webhooks:
