@@ -1,3 +1,5 @@
+[![CircleCI](https://img.shields.io/circleci/project/github/anishkny/realworld-dynamodb-lambda.svg)](http://circleci.com/gh/anishkny/realworld-dynamodb-lambda) [![Gitter](https://img.shields.io/gitter/room/realworld-dev/node-lambda-dynamodb.svg)](https://gitter.im/realworld-dev/node-lambda-dynamodb)
+
 **Work in progress!**
 
 # ![RealWorld Example App](lambda-node-logo.png)
