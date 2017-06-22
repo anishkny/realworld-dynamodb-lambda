@@ -1,0 +1,7 @@
+machine:
+  node:
+    version: 6
+
+notify:
+  webhooks:
+    - url: https://webhooks.gitter.im/e/b907ead49a6ff18d4e33  # https://gitter.im/realworld-dev/node-lambda-dynamodb
