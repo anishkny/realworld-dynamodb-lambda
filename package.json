@@ -4,10 +4,7 @@
   "description": "**Work in progress!**",
   "main": "",
   "scripts": {
-    "test": "echo $TEST_REPORT_PATH; echo $CIRCLE_TEST_REPORTS; jest; find $CIRCLE_TEST_REPORTS"
-  },
-  "jest": {
-    "testResultsProcessor": "./node_modules/jest-junit-reporter"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -26,7 +23,6 @@
   "devDependencies": {
     "aws-sdk": "^2.62.0",
     "jest": "^20.0.4",
-    "jest-junit-reporter": "^1.1.0",
     "serverless": "^1.16.0"
   }
 }
