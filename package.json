@@ -4,7 +4,7 @@
   "description": "**Work in progress!**",
   "main": "",
   "scripts": {
-    "test": "echo $TEST_REPORT_PATH; echo $CIRCLE_TEST_REPORTS; jest"
+    "test": "echo $TEST_REPORT_PATH; echo $CIRCLE_TEST_REPORTS; jest; find $CIRCLE_TEST_REPORTS"
   },
   "jest": {
     "testResultsProcessor": "./node_modules/jest-junit-reporter"
