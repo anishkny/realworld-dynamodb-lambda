@@ -4,11 +4,11 @@
   "description": "**Work in progress!**",
   "main": "",
   "scripts": {
-    "test": "jest"
+    "test": "echo $TEST_REPORT_PATH; echo $CIRCLE_TEST_REPORTS; jest"
   },
   "jest": {
     "testResultsProcessor": "./node_modules/jest-junit-reporter"
-  },  
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/anishkny/realworld-dynamodb-lambda.git"
