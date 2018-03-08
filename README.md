@@ -1,4 +1,4 @@
-[![CircleCI](https://img.shields.io/circleci/project/github/anishkny/realworld-dynamodb-lambda.svg)](http://circleci.com/gh/anishkny/realworld-dynamodb-lambda) [![Gitter](https://img.shields.io/gitter/room/realworld-dev/node-lambda-dynamodb.svg)](https://gitter.im/realworld-dev/node-lambda-dynamodb)
+[![Gitter](https://img.shields.io/gitter/room/realworld-dev/node-lambda-dynamodb.svg)](https://gitter.im/realworld-dev/node-lambda-dynamodb)
 
 **Work in progress!**
 
@@ -24,4 +24,3 @@ For more information on how to this works with other frontends/backends, head ov
 # Getting started
 
 > npm install, npm start, etc.
-
