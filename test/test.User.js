@@ -181,7 +181,14 @@ describe('User', async () => {
         url: `${API_URL}/profiles/followed_user`,
         headers: { 'Authorization': `Token ${loggedInUser.token}` },
       })).data.profile;
-      console.log(retrievedFollowedProfile); // TODO: Assert on this
+      (retrievedFollowedProfile); // TODO: Assert on this
+
+      // Get followed profile without authentication
+      const retrievedFollowedProfileNoAuth = (await axios({
+        method: 'GET',
+        url: `${API_URL}/profiles/followed_user`,
+      })).data.profile;
+      (retrievedFollowedProfileNoAuth); // TODO: Assert on this
 
       // Create a second follower user
       const secondFollowerUsername = `user2-${Math.random().toString(36)}`;
