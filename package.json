@@ -28,5 +28,8 @@
     "bcryptjs": "^2.4.3",
     "jsonwebtoken": "^8.1.0",
     "slugify": "^1.2.6"
+  },
+  "optionalDependencies": {
+    "coveralls": "^3.0.0"
   }
 }
