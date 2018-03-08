@@ -213,6 +213,14 @@ describe('User', async () => {
       (unfollowedProfile);
     });
 
+    it('should disallow following with bad token', async () => {
+      await await axios({
+        method: 'POST',
+        url: `${API_URL}/profiles/followed_user/follow`,
+      }).catch(res =>
+        TestUtil.assertError(res, /Token not present or invalid/));
+    });
+
   });
 
 });
