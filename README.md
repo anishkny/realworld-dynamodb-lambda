@@ -1,7 +1,7 @@
+# 🚧🚧🚧 *Work in progress!* 🚧🚧🚧
+
 [![Build Status](https://travis-ci.org/anishkny/realworld-dynamodb-lambda.svg?branch=master)](https://travis-ci.org/anishkny/realworld-dynamodb-lambda)
 [![Gitter](https://img.shields.io/gitter/room/realworld-dev/node-lambda-dynamodb.svg)](https://gitter.im/realworld-dev/node-lambda-dynamodb)
-
-**Work in progress!**
 
 # ![RealWorld Example App](lambda-node-logo.png)
 
