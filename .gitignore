@@ -1,5 +1,6 @@
 node_modules
 yarn.lock
+yarn-error.log
 .serverless
 dist
 .nyc_output

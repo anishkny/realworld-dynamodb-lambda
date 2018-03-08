@@ -114,6 +114,14 @@ describe('Article', async () => {
       (retrievedArticle);
     });
 
+    it('should disallow unknown slug', async () => {
+      await axios.get(
+          `${API_URL}/articles/${Math.random().toString(36).substring(7)}`)
+        .catch(res => {
+          TestUtil.assertError(res, /Article not found/);
+        });
+    });
+
     // TODO: Add Article.get edge cases
 
   });

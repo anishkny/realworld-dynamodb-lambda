@@ -62,6 +62,8 @@ module.exports = {
 
   async get(event, context, callback) {
     const slug = event.pathParameters.slug;
+
+    /* istanbul ignore if  */
     if (!slug) {
       Util.ERROR('Slug must be specified.');
       return;
