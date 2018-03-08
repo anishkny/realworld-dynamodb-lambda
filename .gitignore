@@ -1,4 +1,5 @@
 node_modules
+yarn.lock
 .serverless
 dist
 .nyc_output
