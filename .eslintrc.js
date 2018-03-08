@@ -1,28 +1,33 @@
 module.exports = {
-    "env": {
-        "es6": true,
-        "node": true,
-        "jest": true
-    },
-    "extends": "eslint:recommended",
-    "rules": {
-        "indent": [
-            "error",
-            2,
-            { "SwitchCase": 1 }
-        ],
-        "linebreak-style": [
-            "error",
-            "unix"
-        ],
-        "quotes": [
-            "error",
-            "single"
-        ],
-        "semi": [
-            "error",
-            "always"
-        ],
-        "no-console": 0
-    }
+
+  env: {
+    node: true,
+    mocha: true,
+    es6: true,
+  },
+
+  parserOptions: {
+    ecmaVersion: 2017,
+    sourceType: 'module',
+  },
+
+  // The Rules (Keep them sorted)
+  extends: 'eslint:recommended',
+  rules: {
+    'comma-spacing': 'error',
+    'eol-last': 'error',
+    'max-len': ['error', 80],
+    'no-console': 'off',
+    'no-multi-spaces': 'error',
+    'no-trailing-spaces': 'error',
+    'no-var': 'error',
+    'prefer-const': 'error',
+    'semi': 'error',
+    'space-before-function-paren': ['error', {
+      'anonymous': 'always',
+      'asyncArrow': 'always',
+      'named': 'never',
+    }],
+  },
+
 };

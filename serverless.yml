@@ -1,0 +1,129 @@
+service: realworld
+frameworkVersion: ">=1.1.0 <2.0.0"
+
+provider:
+  name: aws
+  runtime: nodejs6.10
+  region: us-east-1
+  environment:
+    DYNAMODB_NAMESPACE: ${opt:stage, "dev"}
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/*"
+
+plugins:
+  - serverless-offline
+
+functions:
+
+  ## Users API
+  createUser:
+    handler: dist/User.create
+    events:
+      - http: POST /users
+
+  loginUser:
+    handler: dist/User.login
+    events:
+      - http: POST /users/login
+
+  getUser:
+    handler: dist/User.get
+    events:
+      - http: GET /user
+
+  getProfile:
+    handler: dist/User.getProfile
+    events:
+      - http: GET /profiles/{username}
+
+  followUser:
+    handler: dist/User.follow
+    events:
+      - http: POST /profiles/{username}/follow
+
+  unfollowUser:
+    handler: dist/User.follow
+    events:
+      - http: DELETE /profiles/{username}/follow
+
+  ## Articles API
+  createArticle:
+    handler: dist/Article.create
+    events:
+      - http: POST /articles
+
+  getArticle:
+    handler: dist/Article.get
+    events:
+      - http: GET /articles/{slug}
+
+  ## Utils API
+  ping:
+    handler: dist/Util.ping
+    events:
+      - http: GET ping
+
+  purgeData:
+    handler: dist/Util.purgeData
+    events:
+      - http: DELETE /__TESTUTILS__/purge
+
+resources:
+  Resources:
+
+    UsersDynamoDBTable:
+      Type: 'AWS::DynamoDB::Table'
+      DeletionPolicy: Retain
+      Properties:
+        AttributeDefinitions:
+          -
+            AttributeName: username
+            AttributeType: S
+          -
+            AttributeName: email
+            AttributeType: S
+        KeySchema:
+          -
+            AttributeName: username
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: realworld-${self:provider.environment.DYNAMODB_NAMESPACE}-users
+        GlobalSecondaryIndexes:
+          -
+            IndexName: email
+            KeySchema:
+              -
+                AttributeName: email
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+            ProvisionedThroughput:
+              ReadCapacityUnits: 1
+              WriteCapacityUnits: 1
+
+    ArticlesDynamoDBTable:
+      Type: 'AWS::DynamoDB::Table'
+      DeletionPolicy: Retain
+      Properties:
+        AttributeDefinitions:
+          -
+            AttributeName: slug
+            AttributeType: S
+        KeySchema:
+          -
+            AttributeName: slug
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: realworld-${self:provider.environment.DYNAMODB_NAMESPACE}-articles

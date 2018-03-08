@@ -1,0 +1,15 @@
+{
+  "include": [
+    "src/**/*.js"
+  ],
+  "exclude": [
+    "dest/**/*.js"
+  ],
+  "reporter": [
+    "lcov",
+    "text",
+    "html"
+  ],
+  "sourceMap": false,
+  "instrument": false
+}
