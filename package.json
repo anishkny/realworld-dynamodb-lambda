@@ -3,11 +3,7 @@
     "lint": "eslint src/ test/",
     "build": "babel src/ --presets es2015,stage-3 --out-dir dist/",
     "build:coverage": "npm run build -- --plugins istanbul",
-    "start:offline": "npm run stop:offline && nyc serverless offline & sleep 5",
-    "stop:offline": "lsof -ti:3000 | xargs kill",
-    "mocha": "mocha",
-    "test:api:local": "API_URL=http://localhost:3000 run-s build:coverage start:offline mocha stop:offline",
-    "test": "run-s lint test:api:local",
+    "test": "npm run lint && npm run build:coverage && ./test-api-local.sh",
     "deploy": "npm run build && serverless deploy",
     "test:api:cloud": "API_URL=`serverless info --verbose | grep '^ServiceEndpoint:' | grep -o 'https://.*'` mocha"
   },
@@ -20,7 +16,6 @@
     "babel-preset-stage-3": "^6.24.1",
     "eslint": "^4.12.0",
     "mocha": "^4.0.1",
-    "npm-run-all": "^4.1.2",
     "nyc": "^11.3.0",
     "serverless": "^1.24.1",
     "serverless-offline": "^3.16.0"
