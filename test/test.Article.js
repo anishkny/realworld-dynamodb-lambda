@@ -6,6 +6,7 @@ const globals = {
   authorUser: null,
   createdArticleWithoutTags: null,
   createdArticleWithTags: null,
+  nonAuthorUser: null,
 };
 
 describe('Article', async () => {
@@ -19,6 +20,17 @@ describe('Article', async () => {
         user: {
           email: `${username}@email.com`,
           username: username,
+          password: 'password',
+        }
+      })).data.user;
+
+    const otherUsername =
+      `non-author-${(Math.random() * Math.pow(36, 6) | 0).toString(36)}`;
+    globals.nonAuthorUser = (await axios.post(
+      `${process.env.API_URL}/users`, {
+        user: {
+          email: `${otherUsername}@email.com`,
+          username: otherUsername,
           password: 'password',
         }
       })).data.user;
@@ -123,6 +135,43 @@ describe('Article', async () => {
     });
 
     // TODO: Add Article.get edge cases
+
+  });
+
+  describe('Delete', async () => {
+
+    it('should delete article', async () => {
+      await axios.delete(
+        `${API_URL}/articles/${globals.createdArticleWithoutTags.slug}`, {
+          headers: { Authorization: `Token ${globals.authorUser.token}` },
+        });
+
+      // Assert article is deleted
+      await axios.get(
+        `${API_URL}/articles/${globals.createdArticleWithoutTags.slug}`
+      ).catch(res => TestUtil.assertError(res, /Article not found/));
+    });
+
+    it('should disallow deleting by unauthenticated user', async () => {
+      await axios.delete(`${API_URL}/articles/foo`, {}, {
+        headers: { Authorization: `Token ${globals.authorUser.token} foo` },
+      }).catch(res => TestUtil.assertError(res, /Must be logged in/));
+    });
+
+    it('should disallow deleting unknown article', async () => {
+      await axios.delete(
+        `${API_URL}/articles/foobar`, {
+          headers: { Authorization: `Token ${globals.authorUser.token}` },
+        }).catch(res => TestUtil.assertError(res, /Article not found/));
+    });
+
+    it('should disallow deleting article by non-author', async () => {
+      await axios.delete(
+        `${API_URL}/articles/${globals.createdArticleWithTags.slug}`, {
+          headers: { Authorization: `Token ${globals.nonAuthorUser.token}` },
+        }).catch(res => TestUtil.assertError(res,
+        /Article can only be deleted by author/));
+    });
 
   });
 

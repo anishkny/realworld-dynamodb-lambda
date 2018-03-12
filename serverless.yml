@@ -65,6 +65,11 @@ functions:
     events:
       - http: GET /articles/{slug}
 
+  deleteArticle:
+    handler: dist/Article.delete
+    events:
+      - http: DELETE /articles/{slug}
+
   ## Utils API
   ping:
     handler: dist/Util.ping

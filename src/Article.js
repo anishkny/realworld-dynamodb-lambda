@@ -108,4 +108,44 @@ module.exports = {
     Util.SUCCESS(callback, { article });
   },
 
+  async delete(event, context, callback) {
+    const authenticatedUser = await User.authenticateAndGetUser(event);
+    if (!authenticatedUser) {
+      Util.ERROR(callback, 'Must be logged in.');
+      return;
+    }
+
+    const slug = event.pathParameters.slug;
+
+    /* istanbul ignore if  */
+    if (!slug) {
+      Util.ERROR('Slug must be specified.');
+      return;
+    }
+
+    const article = (await Util.DocumentClient.get({
+      TableName: articlesTable,
+      Key: { slug },
+    }).promise()).Item;
+    if (!article) {
+      Util.ERROR(callback, `Article not found: [${slug}]`);
+      return;
+    }
+
+    // Ensure article is authored by authenticatedUser
+    if (article.author !== authenticatedUser.username) {
+      Util.ERROR(callback,
+        `Article can only be deleted by author: [${article.author}]`);
+      return;
+    }
+
+    await Util.DocumentClient.delete({
+      TableName: articlesTable,
+      Key: { slug },
+    }).promise();
+
+    Util.SUCCESS(callback, null);
+    return;
+  },
+
 };
