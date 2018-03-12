@@ -10,6 +10,3 @@ sleep 5
 API_URL=http://localhost:$PORT mocha
 kill $SLS_PID
 sleep 5
-
-ls -lhta
-find coverage
