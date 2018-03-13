@@ -7,8 +7,8 @@ rm -rf .nyc_output/ coverage/
 set -e
 nyc serverless offline &
 export SLS_PID=$!
-sleep 2
+sleep 5
 API_URL=http://localhost:$PORT mocha
-sleep 2
+sleep 5
 kill $SLS_PID
-sleep 2
+sleep 5
