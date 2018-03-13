@@ -4,4 +4,4 @@ node_js:
   - 8
 
 after_script:
-  - sleep 5; cat ./coverage/lcov.info | npx coveralls
+  - cat ./coverage/lcov.info | npx coveralls
