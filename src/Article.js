@@ -4,8 +4,12 @@ const User = require('./User');
 const articlesTable = Util.getTableName('articles');
 const slugify = require('slugify');
 
+/**
+ * @module Article
+ */
 module.exports = {
 
+  /** Create article */
   async create(event, context, callback) {
     const authenticatedUser = await User.authenticateAndGetUser(event);
     if (!authenticatedUser) {
@@ -60,6 +64,7 @@ module.exports = {
     Util.SUCCESS(callback, { article });
   },
 
+  /** Get article */
   async get(event, context, callback) {
     const slug = event.pathParameters.slug;
 
@@ -78,36 +83,12 @@ module.exports = {
       return;
     }
 
-    article.tagList = article.tagList ? article.tagList.values : [];
-    article.favoritesCount = article.favoritesCount || 0;
-
-    // If user is authenticated, populate favorited field
-    article.favorited = false;
-    let authenticatedUser = null;
-    if (article.favoritedBy) {
-      authenticatedUser = await User.authenticateAndGetUser(event);
-      if (authenticatedUser) {
-        article.favorited = article.favoritedBy
-          .includes(authenticatedUser.username);
-      }
-      delete article.favoritedBy;
-    }
-
-    const authorUser = (await User.getUserByUsername(article.author)).Item;
-    article.author = {
-      username: authorUser.username,
-      bio: authorUser.bio || '',
-      image: authorUser.image || '',
-      following: false,
-    };
-    if (authenticatedUser && authorUser.followers) {
-      article.author.following =
-        authorUser.followers.includes(authenticatedUser.username);
-    }
-
-    Util.SUCCESS(callback, { article });
+    Util.SUCCESS(callback, {
+      article: await transformRetrievedArticle(article)
+    });
   },
 
+  /** Delete article */
   async delete(event, context, callback) {
     const authenticatedUser = await User.authenticateAndGetUser(event);
     if (!authenticatedUser) {
@@ -148,6 +129,7 @@ module.exports = {
     return;
   },
 
+  /** Favorite/unfavorite article */
   async favorite(event, context, callback) {
     const authenticatedUser = await User.authenticateAndGetUser(event);
     if (!authenticatedUser) {
@@ -163,7 +145,7 @@ module.exports = {
       return;
     }
 
-    const article = (await Util.DocumentClient.get({
+    let article = (await Util.DocumentClient.get({
       TableName: articlesTable,
       Key: { slug },
     }).promise()).Item;
@@ -194,21 +176,36 @@ module.exports = {
       Item: article,
     }).promise();
 
-    // Decorate article with other information before returning
-    const authorUser = (await User.getUserByUsername(article.author)).Item;
-    article.author = {
-      username: authorUser.username,
-      bio: authorUser.bio || '',
-      image: authorUser.image || '',
-      following: false,
-    };
-    if (authorUser.followers) {
-      article.author.following =
-        authorUser.followers.includes(authenticatedUser.username);
-    }
-    article.tagList = article.tagList ? article.tagList : [];
+    article = await transformRetrievedArticle(article);
     article.favorited = shouldFavorite;
     Util.SUCCESS(callback, { article });
   },
 
 };
+
+/**
+ * Given an article retrieved from table,
+ * decorate it with extra information like author, favorite, following etc.
+ */
+async function transformRetrievedArticle(article, authenticatedUser) {
+  article.tagList = article.tagList ? article.tagList.values : [];
+  article.favoritesCount = article.favoritesCount || 0;
+  article.favorited = false;
+  if (article.favoritedBy && authenticatedUser) {
+    article.favorited = article.favoritedBy
+      .includes(authenticatedUser.username);
+    delete article.favoritedBy;
+  }
+  const authorUser = (await User.getUserByUsername(article.author)).Item;
+  article.author = {
+    username: authorUser.username,
+    bio: authorUser.bio || '',
+    image: authorUser.image || '',
+    following: false,
+  };
+  if (authenticatedUser && authorUser.followers) {
+    article.author.following =
+      authorUser.followers.includes(authenticatedUser.username);
+  }
+  return article;
+}
