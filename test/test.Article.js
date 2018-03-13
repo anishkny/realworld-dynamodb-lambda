@@ -1,4 +1,5 @@
 const TestUtil = require('./TestUtil');
+const assert = require('assert');
 const axios = require('axios');
 const API_URL = process.env.API_URL;
 
@@ -145,7 +146,8 @@ describe('Article', async () => {
         `${globals.createdArticleWithoutTags.slug}/favorite`, {}, {
           headers: { Authorization: `Token ${globals.nonAuthorUser.token}` },
         })).data.article;
-      (favoritedArticle); // TODO: Assert on favoriteArticle
+      assert(favoritedArticle.favorited === true,
+        `Expected article to have been favorited`);
     });
 
     it('should disallow favoriting by unauthenticated user', async () => {
@@ -164,7 +166,14 @@ describe('Article', async () => {
         }).catch(res => TestUtil.assertError(res, /Article not found/));
     });
 
-    // TODO: Add test for unfavorite article
+    it('should unfavorite article', async () => {
+      const unfavoritedArticle = (await axios.delete(`${API_URL}/articles/` +
+        `${globals.createdArticleWithoutTags.slug}/favorite`, {
+          headers: { Authorization: `Token ${globals.nonAuthorUser.token}` },
+        })).data.article;
+      assert(unfavoritedArticle.favorited === false,
+        `Expected article to have been unfavorited`);
+    });
 
   });
 
