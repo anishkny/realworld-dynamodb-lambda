@@ -70,6 +70,16 @@ functions:
     events:
       - http: DELETE /articles/{slug}
 
+  favoriteArticle:
+    handler: dist/Article.favorite
+    events:
+      - http: POST /articles/{slug}/favorite
+
+  unfavoriteArticle:
+    handler: dist/Article.favorite
+    events:
+      - http: DELETE /articles/{slug}/favorite
+
   ## Utils API
   ping:
     handler: dist/Util.ping

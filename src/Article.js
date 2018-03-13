@@ -148,4 +148,67 @@ module.exports = {
     return;
   },
 
+  async favorite(event, context, callback) {
+    const authenticatedUser = await User.authenticateAndGetUser(event);
+    if (!authenticatedUser) {
+      Util.ERROR(callback, 'Must be logged in.');
+      return;
+    }
+
+    const slug = event.pathParameters.slug;
+
+    /* istanbul ignore if  */
+    if (!slug) {
+      Util.ERROR('Slug must be specified.');
+      return;
+    }
+
+    const article = (await Util.DocumentClient.get({
+      TableName: articlesTable,
+      Key: { slug },
+    }).promise()).Item;
+    if (!article) {
+      Util.ERROR(callback, `Article not found: [${slug}]`);
+      return;
+    }
+
+    // Set/unset favorite bit and count for article
+    const shouldFavorite = !(event.httpMethod === 'DELETE');
+    if (shouldFavorite) {
+      if (!article.favoritedBy) {
+        article.favoritedBy = [];
+      }
+      article.favoritedBy.push(authenticatedUser.username);
+      article.favoritesCount = 1;
+    } else {
+      article.favoritedBy = article.favoritedBy.filter(
+        e => (e !== authenticatedUser.username));
+      if (article.favoritedBy.length === 0) {
+        delete article.favoritedBy;
+      }
+    }
+    article.favoritesCount = article.favoritedBy ?
+      article.favoritedBy.length : 0;
+    await Util.DocumentClient.put({
+      TableName: articlesTable,
+      Item: article,
+    }).promise();
+
+    // Decorate article with other information before returning
+    const authorUser = (await User.getUserByUsername(article.author)).Item;
+    article.author = {
+      username: authorUser.username,
+      bio: authorUser.bio || '',
+      image: authorUser.image || '',
+      following: false,
+    };
+    if (authorUser.followers) {
+      article.author.following =
+        authorUser.followers.includes(authenticatedUser.username);
+    }
+    article.tagList = article.tagList ? article.tagList : [];
+    article.favorited = shouldFavorite;
+    Util.SUCCESS(callback, { article });
+  },
+
 };

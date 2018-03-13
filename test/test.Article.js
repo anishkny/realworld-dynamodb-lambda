@@ -138,6 +138,36 @@ describe('Article', async () => {
 
   });
 
+  describe('Favorite', async () => {
+
+    it('should favorite article', async () => {
+      const favoritedArticle = (await axios.post(`${API_URL}/articles/` +
+        `${globals.createdArticleWithoutTags.slug}/favorite`, {}, {
+          headers: { Authorization: `Token ${globals.nonAuthorUser.token}` },
+        })).data.article;
+      (favoritedArticle); // TODO: Assert on favoriteArticle
+    });
+
+    it('should disallow favoriting by unauthenticated user', async () => {
+      await axios.post(`${API_URL}/articles/` +
+        `${globals.createdArticleWithoutTags.slug}/favorite`, {}, {
+          headers: {
+            Authorization: `Token ${globals.nonAuthorUser.token} foo`
+          },
+        }).catch(res => TestUtil.assertError(res, /Must be logged in/));
+    });
+
+    it('should disallow favoriting unknown article', async () => {
+      await axios.post(`${API_URL}/articles/` +
+        `${globals.createdArticleWithoutTags.slug}_foo/favorite`, {}, {
+          headers: { Authorization: `Token ${globals.nonAuthorUser.token}` },
+        }).catch(res => TestUtil.assertError(res, /Article not found/));
+    });
+
+    // TODO: Add test for unfavorite article
+
+  });
+
   describe('Delete', async () => {
 
     it('should delete article', async () => {
