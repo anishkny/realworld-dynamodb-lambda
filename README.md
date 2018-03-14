@@ -5,7 +5,9 @@
 [![Known Vulnerabilities](https://snyk.io/test/github/anishkny/realworld-dynamodb-lambda/badge.svg)](https://snyk.io/test/github/anishkny/realworld-dynamodb-lambda)
 [![Gitter](https://img.shields.io/gitter/room/realworld-dev/node-lambda-dynamodb.svg)](https://gitter.im/realworld-dev/node-lambda-dynamodb)
 
-# 🚧🚧🚧 Work in progress! 🚧🚧🚧
+# 🚧 **Work in progress!** 🚧
+
+### [API Docs](https://anishkny.github.io/realworld-dynamodb-lambda/)
 
 > ### AWS DynamoDB + Lambda codebase containing real world examples (CRUD, auth, advanced patterns, etc) that adheres to the [RealWorld](https://github.com/gothinkster/realworld-example-apps) spec and API.
 

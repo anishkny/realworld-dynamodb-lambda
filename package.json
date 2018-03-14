@@ -6,7 +6,7 @@
     "test": "npm run lint && npm run build:coverage && ./test-api-local.sh",
     "deploy": "npm run build && serverless deploy",
     "test:api:cloud": "API_URL=`serverless info --verbose | grep '^ServiceEndpoint:' | grep -o 'https://.*'` mocha",
-    "build:docs": "jsdoc -d generated-docs src/ README.md"
+    "build:docs": "jsdoc -d generated-docs src/ .jsdoc.summary.md"
   },
   "devDependencies": {
     "aws-sdk": "^2.152.0",
