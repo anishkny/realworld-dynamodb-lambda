@@ -5,7 +5,8 @@
     "build:coverage": "npm run build -- --plugins istanbul",
     "test": "npm run lint && npm run build:coverage && ./test-api-local.sh",
     "deploy": "npm run build && serverless deploy",
-    "test:api:cloud": "API_URL=`serverless info --verbose | grep '^ServiceEndpoint:' | grep -o 'https://.*'` mocha"
+    "test:api:cloud": "API_URL=`serverless info --verbose | grep '^ServiceEndpoint:' | grep -o 'https://.*'` mocha",
+    "build:docs": "jsdoc -d generated-docs src/"
   },
   "devDependencies": {
     "aws-sdk": "^2.152.0",
@@ -27,6 +28,7 @@
     "slugify": "^1.2.6"
   },
   "optionalDependencies": {
-    "coveralls": "^3.0.0"
+    "coveralls": "^3.0.0",
+    "jsdoc": "^3.5.5"
   }
 }

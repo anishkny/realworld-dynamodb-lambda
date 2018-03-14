@@ -5,3 +5,14 @@ node_js:
 
 after_script:
   - cat ./coverage/lcov.info | npx coveralls
+
+before_deploy: npm run build:docs
+
+deploy:
+  provider: pages
+  local-dir: generated-docs
+  skip-cleanup: true
+  github-token: $GITHUB_TOKEN
+  verbose: true
+  on:
+    branch: master
