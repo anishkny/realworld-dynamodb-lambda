@@ -1,5 +1,7 @@
 # ![RealWorld Example App](https://rawgit.com/anishkny/realworld-dynamodb-lambda/master/lambda-node-logo.png)
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/anishkny/realworld-dynamodb-lambda.svg)](https://greenkeeper.io/)
+
 [![Build Status](https://travis-ci.org/anishkny/realworld-dynamodb-lambda.svg?branch=master)](https://travis-ci.org/anishkny/realworld-dynamodb-lambda)
 [![Coverage Status](https://coveralls.io/repos/github/anishkny/realworld-dynamodb-lambda/badge.svg?branch=master)](https://coveralls.io/github/anishkny/realworld-dynamodb-lambda?branch=master)
 [![Known Vulnerabilities](https://snyk.io/test/github/anishkny/realworld-dynamodb-lambda/badge.svg)](https://snyk.io/test/github/anishkny/realworld-dynamodb-lambda)
