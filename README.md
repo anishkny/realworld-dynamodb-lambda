@@ -7,8 +7,6 @@
 
 # 🚧 **Work in [progress](https://github.com/anishkny/realworld-dynamodb-lambda/projects/1)!** 🚧
 
-### [API Docs](https://anishkny.github.io/realworld-dynamodb-lambda/)
-
 > ### AWS DynamoDB + Lambda codebase containing real world examples (CRUD, auth, advanced patterns, etc) that adheres to the [RealWorld](https://github.com/gothinkster/realworld-example-apps) spec and API.
 
 
