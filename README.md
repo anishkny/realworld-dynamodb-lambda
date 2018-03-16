@@ -5,14 +5,14 @@
 [![Known Vulnerabilities](https://snyk.io/test/github/anishkny/realworld-dynamodb-lambda/badge.svg)](https://snyk.io/test/github/anishkny/realworld-dynamodb-lambda)
 [![Gitter](https://img.shields.io/gitter/room/realworld-dev/node-lambda-dynamodb.svg)](https://gitter.im/realworld-dev/node-lambda-dynamodb)
 
-# 🚧 **Work in progress!** 🚧
+# 🚧 **Work in [progress](https://github.com/anishkny/realworld-dynamodb-lambda/projects/1)!** 🚧
 
 ### [API Docs](https://anishkny.github.io/realworld-dynamodb-lambda/)
 
 > ### AWS DynamoDB + Lambda codebase containing real world examples (CRUD, auth, advanced patterns, etc) that adheres to the [RealWorld](https://github.com/gothinkster/realworld-example-apps) spec and API.
 
 
-### [Demo]()&nbsp;&nbsp;&nbsp;&nbsp;[RealWorld](https://github.com/gothinkster/realworld)
+### *Demo (Coming soon!)*&nbsp;&nbsp;&nbsp;&nbsp;[RealWorld](https://github.com/gothinkster/realworld)&nbsp;&nbsp;&nbsp;&nbsp;[API Docs](https://anishkny.github.io/realworld-dynamodb-lambda/)
 
 
 This codebase was created to demonstrate a fully fledged fullstack application built with **AWS DynamoDB + Lambda** including CRUD operations, authentication, routing, pagination, and more.
