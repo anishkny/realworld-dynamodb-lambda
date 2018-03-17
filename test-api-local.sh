@@ -5,6 +5,9 @@ lsof -ti:$PORT | xargs kill
 rm -rf .nyc_output/ coverage/
 
 set -e
+which java
+java -version
+lsof -ti:8000 | xargs kill
 sls dynamodb start --migrate &
 export DDB_PID=$!
 sleep 5

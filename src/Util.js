@@ -13,6 +13,7 @@ const AWS = require('aws-sdk');
 
 // In offline mode, use DynamoDB local server
 let DocumentClient = null;
+/* istanbul ignore next */
 if (process.env.IS_OFFLINE) {
   AWS.config.update({
     region: 'localhost',
@@ -68,10 +69,9 @@ function ERROR(callback, err) {
 
 const asyncHelpers = {
 
-  async purgeTable(aTable, aKeyName) {
+  async purgeTable(aTable, aKeyName) /* istanbul ignore next */ {
     const tableName = module.exports.getTableName(aTable);
 
-    /* istanbul ignore next */
     if (!tableName.includes('dev') && !tableName.includes('test')) {
       console.log(`WARNING: Table name [${tableName}] ` +
         `contains neither dev nor test, not purging`);

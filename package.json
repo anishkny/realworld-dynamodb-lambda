@@ -6,7 +6,8 @@
     "test": "npm run lint && npm run build:coverage && ./test-api-local.sh",
     "deploy": "npm run build && serverless deploy",
     "test:api:cloud": "API_URL=`serverless info --verbose | grep '^ServiceEndpoint:' | grep -o 'https://.*'` mocha",
-    "build:docs": "jsdoc -d generated-docs src/ .jsdoc.summary.md"
+    "build:docs": "jsdoc -d generated-docs src/ .jsdoc.summary.md",
+    "postinstall": "serverless dynamodb remove && serverless dynamodb install"
   },
   "devDependencies": {
     "aws-sdk": "^2.152.0",
