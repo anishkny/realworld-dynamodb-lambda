@@ -15,7 +15,7 @@
     "babel-plugin-istanbul": "^4.1.5",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-stage-3": "^6.24.1",
-    "eslint": "^4.12.0",
+    "eslint": "^4.19.0",
     "mocha": "^5.0.4",
     "nyc": "^11.3.0",
     "serverless": "^1.24.1",
