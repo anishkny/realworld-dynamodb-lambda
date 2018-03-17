@@ -7,7 +7,7 @@
     "deploy": "npm run build && serverless deploy",
     "test:api:cloud": "API_URL=`serverless info --verbose | grep '^ServiceEndpoint:' | grep -o 'https://.*'` mocha",
     "build:docs": "jsdoc -d generated-docs src/ .jsdoc.summary.md",
-    "postinstall": "serverless dynamodb remove && serverless dynamodb install"
+    "postinstall": "serverless dynamodb install"
   },
   "devDependencies": {
     "aws-sdk": "^2.152.0",
