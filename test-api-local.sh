@@ -7,6 +7,7 @@ rm -rf .nyc_output/ coverage/
 set -e
 sls dynamodb start --migrate &
 export DDB_PID=$!
+sleep 5
 nyc serverless offline &
 export SLS_PID=$!
 sleep 5
