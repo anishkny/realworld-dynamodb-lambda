@@ -3,6 +3,14 @@ language: node_js
 node_js:
   - 8
 
+## JDK needed for DynamoDB local
+addons:
+  apt:
+    packages:
+      - openjdk-6-jdk
+jdk: openjdk6
+
+
 after_script:
   - cat ./coverage/lcov.info | npx coveralls
 
