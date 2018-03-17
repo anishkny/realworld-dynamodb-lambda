@@ -20,6 +20,7 @@ provider:
 
 plugins:
   - serverless-offline
+  - serverless-dynamodb-local
 
 functions:
 
