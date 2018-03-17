@@ -11,6 +11,8 @@ before_install:
   - which java
   - java -version
 
+before_script:
+  - npx serverless dynamodb install
 
 after_script:
   - cat ./coverage/lcov.info | npx coveralls

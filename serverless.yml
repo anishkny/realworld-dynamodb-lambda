@@ -19,8 +19,8 @@ provider:
       Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/*"
 
 plugins:
-  - serverless-offline
   - serverless-dynamodb-local
+  - serverless-offline
 
 functions:
 
