@@ -3,6 +3,9 @@ language: node_js
 node_js:
   - 8
 
+before_script:
+  - npx serverless dynamodb install
+
 after_script:
   - cat ./coverage/lcov.info | npx coveralls
 

@@ -10,7 +10,17 @@ if (!process.env.DYNAMODB_NAMESPACE) {
 
 require('babel-polyfill');
 const AWS = require('aws-sdk');
-const DocumentClient = new AWS.DynamoDB.DocumentClient();
+
+// In offline mode, use DynamoDB local server
+let DocumentClient = null;
+if (process.env.IS_OFFLINE) {
+  AWS.config.update({
+    region: 'localhost',
+    endpoint: "http://localhost:8000"
+  });
+}
+DocumentClient = new AWS.DynamoDB.DocumentClient();
+
 
 module.exports = {
 
