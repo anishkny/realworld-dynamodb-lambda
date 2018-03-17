@@ -1,10 +1,12 @@
 #!/usr/bin/env bash
 set -x
 export PORT=3000
-lsof -ti:$PORT | xargs kill
+lsof -ti:$PORT -ti:8000 | xargs kill
 rm -rf .nyc_output/ coverage/
 
 set -e
+which java
+java -version
 sls dynamodb start --migrate &
 export DDB_PID=$!
 sleep 5
