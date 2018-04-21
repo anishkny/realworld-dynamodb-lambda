@@ -1,9 +1,8 @@
 service: realworld
-frameworkVersion: ">=1.1.0 <2.0.0"
 
 provider:
   name: aws
-  runtime: nodejs6.10
+  runtime: nodejs8.10
   region: us-east-1
   environment:
     DYNAMODB_NAMESPACE: ${opt:stage, "dev"}
@@ -18,6 +17,13 @@ provider:
         - dynamodb:DeleteItem
       Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/*"
 
+package:
+  exclude:
+    - test/**
+    - coverage/**
+    - lambda-node-logo.png
+    - .nyc_output/**
+
 plugins:
   - serverless-dynamodb-local
   - serverless-offline
@@ -26,69 +32,69 @@ functions:
 
   ## Users API
   createUser:
-    handler: dist/User.create
+    handler: src/User.create
     events:
       - http: POST /users
 
   loginUser:
-    handler: dist/User.login
+    handler: src/User.login
     events:
       - http: POST /users/login
 
   getUser:
-    handler: dist/User.get
+    handler: src/User.get
     events:
       - http: GET /user
 
   getProfile:
-    handler: dist/User.getProfile
+    handler: src/User.getProfile
     events:
       - http: GET /profiles/{username}
 
   followUser:
-    handler: dist/User.follow
+    handler: src/User.follow
     events:
       - http: POST /profiles/{username}/follow
 
   unfollowUser:
-    handler: dist/User.follow
+    handler: src/User.follow
     events:
       - http: DELETE /profiles/{username}/follow
 
   ## Articles API
   createArticle:
-    handler: dist/Article.create
+    handler: src/Article.create
     events:
       - http: POST /articles
 
   getArticle:
-    handler: dist/Article.get
+    handler: src/Article.get
     events:
       - http: GET /articles/{slug}
 
   deleteArticle:
-    handler: dist/Article.delete
+    handler: src/Article.delete
     events:
       - http: DELETE /articles/{slug}
 
   favoriteArticle:
-    handler: dist/Article.favorite
+    handler: src/Article.favorite
     events:
       - http: POST /articles/{slug}/favorite
 
   unfavoriteArticle:
-    handler: dist/Article.favorite
+    handler: src/Article.favorite
     events:
       - http: DELETE /articles/{slug}/favorite
 
   ## Utils API
   ping:
-    handler: dist/Util.ping
+    handler: src/Util.ping
     events:
       - http: GET ping
 
   purgeData:
-    handler: dist/Util.purgeData
+    handler: src/Util.purgeData
     events:
       - http: DELETE /__TESTUTILS__/purge
 
