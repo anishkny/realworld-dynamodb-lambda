@@ -13,5 +13,5 @@ which java
 java -version
 serverless dynamodb start --migrate &
 sleep 5
-nyc serverless offline &
+serverless offline &
 sleep 5

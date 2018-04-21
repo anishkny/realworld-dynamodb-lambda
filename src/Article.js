@@ -1,4 +1,3 @@
-require('babel-polyfill');
 const Util = require('./Util');
 const User = require('./User');
 const articlesTable = Util.getTableName('articles');

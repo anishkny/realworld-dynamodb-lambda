@@ -8,7 +8,6 @@ if (!process.env.DYNAMODB_NAMESPACE) {
   process.env.DYNAMODB_NAMESPACE = 'dev';
 }
 
-require('babel-polyfill');
 const AWS = require('aws-sdk');
 
 // In offline mode, use DynamoDB local server

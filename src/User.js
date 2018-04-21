@@ -1,4 +1,3 @@
-require('babel-polyfill');
 const Util = require('./Util');
 const usersTable = Util.getTableName('users');
 const bcrypt = require('bcryptjs');
