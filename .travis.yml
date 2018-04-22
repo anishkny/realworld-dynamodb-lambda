@@ -8,11 +8,14 @@ after_script:
   - cat ./coverage/lcov.info | npx coveralls
 
 before_deploy:
+  - rm -rf gh-pages
+  - mkdir -p gh-pages
   - npm run build:docs
+  - cp -r ./coverage gh-pages
 
 deploy:
   provider: pages
-  local-dir: generated-docs
+  local-dir: gh-pages
   skip-cleanup: true
   github-token: $GITHUB_TOKEN
   verbose: true
