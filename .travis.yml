@@ -3,7 +3,12 @@ language: node_js
 node_js:
   - 8
 
-before_deploy: npm run build:docs
+after_script:
+  - sleep 10
+  - cat ./coverage/lcov.info | npx coveralls
+
+before_deploy:
+  - npm run build:docs
 
 deploy:
   provider: pages
