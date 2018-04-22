@@ -87,6 +87,12 @@ functions:
     events:
       - http: DELETE /articles/{slug}/favorite
 
+  ## Comments API
+  createComment:
+    handler: src/Comment.create
+    events:
+      - http: POST /articles/{slug}/comments
+
   ## Utils API
   ping:
     handler: src/Util.ping

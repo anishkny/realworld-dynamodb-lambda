@@ -13,28 +13,11 @@ const globals = {
 describe('Article', async () => {
 
   before(async () => {
-    const username =
-      `author-${(Math.random() * Math.pow(36, 6) | 0).toString(36)}`;
+    globals.authorUser = await TestUtil.createTestUser(
+      `author-${(Math.random() * Math.pow(36, 6) | 0).toString(36)}`);
 
-    globals.authorUser = (await axios.post(
-      `${process.env.API_URL}/users`, {
-        user: {
-          email: `${username}@email.com`,
-          username: username,
-          password: 'password',
-        }
-      })).data.user;
-
-    const otherUsername =
-      `non-author-${(Math.random() * Math.pow(36, 6) | 0).toString(36)}`;
-    globals.nonAuthorUser = (await axios.post(
-      `${process.env.API_URL}/users`, {
-        user: {
-          email: `${otherUsername}@email.com`,
-          username: otherUsername,
-          password: 'password',
-        }
-      })).data.user;
+    globals.nonAuthorUser = await TestUtil.createTestUser(
+      `non-author-${(Math.random() * Math.pow(36, 6) | 0).toString(36)}`);
   });
 
   describe('Create', async () => {
