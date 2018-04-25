@@ -35,6 +35,7 @@ module.exports = {
   async purgeData(event, context, callback) {
     await asyncHelpers.purgeTable('users', 'username');
     await asyncHelpers.purgeTable('articles', 'slug');
+    await asyncHelpers.purgeTable('comments', 'id');
     SUCCESS(callback, 'Purged all data!');
   },
 

@@ -155,3 +155,35 @@ resources:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
         TableName: realworld-${self:provider.environment.DYNAMODB_NAMESPACE}-articles
+
+    CommentsDynamoDBTable:
+      Type: 'AWS::DynamoDB::Table'
+      DeletionPolicy: Retain
+      Properties:
+        AttributeDefinitions:
+          -
+            AttributeName: id
+            AttributeType: S
+          -
+            AttributeName: slug
+            AttributeType: S
+        KeySchema:
+          -
+            AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: realworld-${self:provider.environment.DYNAMODB_NAMESPACE}-comments
+        GlobalSecondaryIndexes:
+          -
+            IndexName: article
+            KeySchema:
+              -
+                AttributeName: slug
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+            ProvisionedThroughput:
+              ReadCapacityUnits: 1
+              WriteCapacityUnits: 1
