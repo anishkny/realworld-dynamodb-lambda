@@ -1,4 +1,5 @@
 const assert = require('assert');
+const axios = require('axios');
 
 module.exports = {
 
@@ -7,6 +8,17 @@ module.exports = {
     const actualError = res.response.data.errors.body[0];
     assert(errorRegex.test(actualError),
       `Expected: [${errorRegex}], Actual: [${actualError}]`);
+  },
+
+  async createTestUser(username) {
+    return (await axios.post(
+      `${process.env.API_URL}/users`, {
+        user: {
+          email: `${username}@email.com`,
+          username: username,
+          password: 'password',
+        }
+      })).data.user;
   },
 
   delay,
