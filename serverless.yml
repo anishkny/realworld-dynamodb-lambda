@@ -98,6 +98,11 @@ functions:
     events:
       - http: GET /articles/{slug}/comments
 
+  deleteComment:
+    handler: src/Comment.delete
+    events:
+      - http: DELETE /articles/{slug}/comments/{id}
+
   ## Utils API
   ping:
     handler: src/Util.ping
