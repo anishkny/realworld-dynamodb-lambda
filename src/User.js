@@ -104,7 +104,7 @@ module.exports = {
   },
 
   async get(event, context, callback) {
-    const authenticatedUser = await asyncHelpers.authenticateAndGetUser(event);
+    const authenticatedUser = await authenticateAndGetUser(event);
     if (!authenticatedUser) {
       Util.ERROR(callback, 'Token not present or invalid.');
       return;
@@ -120,41 +120,26 @@ module.exports = {
     });
   },
 
-  async authenticateAndGetUser(event) {
-    return await asyncHelpers.authenticateAndGetUser(event);
-  },
-
+  authenticateAndGetUser,
   getUserByUsername,
 
   async getProfile(event, context, callback) {
     const username = event.pathParameters.username;
-    const user = (await getUserByUsername(username)).Item;
-    if (!user) {
+    const authenticatedUser =
+      await authenticateAndGetUser(event);
+    const profile = await getProfileByUsername(username,
+      authenticatedUser);
+    if (!profile) {
       Util.ERROR(callback, `User not found: [${username}]`);
       return;
     }
-    const profile = {
-      username: user.username,
-      bio: user.bio || '',
-      image: user.image || '',
-      following: false,
-    };
-
-    // If user is authenticated, set following bit
-    if (user.followers) {
-      const authenticatedUser =
-        await asyncHelpers.authenticateAndGetUser(event);
-      if (authenticatedUser) {
-        profile.following = user.followers.values
-          .includes(authenticatedUser.username);
-      }
-    }
-
     Util.SUCCESS(callback, { profile });
   },
 
+  getProfileByUsername,
+
   async follow(event, context, callback) {
-    const authenticatedUser = await asyncHelpers.authenticateAndGetUser(event);
+    const authenticatedUser = await authenticateAndGetUser(event);
     if (!authenticatedUser) {
       Util.ERROR(callback, 'Token not present or invalid.');
       return;
@@ -216,18 +201,35 @@ function getTokenFromEvent(event) {
   return event.headers.Authorization.replace('Token ', '');
 }
 
-const asyncHelpers = {
+async function getProfileByUsername(aUsername, aAuthenticatedUser) {
+  const user = (await getUserByUsername(aUsername)).Item;
+  if (!user) {
+    return null;
+  }
 
-  async authenticateAndGetUser(event) {
-    try {
-      const token = getTokenFromEvent(event);
-      const decoded = jwt.verify(token, Util.tokenSecret);
-      const username = decoded.username;
-      const authenticatedUser = await getUserByUsername(username);
-      return authenticatedUser.Item;
-    } catch (err) {
-      return null;
-    }
-  },
+  const profile = {
+    username: user.username,
+    bio: user.bio || '',
+    image: user.image || '',
+    following: false,
+  };
 
-};
+  // If user is authenticated, set following bit
+  if (user.followers && aAuthenticatedUser) {
+    profile.following = user.followers.values
+      .includes(aAuthenticatedUser.username);
+  }
+  return profile;
+}
+
+async function authenticateAndGetUser(event) {
+  try {
+    const token = getTokenFromEvent(event);
+    const decoded = jwt.verify(token, Util.tokenSecret);
+    const username = decoded.username;
+    const authenticatedUser = await getUserByUsername(username);
+    return authenticatedUser.Item;
+  } catch (err) {
+    return null;
+  }
+}

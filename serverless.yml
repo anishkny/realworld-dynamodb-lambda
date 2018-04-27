@@ -93,6 +93,11 @@ functions:
     events:
       - http: POST /articles/{slug}/comments
 
+  getComments:
+    handler: src/Comment.get
+    events:
+      - http: GET /articles/{slug}/comments
+
   ## Utils API
   ping:
     handler: src/Util.ping

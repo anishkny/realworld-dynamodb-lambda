@@ -14,10 +14,10 @@ describe('Article', async () => {
 
   before(async () => {
     globals.authorUser = await TestUtil.createTestUser(
-      `author-${(Math.random() * Math.pow(36, 6) | 0).toString(36)}`);
+      `author-${TestUtil.randomString()}`);
 
     globals.nonAuthorUser = await TestUtil.createTestUser(
-      `non-author-${(Math.random() * Math.pow(36, 6) | 0).toString(36)}`);
+      `non-author-${TestUtil.randomString()}`);
   });
 
   describe('Create', async () => {

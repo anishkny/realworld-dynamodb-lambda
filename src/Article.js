@@ -195,16 +195,7 @@ async function transformRetrievedArticle(article, authenticatedUser) {
       .includes(authenticatedUser.username);
     delete article.favoritedBy;
   }
-  const authorUser = (await User.getUserByUsername(article.author)).Item;
-  article.author = {
-    username: authorUser.username,
-    bio: authorUser.bio || '',
-    image: authorUser.image || '',
-    following: false,
-  };
-  if (authenticatedUser && authorUser.followers) {
-    article.author.following =
-      authorUser.followers.includes(authenticatedUser.username);
-  }
+  article.author = await User.getProfileByUsername(article.author,
+    authenticatedUser);
   return article;
 }
