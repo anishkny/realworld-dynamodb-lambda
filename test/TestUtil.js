@@ -10,6 +10,10 @@ module.exports = {
       `Expected: [${errorRegex}], Actual: [${actualError}]`);
   },
 
+  randomString() {
+    return (Math.random() * Math.pow(36, 6) | 0).toString(36);
+  },
+
   async createTestUser(username) {
     return (await axios.post(
       `${process.env.API_URL}/users`, {

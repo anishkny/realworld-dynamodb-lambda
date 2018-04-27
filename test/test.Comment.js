@@ -6,7 +6,7 @@ const globals = {
   authorUser: null,
   commenterUser: null,
   testArticle: null,
-  createdComment: null,
+  createdComments: [],
 };
 
 describe('Comment', async () => {
@@ -14,9 +14,9 @@ describe('Comment', async () => {
   before(async () => {
 
     globals.authorUser = await TestUtil.createTestUser(
-      `author-${(Math.random() * Math.pow(36, 6) | 0).toString(36)}`);
+      `author-${TestUtil.randomString()}`);
     globals.commenterUser = await TestUtil.createTestUser(
-      `commenter-${(Math.random() * Math.pow(36, 6) | 0).toString(36)}`);
+      `commenter-${TestUtil.randomString()}`);
     globals.testArticle = (await axios.post(`${API_URL}/articles`, {
       article: {
         title: 'title',
@@ -32,14 +32,26 @@ describe('Comment', async () => {
   describe('Create', async () => {
 
     it('should create comment', async () => {
-      globals.createdComment = (await axios.post(
-        `${API_URL}/articles/${globals.testArticle.slug}/comments`, {
-          comment: { body: "test comment" },
-        }, {
-          headers: { Authorization: `Token ${globals.commenterUser.token}` },
-        })).data.comment;
+      for (let i = 0; i < 10; ++i) {
+        globals.createdComments.push((await axios.post(
+          `${API_URL}/articles/${globals.testArticle.slug}/comments`, {
+            comment: {
+              body: `test comment ${TestUtil.randomString()}`
+            },
+          }, {
+            headers: { Authorization: `Token ${globals.commenterUser.token}` },
+          })).data.comment);
+      }
+      // TODO: Assert on createdComments
+    });
 
-      //TODO: Assert on createdComment
+    it('should get all comments for article', async () => {
+      const retrievedComments = (await axios.get(
+          `${API_URL}/articles/${globals.testArticle.slug}/comments`))
+        .data.comments;
+
+      // TODO: Assert on retrievedComments
+      (retrievedComments);
     });
 
   });

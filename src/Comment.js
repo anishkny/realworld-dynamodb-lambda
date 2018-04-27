@@ -59,5 +59,27 @@ module.exports = {
     Util.SUCCESS(callback, { comment });
   },
 
+  /** Get comments for an article */
+  async get(event, context, callback) {
+    const authenticatedUser = await User.authenticateAndGetUser(event);
+    const slug = event.pathParameters.slug;
+
+    const comments = (await Util.DocumentClient.query({
+      TableName: commentsTable,
+      IndexName: 'article',
+      KeyConditionExpression: 'slug = :slug',
+      ExpressionAttributeValues: {
+        ':slug': slug,
+      },
+    }).promise()).Items;
+
+    // Get profile for each comment's author
+    for (let i = 0; i < comments.length; ++i) {
+      comments[i].author = await User.getProfileByUsername(comments[i].author,
+        authenticatedUser);
+    }
+
+    Util.SUCCESS(callback, { comments });
+  },
 
 };
