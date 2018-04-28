@@ -82,4 +82,41 @@ module.exports = {
     Util.SUCCESS(callback, { comments });
   },
 
+  /** Delete comment */
+  async delete(event, context, callback) {
+    const authenticatedUser = await User.authenticateAndGetUser(event);
+    if (!authenticatedUser) {
+      Util.ERROR(callback, 'Must be logged in.');
+      return;
+    }
+    const commentId = event.pathParameters.id;
+
+    const comment = (await Util.DocumentClient.get({
+      TableName: commentsTable,
+      Key: {
+        id: commentId,
+      },
+    }).promise()).Item;
+    if (!comment) {
+      Util.ERROR(callback, `Comment ID not found: [${commentId}]`);
+      return;
+    }
+
+    // Only comment author can delete comment
+    if (comment.author !== authenticatedUser.username) {
+      Util.ERROR(callback,
+        `Only comment author can delete: [${comment.author}]`);
+      return;
+    }
+
+    await Util.DocumentClient.delete({
+      TableName: commentsTable,
+      Key: {
+        id: commentId,
+      },
+    }).promise();
+
+    Util.SUCCESS(callback, null);
+  },
+
 };

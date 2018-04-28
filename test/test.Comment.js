@@ -45,6 +45,10 @@ describe('Comment', async () => {
       // TODO: Assert on createdComments
     });
 
+  });
+
+  describe('Get', async () => {
+
     it('should get all comments for article', async () => {
       const retrievedComments = (await axios.get(
           `${API_URL}/articles/${globals.testArticle.slug}/comments`))
@@ -52,6 +56,28 @@ describe('Comment', async () => {
 
       // TODO: Assert on retrievedComments
       (retrievedComments);
+    });
+
+  });
+
+  describe('Delete', async () => {
+
+    it('should delete comment', async () => {
+      await axios.delete(`${API_URL}/articles/${globals.testArticle.slug}` +
+        `/comments/${globals.createdComments[0].id}`, {
+          headers: { Authorization: `Token ${globals.commenterUser.token}` },
+        });
+
+      // TODO: Assert comment is deleted
+    });
+
+    it('only comment author should be able to delete comment', async () => {
+      await axios.delete(`${API_URL}/articles/${globals.testArticle.slug}` +
+        `/comments/${globals.createdComments[1].id}`, {
+          headers: { Authorization: `Token ${globals.authorUser.token}` },
+        }).catch(res => {
+        TestUtil.assertError(res, /Only comment author can delete/);
+      });
     });
 
   });
