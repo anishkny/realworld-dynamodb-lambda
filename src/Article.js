@@ -180,6 +180,15 @@ module.exports = {
     Util.SUCCESS(callback, { article });
   },
 
+  async list(event, context, callback) {
+    const authenticatedUser = await User.authenticateAndGetUser(event);
+    console.log(authenticatedUser);
+    const params = event.queryStringParameters || {};
+    const limit = parseInt(params.limit) || 20;
+    const offset = parseInt(params.offset) || 0;
+    Util.SUCCESS(callback, { limit, offset });
+  },
+
 };
 
 /**

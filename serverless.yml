@@ -87,6 +87,11 @@ functions:
     events:
       - http: DELETE /articles/{slug}/favorite
 
+  listArticles:
+    handler: src/Article.list
+    events:
+      - http: GET /articles
+
   ## Comments API
   createComment:
     handler: src/Comment.create

@@ -197,4 +197,20 @@ describe('Article', async () => {
 
   });
 
+  describe('List', async () => {
+
+    it('should list articles', async () => {
+      await axios.get(`${API_URL}/articles`);
+      // TODO: Assert on retrieved articles
+    });
+
+    it('should list articles when authenticated', async () => {
+      await axios.get(`${API_URL}/articles`, {
+        headers: { Authorization: `Token ${globals.nonAuthorUser.token}` },
+      });
+      // TODO: Assert on retrieved articles
+    });
+
+  });
+
 });
