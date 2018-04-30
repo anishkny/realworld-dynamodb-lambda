@@ -214,20 +214,23 @@ module.exports = {
 
     // Query for records, until we have enough records (offset+limit),
     // or there are no more records to be found
-    const articlePromises = [];
-    while (articlePromises.length < (offset + limit)) {
+    const queryResultItems = [];
+    while (queryResultItems.length < (offset + limit)) {
       const queryResult = await Util.DocumentClient.query(queryParams)
         .promise();
-      queryResult.Items.forEach(a =>
-        articlePromises.push(transformRetrievedArticle(a, authenticatedUser)));
+      queryResultItems.push(...queryResult.Items);
       if (queryResult.LastEvaluatedKey) {
         queryParams.ExclusiveStartKey = queryResult.LastEvaluatedKey;
       } else {
         break;
       }
     }
-    const articles = await Promise.all(
-      articlePromises.slice(offset, offset + limit));
+
+    // Decorate each of the retrieved articles with extra data
+    const articlePromises = [];
+    queryResultItems.slice(offset, offset + limit).forEach(a =>
+      articlePromises.push(transformRetrievedArticle(a, authenticatedUser)));
+    const articles = await Promise.all(articlePromises);
     Util.SUCCESS(callback, { articles });
   },
 
