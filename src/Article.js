@@ -184,11 +184,39 @@ module.exports = {
 
   async list(event, context, callback) {
     const authenticatedUser = await User.authenticateAndGetUser(event);
-    console.log(authenticatedUser);
     const params = event.queryStringParameters || {};
-    const limit = parseInt(params.limit) || 20;
-    const offset = parseInt(params.offset) || 0;
-    Util.SUCCESS(callback, { limit, offset });
+    // TODO: Enforce limit/offset
+    // const limit = parseInt(params.limit) || 20;
+    // const offset = parseInt(params.offset) || 0;
+    if ((params.tag && params.author) ||
+      (params.tag && params.author) || (params.tag && params.author)) {
+      Util.ERROR(callback,
+        'Only one of these can be specified: [tag, author, favorited]');
+    }
+    const queryParams = {
+      TableName: articlesTable,
+      IndexName: 'updatedAt',
+      KeyConditionExpression: 'dummy = :dummy',
+      ExpressionAttributeValues: {
+        ':dummy': 'OK',
+      },
+      ScanIndexForward: false,
+    };
+    if (params.tag) {
+      queryParams.FilterExpression = 'contains(tagList, :tag)';
+      queryParams.ExpressionAttributeValues[':tag'] = params.tag;
+    } else if (params.author) {
+      queryParams.FilterExpression = 'author = :author';
+      queryParams.ExpressionAttributeValues[':author'] = params.author;
+    } else if (params.favorited) {
+      queryParams.FilterExpression = 'contains(favoritedBy, :favorited)';
+      queryParams.ExpressionAttributeValues[':favorited'] = params.favorited;
+    }
+    const articlePromises =
+      (await Util.DocumentClient.query(queryParams).promise()).Items.map(a =>
+        transformRetrievedArticle(a, authenticatedUser));
+    const articles = await Promise.all(articlePromises);
+    Util.SUCCESS(callback, { articles });
   },
 
 };

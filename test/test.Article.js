@@ -19,7 +19,7 @@ describe('Article', async () => {
       `author-${TestUtil.randomString()}`);
 
     globals.authoressUser = await TestUtil.createTestUser(
-      `authoress-${TestUtil.randomString()}`);
+      `authoressUser-${TestUtil.randomString()}`);
 
     globals.nonAuthorUser = await TestUtil.createTestUser(
       `non-author-${TestUtil.randomString()}`);
@@ -204,8 +204,70 @@ describe('Article', async () => {
 
   describe('List', async () => {
 
+    before(async () => {
+      // Create a few articles to be listed
+      for (let i = 0; i < 20; ++i) {
+        globals.listArticles.push((await axios.post(`${API_URL}/articles`, {
+          article: {
+            title: 'title',
+            description: 'description',
+            body: 'body',
+            tagList: [
+              TestUtil.randomString(),
+              `tag_${i}`,
+              `tag_mod_2_${(i % 2)}`,
+              `tag_mod_3_${(i % 3)}`,
+            ],
+          },
+        }, {
+          headers: {
+            Authorization: 'Token ' +
+              ((i % 2) ? globals.authorUser.token : globals.authoressUser.token)
+          },
+        })).data.article);
+      }
+    });
+
     it('should list articles', async () => {
-      await axios.get(`${API_URL}/articles`);
+      const allArticles =
+        (await axios.get(`${API_URL}/articles`)).data.articles;
+      console.log('All articles:');
+      console.log(allArticles);
+
+      // TODO: Assert on retrieved articles
+    });
+
+    it('should list articles with tag', async () => {
+      const articles_tag_7 =
+        (await axios.get(`${API_URL}/articles?tag=tag_7`)).data.articles;
+      console.log('Articles with tag_7:');
+      console.log(articles_tag_7);
+
+      const articles_tag_mod_3_2 =
+        (await axios.get(`${API_URL}/articles?tag=tag_mod_3_2`)).data.articles;
+      console.log('Articles with tag_mod_3_2:');
+      console.log(articles_tag_mod_3_2);
+
+      // TODO: Assert on retrieved articles
+    });
+
+    it('should list articles by author', async () => {
+      const articles_of_authoress = (await axios.get(
+          `${API_URL}/articles?author=${globals.authoressUser.username}`))
+        .data.articles;
+      console.log(`Articles by [${globals.authoressUser.username}]:`);
+      console.log(articles_of_authoress);
+
+      // TODO: Assert on retrieved articles
+    });
+
+    it('should list articles favorited by user', async () => {
+      const favorited_articles = (await axios.get(
+          `${API_URL}/articles?favorited=${globals.nonAuthorUser.username}`))
+        .data.articles;
+      console.log(`Articles favorited by [${globals.nonAuthorUser.username}]:`);
+      console.log(favorited_articles);
+
       // TODO: Assert on retrieved articles
     });
 
