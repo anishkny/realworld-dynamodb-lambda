@@ -271,6 +271,23 @@ describe('Article', async () => {
       // TODO: Assert on retrieved articles
     });
 
+    it('should list articles by limit/offset', async () => {
+      const articles_batch_1 = (await axios.get(
+          `${API_URL}/articles?author=${globals.authorUser.username}&limit=2`))
+        .data.articles;
+      console.log(`Batch 1 articles by: [${globals.authorUser.username}]:`);
+      console.log(articles_batch_1);
+
+      const articles_batch_2 = (await axios.get(
+          `${API_URL}/articles?author=${globals.authorUser.username}` +
+          `&limit=2&offset=2`))
+        .data.articles;
+      console.log(`Batch 2 articles by: [${globals.authorUser.username}]:`);
+      console.log(articles_batch_2);
+
+      // TODO: Assert on retrieved articles
+    });
+
     it('should list articles when authenticated', async () => {
       await axios.get(`${API_URL}/articles`, {
         headers: { Authorization: `Token ${globals.nonAuthorUser.token}` },
