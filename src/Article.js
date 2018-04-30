@@ -185,9 +185,8 @@ module.exports = {
   async list(event, context, callback) {
     const authenticatedUser = await User.authenticateAndGetUser(event);
     const params = event.queryStringParameters || {};
-    // TODO: Enforce limit/offset
-    // const limit = parseInt(params.limit) || 20;
-    // const offset = parseInt(params.offset) || 0;
+    const limit = parseInt(params.limit) || 20;
+    const offset = parseInt(params.offset) || 0;
     if ((params.tag && params.author) ||
       (params.tag && params.author) || (params.tag && params.author)) {
       Util.ERROR(callback,
@@ -212,10 +211,23 @@ module.exports = {
       queryParams.FilterExpression = 'contains(favoritedBy, :favorited)';
       queryParams.ExpressionAttributeValues[':favorited'] = params.favorited;
     }
-    const articlePromises =
-      (await Util.DocumentClient.query(queryParams).promise()).Items.map(a =>
-        transformRetrievedArticle(a, authenticatedUser));
-    const articles = await Promise.all(articlePromises);
+
+    // Query for records, until we have enough records (offset+limit),
+    // or there are no more records to be found
+    const articlePromises = [];
+    while (articlePromises.length < (offset + limit)) {
+      const queryResult = await Util.DocumentClient.query(queryParams)
+        .promise();
+      queryResult.Items.forEach(a =>
+        articlePromises.push(transformRetrievedArticle(a, authenticatedUser)));
+      if (queryResult.LastEvaluatedKey) {
+        queryParams.ExclusiveStartKey = queryResult.LastEvaluatedKey;
+      } else {
+        break;
+      }
+    }
+    const articles = await Promise.all(
+      articlePromises.slice(offset, offset + limit));
     Util.SUCCESS(callback, { articles });
   },
 
