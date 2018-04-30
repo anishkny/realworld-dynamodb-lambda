@@ -19,7 +19,7 @@ describe('Article', async () => {
       `author-${TestUtil.randomString()}`);
 
     globals.authoressUser = await TestUtil.createTestUser(
-      `authoressUser-${TestUtil.randomString()}`);
+      `authoress-${TestUtil.randomString()}`);
 
     globals.nonAuthorUser = await TestUtil.createTestUser(
       `non-author-${TestUtil.randomString()}`);
