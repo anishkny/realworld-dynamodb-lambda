@@ -297,4 +297,42 @@ describe('Article', async () => {
 
   });
 
+  describe('Feed', async () => {
+
+    it('should get feed', async () => {
+      // Get feed without following any user
+      const feed0 = (await axios.get(`${API_URL}/articles/feed`, {
+        headers: { Authorization: `Token ${globals.nonAuthorUser.token}` },
+      })).data;
+      console.log('Feed0:');
+      console.log(feed0);
+      // TODO: Assert on feed
+
+      // Get feed after following only authoressUser
+      await axios.post(
+        `${API_URL}/profiles/${globals.authoressUser.username}/follow`, {}, {
+          headers: { Authorization: `Token ${globals.nonAuthorUser.token}` },
+        });
+      const feed1 = (await axios.get(`${API_URL}/articles/feed`, {
+        headers: { Authorization: `Token ${globals.nonAuthorUser.token}` },
+      })).data;
+      console.log('Feed1:');
+      console.log(feed1);
+      // TODO: Assert on feed
+
+      // Get feed after following authorUser too
+      await axios.post(
+        `${API_URL}/profiles/${globals.authorUser.username}/follow`, {}, {
+          headers: { Authorization: `Token ${globals.nonAuthorUser.token}` },
+        });
+      const feed2 = (await axios.get(`${API_URL}/articles/feed`, {
+        headers: { Authorization: `Token ${globals.nonAuthorUser.token}` },
+      })).data;
+      console.log('Feed2:');
+      console.log(feed2);
+      // TODO: Assert on feed
+    });
+
+  });
+
 });

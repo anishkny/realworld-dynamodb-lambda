@@ -234,6 +234,55 @@ module.exports = {
     Util.SUCCESS(callback, { articles });
   },
 
+  async getFeed(event, context, callback) {
+    const authenticatedUser = await User.authenticateAndGetUser(event);
+    if (!authenticatedUser) {
+      Util.ERROR(callback, 'Must be logged in.');
+      return;
+    }
+
+    // Get followed users
+    const followed = await User.getFollowedUsers(authenticatedUser.username);
+    if (!followed.length) {
+      Util.SUCCESS(callback, { articles: [] });
+      return;
+    }
+
+    const queryParams = {
+      TableName: articlesTable,
+      IndexName: 'updatedAt',
+      KeyConditionExpression: 'dummy = :dummy',
+      FilterExpression: 'author IN ',
+      ExpressionAttributeValues: {
+        ':dummy': 'OK',
+      },
+      ScanIndexForward: false,
+    };
+
+    // Query articlesTable to filter only authored by followed users
+    // This results in:
+    //   FilterExpression:
+    //      'author IN (:author0, author1, ...)',
+    //   ExpressionAttributeValues:
+    //      { ':dummy': 'OK', ':author0': 'authoress-kly3oz', ':author1': ... },
+    for (let i = 0; i < followed.length; ++i) {
+      queryParams.ExpressionAttributeValues[`:author${i}`] = followed[i];
+    }
+    queryParams.FilterExpression += '(' +
+      Object.keys(queryParams.ExpressionAttributeValues)
+      .filter(e => e !== ':dummy').join(",") +
+      ')';
+    console.log(`FilterExpression: [${queryParams.FilterExpression}]`);
+
+    // TODO: Enforce limit, offset, pagination
+    const queryResult = await Util.DocumentClient.query(queryParams)
+      .promise();
+
+    // TODO: Decorate retrieved articles
+
+    Util.SUCCESS(callback, queryResult.Items);
+  },
+
 };
 
 /**

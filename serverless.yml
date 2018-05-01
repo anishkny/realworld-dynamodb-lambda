@@ -92,6 +92,11 @@ functions:
     events:
       - http: GET /articles
 
+  getArticlesFeed:
+    handler: src/Article.getFeed
+    events:
+      - http: GET /articles/feed
+
   ## Comments API
   createComment:
     handler: src/Comment.create
