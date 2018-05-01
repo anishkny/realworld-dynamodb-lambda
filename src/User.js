@@ -147,6 +147,8 @@ module.exports = {
     const username = event.pathParameters.username;
     const user = (await getUserByUsername(username)).Item;
     const shouldFollow = !(event.httpMethod === 'DELETE');
+
+    // Update "followers" field on followed user
     if (shouldFollow) {
       if (user.followers &&
         !user.followers.values.includes(authenticatedUser.username)) {
@@ -155,11 +157,30 @@ module.exports = {
         user.followers = Util.DocumentClient.createSet(
           [authenticatedUser.username]);
       }
+    } else {
+      // TODO: Implement unfollow logic
     }
     await Util.DocumentClient.put({
       TableName: usersTable,
       Item: user,
     }).promise();
+
+    // Update "following" field on follower user
+    if (shouldFollow) {
+      if (authenticatedUser.following &&
+        !authenticatedUser.following.values.includes(username)) {
+        authenticatedUser.following.values.push(username);
+      } else {
+        authenticatedUser.following = Util.DocumentClient.createSet([username]);
+      }
+    } else {
+      // TODO: Implement unfollow logic
+    }
+    await Util.DocumentClient.put({
+      TableName: usersTable,
+      Item: authenticatedUser,
+    }).promise();
+
     const profile = {
       username,
       bio: user.bio || '',
@@ -167,6 +188,16 @@ module.exports = {
       following: shouldFollow,
     };
     Util.SUCCESS(callback, { profile });
+  },
+
+  async getFollowedUsers(aUsername) {
+    const user = (await Util.DocumentClient.get({
+      TableName: usersTable,
+      Key: {
+        username: aUsername,
+      },
+    }).promise()).Item;
+    return user.following ? user.following.values : [];
   },
 
 };
