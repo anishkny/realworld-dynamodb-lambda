@@ -303,7 +303,7 @@ describe('Article', async () => {
       // Get feed without following any user
       const feed0 = (await axios.get(`${API_URL}/articles/feed`, {
         headers: { Authorization: `Token ${globals.nonAuthorUser.token}` },
-      })).data;
+      })).data.articles;
       console.log('Feed0:');
       console.log(feed0);
       // TODO: Assert on feed
@@ -315,7 +315,7 @@ describe('Article', async () => {
         });
       const feed1 = (await axios.get(`${API_URL}/articles/feed`, {
         headers: { Authorization: `Token ${globals.nonAuthorUser.token}` },
-      })).data;
+      })).data.articles;
       console.log('Feed1:');
       console.log(feed1);
       // TODO: Assert on feed
@@ -327,7 +327,7 @@ describe('Article', async () => {
         });
       const feed2 = (await axios.get(`${API_URL}/articles/feed`, {
         headers: { Authorization: `Token ${globals.nonAuthorUser.token}` },
-      })).data;
+      })).data.articles;
       console.log('Feed2:');
       console.log(feed2);
       // TODO: Assert on feed

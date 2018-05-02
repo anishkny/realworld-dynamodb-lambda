@@ -212,26 +212,10 @@ module.exports = {
       queryParams.ExpressionAttributeValues[':favorited'] = params.favorited;
     }
 
-    // Query for records, until we have enough records (offset+limit),
-    // or there are no more records to be found
-    const queryResultItems = [];
-    while (queryResultItems.length < (offset + limit)) {
-      const queryResult = await Util.DocumentClient.query(queryParams)
-        .promise();
-      queryResultItems.push(...queryResult.Items);
-      if (queryResult.LastEvaluatedKey) {
-        queryParams.ExclusiveStartKey = queryResult.LastEvaluatedKey;
-      } else {
-        break;
-      }
-    }
-
-    // Decorate each of the retrieved articles with extra data
-    const articlePromises = [];
-    queryResultItems.slice(offset, offset + limit).forEach(a =>
-      articlePromises.push(transformRetrievedArticle(a, authenticatedUser)));
-    const articles = await Promise.all(articlePromises);
-    Util.SUCCESS(callback, { articles });
+    Util.SUCCESS(callback, {
+      articles: await queryEnoughArticles(queryParams, authenticatedUser,
+        limit, offset)
+    });
   },
 
   async getFeed(event, context, callback) {
@@ -240,6 +224,10 @@ module.exports = {
       Util.ERROR(callback, 'Must be logged in.');
       return;
     }
+
+    const params = event.queryStringParameters || {};
+    const limit = parseInt(params.limit) || 20;
+    const offset = parseInt(params.offset) || 0;
 
     // Get followed users
     const followed = await User.getFollowedUsers(authenticatedUser.username);
@@ -274,16 +262,41 @@ module.exports = {
       ')';
     console.log(`FilterExpression: [${queryParams.FilterExpression}]`);
 
-    // TODO: Enforce limit, offset, pagination
-    const queryResult = await Util.DocumentClient.query(queryParams)
-      .promise();
-
-    // TODO: Decorate retrieved articles
-
-    Util.SUCCESS(callback, queryResult.Items);
+    Util.SUCCESS(callback, {
+      articles: await queryEnoughArticles(queryParams, authenticatedUser,
+        limit, offset),
+    });
   },
 
 };
+
+/**
+ * Given queryParams, repeatedly call query until we have enough records
+ * to satisfy (limit + offset)
+ */
+async function queryEnoughArticles(queryParams, authenticatedUser,
+  limit, offset) {
+
+  // Call query repeatedly, until we have enough records, or there are no more
+  const queryResultItems = [];
+  while (queryResultItems.length < (offset + limit)) {
+    const queryResult = await Util.DocumentClient.query(queryParams)
+      .promise();
+    queryResultItems.push(...queryResult.Items);
+    if (queryResult.LastEvaluatedKey) {
+      queryParams.ExclusiveStartKey = queryResult.LastEvaluatedKey;
+    } else {
+      break;
+    }
+  }
+
+  // Decorate last "limit" number of articles with author data
+  const articlePromises = [];
+  queryResultItems.slice(offset, offset + limit).forEach(a =>
+    articlePromises.push(transformRetrievedArticle(a, authenticatedUser)));
+  const articles = await Promise.all(articlePromises);
+  return articles;
+}
 
 /**
  * Given an article retrieved from table,
