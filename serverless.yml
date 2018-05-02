@@ -87,6 +87,11 @@ functions:
     events:
       - http: DELETE /articles/{slug}/favorite
 
+  listArticles:
+    handler: src/Article.list
+    events:
+      - http: GET /articles
+
   ## Comments API
   createComment:
     handler: src/Comment.create
@@ -157,6 +162,12 @@ resources:
           -
             AttributeName: slug
             AttributeType: S
+          -
+            AttributeName: dummy
+            AttributeType: S
+          -
+            AttributeName: updatedAt
+            AttributeType: N
         KeySchema:
           -
             AttributeName: slug
@@ -165,6 +176,21 @@ resources:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
         TableName: realworld-${self:provider.environment.DYNAMODB_NAMESPACE}-articles
+        GlobalSecondaryIndexes:
+          -
+            IndexName: updatedAt
+            KeySchema:
+              -
+                AttributeName: dummy
+                KeyType: HASH
+              -
+                AttributeName: updatedAt
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL
+            ProvisionedThroughput:
+              ReadCapacityUnits: 1
+              WriteCapacityUnits: 1
 
     CommentsDynamoDBTable:
       Type: 'AWS::DynamoDB::Table'
