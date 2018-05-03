@@ -16,7 +16,7 @@ module.exports = {
 
   async createTestUser(username) {
     return (await axios.post(
-      `${process.env.API_URL}/users`, {
+      `/users`, {
         user: {
           email: `${username}@email.com`,
           username: username,

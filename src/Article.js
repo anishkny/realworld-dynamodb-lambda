@@ -182,6 +182,7 @@ module.exports = {
     Util.SUCCESS(callback, { article });
   },
 
+  /** List articles */
   async list(event, context, callback) {
     const authenticatedUser = await User.authenticateAndGetUser(event);
     const params = event.queryStringParameters || {};
@@ -218,6 +219,7 @@ module.exports = {
     });
   },
 
+  /** Get Articles feed */
   async getFeed(event, context, callback) {
     const authenticatedUser = await User.authenticateAndGetUser(event);
     if (!authenticatedUser) {
