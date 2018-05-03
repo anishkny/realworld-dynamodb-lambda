@@ -212,29 +212,91 @@ module.exports = {
       queryParams.ExpressionAttributeValues[':favorited'] = params.favorited;
     }
 
-    // Query for records, until we have enough records (offset+limit),
-    // or there are no more records to be found
-    const queryResultItems = [];
-    while (queryResultItems.length < (offset + limit)) {
-      const queryResult = await Util.DocumentClient.query(queryParams)
-        .promise();
-      queryResultItems.push(...queryResult.Items);
-      if (queryResult.LastEvaluatedKey) {
-        queryParams.ExclusiveStartKey = queryResult.LastEvaluatedKey;
-      } else {
-        break;
-      }
+    Util.SUCCESS(callback, {
+      articles: await queryEnoughArticles(queryParams, authenticatedUser,
+        limit, offset)
+    });
+  },
+
+  async getFeed(event, context, callback) {
+    const authenticatedUser = await User.authenticateAndGetUser(event);
+    if (!authenticatedUser) {
+      Util.ERROR(callback, 'Must be logged in.');
+      return;
     }
 
-    // Decorate each of the retrieved articles with extra data
-    const articlePromises = [];
-    queryResultItems.slice(offset, offset + limit).forEach(a =>
-      articlePromises.push(transformRetrievedArticle(a, authenticatedUser)));
-    const articles = await Promise.all(articlePromises);
-    Util.SUCCESS(callback, { articles });
+    const params = event.queryStringParameters || {};
+    const limit = parseInt(params.limit) || 20;
+    const offset = parseInt(params.offset) || 0;
+
+    // Get followed users
+    const followed = await User.getFollowedUsers(authenticatedUser.username);
+    if (!followed.length) {
+      Util.SUCCESS(callback, { articles: [] });
+      return;
+    }
+
+    const queryParams = {
+      TableName: articlesTable,
+      IndexName: 'updatedAt',
+      KeyConditionExpression: 'dummy = :dummy',
+      FilterExpression: 'author IN ',
+      ExpressionAttributeValues: {
+        ':dummy': 'OK',
+      },
+      ScanIndexForward: false,
+    };
+
+    // Query articlesTable to filter only authored by followed users
+    // This results in:
+    //   FilterExpression:
+    //      'author IN (:author0, author1, ...)',
+    //   ExpressionAttributeValues:
+    //      { ':dummy': 'OK', ':author0': 'authoress-kly3oz', ':author1': ... },
+    for (let i = 0; i < followed.length; ++i) {
+      queryParams.ExpressionAttributeValues[`:author${i}`] = followed[i];
+    }
+    queryParams.FilterExpression += '(' +
+      Object.keys(queryParams.ExpressionAttributeValues)
+      .filter(e => e !== ':dummy').join(",") +
+      ')';
+    console.log(`FilterExpression: [${queryParams.FilterExpression}]`);
+
+    Util.SUCCESS(callback, {
+      articles: await queryEnoughArticles(queryParams, authenticatedUser,
+        limit, offset),
+    });
   },
 
 };
+
+/**
+ * Given queryParams, repeatedly call query until we have enough records
+ * to satisfy (limit + offset)
+ */
+async function queryEnoughArticles(queryParams, authenticatedUser,
+  limit, offset) {
+
+  // Call query repeatedly, until we have enough records, or there are no more
+  const queryResultItems = [];
+  while (queryResultItems.length < (offset + limit)) {
+    const queryResult = await Util.DocumentClient.query(queryParams)
+      .promise();
+    queryResultItems.push(...queryResult.Items);
+    if (queryResult.LastEvaluatedKey) {
+      queryParams.ExclusiveStartKey = queryResult.LastEvaluatedKey;
+    } else {
+      break;
+    }
+  }
+
+  // Decorate last "limit" number of articles with author data
+  const articlePromises = [];
+  queryResultItems.slice(offset, offset + limit).forEach(a =>
+    articlePromises.push(transformRetrievedArticle(a, authenticatedUser)));
+  const articles = await Promise.all(articlePromises);
+  return articles;
+}
 
 /**
  * Given an article retrieved from table,
