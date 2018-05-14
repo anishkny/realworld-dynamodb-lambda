@@ -22,7 +22,7 @@ before(async () => {
     }
 
     if (NETWORK_DUMP_FILE) {
-      let reqDump = `## ${config.method.toUpperCase()} ${config.url}\n`;
+      let reqDump = `# \`${config.method.toUpperCase()} ${config.url}\`\n`;
       if (config.data) {
         reqDump += '```\n' +
           JSON.stringify(config.data, null, 2) + '\n' +
