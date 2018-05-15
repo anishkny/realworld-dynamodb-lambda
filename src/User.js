@@ -3,8 +3,12 @@ const usersTable = Util.getTableName('users');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
+/**
+ * @module User
+ */
 module.exports = {
 
+  /** Create user */
   async create(event, context, callback) {
     const body = JSON.parse(event.body);
 
@@ -63,6 +67,7 @@ module.exports = {
     });
   },
 
+  /** Login user */
   async login(event, context, callback) {
     const body = JSON.parse(event.body);
     if (!body.user) {
@@ -103,6 +108,7 @@ module.exports = {
     Util.SUCCESS(callback, { user: authenticatedUser });
   },
 
+  /** Get user */
   async get(event, context, callback) {
     const authenticatedUser = await authenticateAndGetUser(event);
     if (!authenticatedUser) {
@@ -190,6 +196,7 @@ module.exports = {
     Util.SUCCESS(callback, { profile });
   },
 
+  /** Create followed users */
   async getFollowedUsers(aUsername) {
     const user = (await Util.DocumentClient.get({
       TableName: usersTable,

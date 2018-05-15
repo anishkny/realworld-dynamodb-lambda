@@ -84,8 +84,9 @@ module.exports = {
       return;
     }
 
+    const authenticatedUser = await User.authenticateAndGetUser(event);
     Util.SUCCESS(callback, {
-      article: await transformRetrievedArticle(article)
+      article: await transformRetrievedArticle(article, authenticatedUser)
     });
   },
 
@@ -158,6 +159,7 @@ module.exports = {
     // Set/unset favorite bit and count for article
     const shouldFavorite = !(event.httpMethod === 'DELETE');
     if (shouldFavorite) {
+      /* istanbul ignore next */
       if (!article.favoritedBy) {
         article.favoritedBy = [];
       }
@@ -166,6 +168,7 @@ module.exports = {
     } else {
       article.favoritedBy = article.favoritedBy.filter(
         e => (e !== authenticatedUser.username));
+      /* istanbul ignore next */
       if (article.favoritedBy.length === 0) {
         delete article.favoritedBy;
       }
@@ -182,13 +185,14 @@ module.exports = {
     Util.SUCCESS(callback, { article });
   },
 
+  /** List articles */
   async list(event, context, callback) {
     const authenticatedUser = await User.authenticateAndGetUser(event);
     const params = event.queryStringParameters || {};
     const limit = parseInt(params.limit) || 20;
     const offset = parseInt(params.offset) || 0;
     if ((params.tag && params.author) ||
-      (params.tag && params.author) || (params.tag && params.author)) {
+      (params.author && params.favorited) || (params.favorited && params.tag)) {
       Util.ERROR(callback,
         'Only one of these can be specified: [tag, author, favorited]');
     }
@@ -218,6 +222,7 @@ module.exports = {
     });
   },
 
+  /** Get Articles feed */
   async getFeed(event, context, callback) {
     const authenticatedUser = await User.authenticateAndGetUser(event);
     if (!authenticatedUser) {
@@ -283,6 +288,7 @@ async function queryEnoughArticles(queryParams, authenticatedUser,
     const queryResult = await Util.DocumentClient.query(queryParams)
       .promise();
     queryResultItems.push(...queryResult.Items);
+    /* istanbul ignore next */
     if (queryResult.LastEvaluatedKey) {
       queryParams.ExclusiveStartKey = queryResult.LastEvaluatedKey;
     } else {

@@ -1,7 +1,6 @@
 const TestUtil = require('./TestUtil');
 const assert = require('assert');
 const axios = require('axios');
-const API_URL = process.env.API_URL;
 
 const username = `user1-${Math.random().toString(36)}`;
 const userToCreate = {
@@ -17,20 +16,20 @@ describe('User', async () => {
 
     it('should create user', async () => {
       const createdUser = (await axios.post(
-        `${API_URL}/users`, { user: userToCreate })).data.user;
+        `/users`, { user: userToCreate })).data.user;
       assertUserEquals(createdUser, userToCreate);
     });
 
     it('should disallow same username', async () => {
       await axios.post(
-        `${API_URL}/users`, { user: userToCreate }).catch(res => {
+        `/users`, { user: userToCreate }).catch(res => {
         assert.equal(res.response.status, 422);
         assert(/Username already taken/.test(res.response.data.errors.body[0]));
       });
     });
 
     it('should disallow same email', async () => {
-      await axios.post(`${API_URL}/users`, {
+      await axios.post(`/users`, {
         user: {
           username: 'user2',
           email: userToCreate.email,
@@ -43,21 +42,21 @@ describe('User', async () => {
     });
 
     it('should enforce required fields', async () => {
-      await axios.post(`${API_URL}/users`, {})
+      await axios.post(`/users`, {})
         .catch(res => {
           TestUtil.assertError(res, /User must be specified/);
         });
-      await axios.post(`${API_URL}/users`, {
+      await axios.post(`/users`, {
         user: { foo: 1 }
       }).catch(res => {
         TestUtil.assertError(res, /Username must be specified/);
       });
-      await axios.post(`${API_URL}/users`, {
+      await axios.post(`/users`, {
         user: { username: 1 }
       }).catch(res => {
         TestUtil.assertError(res, /Email must be specified/);
       });
-      await axios.post(`${API_URL}/users`, {
+      await axios.post(`/users`, {
         user: { username: 1, email: 2 }
       }).catch(res => {
         TestUtil.assertError(res, /Password must be specified/);
@@ -69,14 +68,14 @@ describe('User', async () => {
   describe('Login', async () => {
 
     it('should login', async () => {
-      loggedInUser = (await axios.post(`${API_URL}/users/login`, {
+      loggedInUser = (await axios.post(`/users/login`, {
         user: { email: userToCreate.email, password: userToCreate.password }
       })).data.user;
       assertUserEquals(loggedInUser, userToCreate);
     });
 
     it('should disallow unknown email', async () => {
-      await axios.post(`${API_URL}/users/login`, {
+      await axios.post(`/users/login`, {
         user: { email: Math.random().toString(36), password: 'somepassword' }
       }).catch(res => {
         TestUtil.assertError(res, /Email not found/);
@@ -84,7 +83,7 @@ describe('User', async () => {
     });
 
     it('should disallow wrong password', async () => {
-      await axios.post(`${API_URL}/users/login`, {
+      await axios.post(`/users/login`, {
         user: {
           email: userToCreate.email,
           password: Math.random().toString(36)
@@ -95,13 +94,13 @@ describe('User', async () => {
     });
 
     it('should enforce required fields', async () => {
-      await axios.post(`${API_URL}/users/login`, {}).catch(res => {
+      await axios.post(`/users/login`, {}).catch(res => {
         TestUtil.assertError(res, /User must be specified/);
       });
-      await axios.post(`${API_URL}/users/login`, { user: {} }).catch(res => {
+      await axios.post(`/users/login`, { user: {} }).catch(res => {
         TestUtil.assertError(res, /Email must be specified/);
       });
-      await axios.post(`${API_URL}/users/login`, {
+      await axios.post(`/users/login`, {
         user: { email: 'someemail' }
       }).catch(res => {
         TestUtil.assertError(res, /Password must be specified/);
@@ -113,23 +112,23 @@ describe('User', async () => {
   describe('Get', async () => {
 
     it('should get current user', async () => {
-      const authenticatedUser = (await axios.get(`${API_URL}/user`, {
+      const authenticatedUser = (await axios.get(`/user`, {
         headers: { 'Authorization': `Token ${loggedInUser.token}` }
       })).data.user;
       assertUserEquals(authenticatedUser, loggedInUser);
     });
 
     it('should disallow bad tokens', async () => {
-      await axios.get(`${API_URL}/user`)
+      await axios.get(`/user`)
         .catch(res =>
           TestUtil.assertError(res, /Token not present or invalid/));
-      await axios.get(`${API_URL}/user`, { headers: { foo: 'bar' } })
+      await axios.get(`/user`, { headers: { foo: 'bar' } })
         .catch(res =>
           TestUtil.assertError(res, /Token not present or invalid/));
-      await axios.get(`${API_URL}/user`, { headers: { Authorization: 'foo' } })
+      await axios.get(`/user`, { headers: { Authorization: 'foo' } })
         .catch(res =>
           TestUtil.assertError(res, /Token not present or invalid/));
-      await axios.get(`${API_URL}/user`, {
+      await axios.get(`/user`, {
         headers: { Authorization: 'Token: foo' }
       }).catch(res =>
         TestUtil.assertError(res, /Token not present or invalid/));
@@ -141,13 +140,13 @@ describe('User', async () => {
 
     it('should get profile', async () => {
       const profile = (await axios.get(
-        `${API_URL}/profiles/${userToCreate.username}`)).data.profile;
+        `/profiles/${userToCreate.username}`)).data.profile;
       // TODO: Assert on profile
       (profile);
     });
 
     it('should disallow unknown username', async () => {
-      await axios.get(`${API_URL}/profiles/foo_${Math.random().toString(36)}`)
+      await axios.get(`/profiles/foo_${Math.random().toString(36)}`)
         .catch(res => { TestUtil.assertError(res, /User not found/); });
     });
 
@@ -156,7 +155,7 @@ describe('User', async () => {
     it('should follow user', async () => {
 
       // Create user who can be followed
-      await axios.post(`${API_URL}/users`, {
+      await axios.post(`/users`, {
         user: {
           username: 'followed_user',
           email: 'followed_user@mail.com',
@@ -165,7 +164,7 @@ describe('User', async () => {
       });
       const followedProfile = (await axios({
         method: 'POST',
-        url: `${API_URL}/profiles/followed_user/follow`,
+        url: `/profiles/followed_user/follow`,
         headers: { 'Authorization': `Token ${loggedInUser.token}` },
       })).data.profile;
       (followedProfile); // TODO: Assert on this
@@ -173,12 +172,12 @@ describe('User', async () => {
       // Following a user again should have no effect
       await axios({
         method: 'POST',
-        url: `${API_URL}/profiles/followed_user/follow`,
+        url: `/profiles/followed_user/follow`,
         headers: { 'Authorization': `Token ${loggedInUser.token}` },
       });
       const retrievedFollowedProfile = (await axios({
         method: 'GET',
-        url: `${API_URL}/profiles/followed_user`,
+        url: `/profiles/followed_user`,
         headers: { 'Authorization': `Token ${loggedInUser.token}` },
       })).data.profile;
       (retrievedFollowedProfile); // TODO: Assert on this
@@ -186,7 +185,7 @@ describe('User', async () => {
       // Get followed profile without authentication
       const retrievedFollowedProfileNoAuth = (await axios({
         method: 'GET',
-        url: `${API_URL}/profiles/followed_user`,
+        url: `/profiles/followed_user`,
       })).data.profile;
       (retrievedFollowedProfileNoAuth); // TODO: Assert on this
 
@@ -194,7 +193,7 @@ describe('User', async () => {
       const secondFollowerUsername = `user2-${Math.random().toString(36)}`;
       const secondFollowerUser = (await axios({
         method: 'POST',
-        url: `${API_URL}/users`,
+        url: `/users`,
         data: {
           user: {
             username: secondFollowerUsername,
@@ -205,7 +204,7 @@ describe('User', async () => {
       })).data.user;
       const secondFollowedProfile = (await axios({
         method: 'POST',
-        url: `${API_URL}/profiles/followed_user/follow`,
+        url: `/profiles/followed_user/follow`,
         headers: { 'Authorization': `Token ${secondFollowerUser.token}` },
       })).data.profile;
       (secondFollowedProfile); // TODO: Assert on this
@@ -214,7 +213,7 @@ describe('User', async () => {
     it('should unfollow user', async () => {
       const unfollowedProfile = (await axios({
         method: 'DELETE',
-        url: `${API_URL}/profiles/followed_user/follow`,
+        url: `/profiles/followed_user/follow`,
         headers: { 'Authorization': `Token ${loggedInUser.token}` },
       })).data.profile;
       (unfollowedProfile);
@@ -223,7 +222,7 @@ describe('User', async () => {
     it('should disallow following with bad token', async () => {
       await await axios({
         method: 'POST',
-        url: `${API_URL}/profiles/followed_user/follow`,
+        url: `/profiles/followed_user/follow`,
       }).catch(res =>
         TestUtil.assertError(res, /Token not present or invalid/));
     });
