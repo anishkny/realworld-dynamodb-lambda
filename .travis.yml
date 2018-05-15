@@ -13,6 +13,7 @@ before_deploy:
   - mkdir -p gh-pages
   - npm run build:docs
   - cp -r ./coverage gh-pages
+  - cp -r ./.test_output gh-pages/test-output
 
 deploy:
   provider: pages
