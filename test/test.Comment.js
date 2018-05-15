@@ -44,6 +44,29 @@ describe('Comment', async () => {
       // TODO: Assert on createdComments
     });
 
+    it('should disallow unauthenticated user', async () => {
+      await axios.post(
+        `/articles/${globals.testArticle.slug}/comments`, {}, {
+          headers: { Authorization: 'Token foobar' },
+        }).catch(res => TestUtil.assertError(res, /Must be logged in/));
+    });
+
+    it('should enforce comment body', async () => {
+      await axios.post(`/articles/${globals.testArticle.slug}/comments`, {}, {
+        headers: { Authorization: `Token ${globals.commenterUser.token}` },
+      }).catch(res => TestUtil.assertError(res, /Comment must be specified/));
+    });
+
+    it('should disallow non-existent article', async () => {
+      await axios.post('/articles/foobar/comments', {
+        comment: {
+          body: `test comment ${TestUtil.randomString()}`
+        },
+      }, {
+        headers: { Authorization: `Token ${globals.commenterUser.token}` },
+      }).catch(res => TestUtil.assertError(res, /Article not found/));
+    });
+
   });
 
   describe('Get', async () => {
@@ -76,6 +99,24 @@ describe('Comment', async () => {
           headers: { Authorization: `Token ${globals.authorUser.token}` },
         }).catch(res => {
         TestUtil.assertError(res, /Only comment author can delete/);
+      });
+    });
+
+    it('should disallow unauthenticated user', async () => {
+      await axios.delete(`/articles/${globals.testArticle.slug}` +
+        `/comments/${globals.createdComments[1].id}`, {
+          headers: { Authorization: 'Token foo' },
+        }).catch(res => {
+        TestUtil.assertError(res, /Must be logged in/);
+      });
+    });
+
+    it('should disallow deleting unknown comment', async () => {
+      await axios.delete(`/articles/${globals.testArticle.slug}` +
+        '/comments/foobar_id', {
+          headers: { Authorization: `Token ${globals.authorUser.token}` },
+        }).catch(res => {
+        TestUtil.assertError(res, /Comment ID not found/);
       });
     });
 
