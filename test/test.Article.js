@@ -135,6 +135,13 @@ describe('Article', async () => {
         })).data.article;
       assert(favoritedArticle.favorited === true,
         `Expected article to have been favorited`);
+
+      const retrievedArticle = (await axios.get(`/articles/` +
+        `${globals.createdArticleWithoutTags.slug}`, {
+          headers: { Authorization: `Token ${globals.nonAuthorUser.token}` },
+        })).data.article;
+      assert(retrievedArticle.favorited === true,
+        `Expected article to have been favorited`);
     });
 
     it('should disallow favoriting by unauthenticated user', async () => {

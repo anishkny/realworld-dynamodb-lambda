@@ -84,8 +84,9 @@ module.exports = {
       return;
     }
 
+    const authenticatedUser = await User.authenticateAndGetUser(event);
     Util.SUCCESS(callback, {
-      article: await transformRetrievedArticle(article)
+      article: await transformRetrievedArticle(article, authenticatedUser)
     });
   },
 
