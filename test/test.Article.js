@@ -301,6 +301,18 @@ describe('Article', async () => {
       // TODO: Assert on retrieved articles
     });
 
+    it('should disallow multiple of author/tag/favorited', async () => {
+      [
+        ['tag', 'author', ],
+        ['author', 'favorited', ],
+        ['favorited', 'tag', ],
+      ].forEach(async (params) => {
+        await axios.get(`/articles?${params[0]}=foo&${params[1]}=bar`)
+          .catch(res => TestUtil.assertError(res,
+            /Only one of these can be specified/));
+      });
+    });
+
   });
 
   describe('Feed', async () => {
@@ -337,6 +349,11 @@ describe('Article', async () => {
       console.log('Feed2:');
       console.log(feed2);
       // TODO: Assert on feed
+    });
+
+    it('should disallow unauthenticated feed', async () => {
+      await axios.get('/articles/feed').catch(res => TestUtil.assertError(res,
+        /Must be logged in/));
     });
 
   });
