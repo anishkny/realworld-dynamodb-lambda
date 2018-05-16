@@ -11,6 +11,10 @@ before(async () => {
   console.log(`Testing API_URL: [${API_URL}]`);
   axios.defaults.baseURL = API_URL;
 
+  process.stdout.write('Purging data... ');
+  await axios.delete(`/__TESTUTILS__/purge`);
+  console.log('Done!\n');
+
   // Setup request/response interceptors for testing
   axios.interceptors.request.use(async (config) => {
 
@@ -52,10 +56,6 @@ before(async () => {
     });
   }
 
-
-  process.stdout.write('Purging data... ');
-  await axios.delete(`/TESTUTILS/purge`);
-  console.log('Done!\n');
 });
 
 describe('Util', async () => {
