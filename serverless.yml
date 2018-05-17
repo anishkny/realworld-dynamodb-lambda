@@ -34,95 +34,146 @@ functions:
   createUser:
     handler: src/User.create
     events:
-      - http: POST /users
+      - http:
+          method: POST
+          path: /users
+          cors: true
 
   loginUser:
     handler: src/User.login
     events:
-      - http: POST /users/login
+      - http:
+          method: POST
+          path: /users/login
+          cors: true
 
   getUser:
     handler: src/User.get
     events:
-      - http: GET /user
+      - http:
+          method: GET
+          path: /user
+          cors: true
 
   getProfile:
     handler: src/User.getProfile
     events:
-      - http: GET /profiles/{username}
+      - http:
+          method: GET
+          path: /profiles/{username}
+          cors: true
 
   followUser:
     handler: src/User.follow
     events:
-      - http: POST /profiles/{username}/follow
+      - http:
+          method: POST
+          path: /profiles/{username}/follow
+          cors: true
 
   unfollowUser:
     handler: src/User.follow
     events:
-      - http: DELETE /profiles/{username}/follow
+      - http:
+          method: DELETE
+          path: /profiles/{username}/follow
+          cors: true
 
   ## Articles API
   createArticle:
     handler: src/Article.create
     events:
-      - http: POST /articles
+      - http:
+          method: POST
+          path: /articles
+          cors: true
 
   getArticle:
     handler: src/Article.get
     events:
-      - http: GET /articles/{slug}
+      - http:
+          method: GET
+          path: /articles/{slug}
+          cors: true
 
   deleteArticle:
     handler: src/Article.delete
     events:
-      - http: DELETE /articles/{slug}
+      - http:
+          method: DELETE
+          path: /articles/{slug}
+          cors: true
 
   favoriteArticle:
     handler: src/Article.favorite
     events:
-      - http: POST /articles/{slug}/favorite
+      - http:
+          method: POST
+          path: /articles/{slug}/favorite
+          cors: true
 
   unfavoriteArticle:
     handler: src/Article.favorite
     events:
-      - http: DELETE /articles/{slug}/favorite
+      - http:
+          method: DELETE
+          path: /articles/{slug}/favorite
+          cors: true
 
   listArticles:
     handler: src/Article.list
     events:
-      - http: GET /articles
+      - http:
+          method: GET
+          path: /articles
+          cors: true
 
   getArticlesFeed:
     handler: src/Article.getFeed
     events:
-      - http: GET /articles/feed
+      - http:
+          method: GET
+          path: /articles/feed
+          cors: true
 
   ## Comments API
   createComment:
     handler: src/Comment.create
     events:
-      - http: POST /articles/{slug}/comments
+      - http:
+          method: POST
+          path: /articles/{slug}/comments
+          cors: true
 
   getComments:
     handler: src/Comment.get
     events:
-      - http: GET /articles/{slug}/comments
+      - http:
+          method: GET
+          path: /articles/{slug}/comments
+          cors: true
 
   deleteComment:
     handler: src/Comment.delete
     events:
-      - http: DELETE /articles/{slug}/comments/{id}
+      - http:
+          method: DELETE
+          path: /articles/{slug}/comments/{id}
+          cors: true
 
   ## Utils API
   ping:
     handler: src/Util.ping
     events:
-      - http: GET ping
+      - http:
+          method: GET
+          path: /ping
+          cors: true
 
   purgeData:
     handler: src/Util.purgeData
     events:
-      - http: DELETE /TESTUTILS/purge
+      - http: DELETE /__TESTUTILS__/purge
 
 resources:
   Resources:

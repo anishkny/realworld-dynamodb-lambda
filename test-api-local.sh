@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -x
 
-./start-server.sh
+SERVERLESS_OFFLINE_EXTRA_ARGS="--dontPrintOutput" ./start-server.sh
 
 rm -rf .test_output && mkdir -p .test_output
 touch .test_output/network.md

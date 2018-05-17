@@ -11,6 +11,10 @@ before(async () => {
   console.log(`Testing API_URL: [${API_URL}]`);
   axios.defaults.baseURL = API_URL;
 
+  process.stdout.write('Purging data... ');
+  await axios.delete(`/__TESTUTILS__/purge`);
+  console.log('Done!\n');
+
   // Setup request/response interceptors for testing
   axios.interceptors.request.use(async (config) => {
 
@@ -52,10 +56,6 @@ before(async () => {
     });
   }
 
-
-  process.stdout.write('Purging data... ');
-  await axios.delete(`/TESTUTILS/purge`);
-  console.log('Done!\n');
 });
 
 describe('Util', async () => {
@@ -68,6 +68,16 @@ describe('Util', async () => {
         assert.equal(typeof pong.data[k], 'string',
           `Expected key not found: [${k}], ` +
           `Actual: [${JSON.stringify(pong.data)}]`);
+      });
+
+      // Verify CORS headers
+      [
+        ['access-control-allow-origin', '*'],
+        ['access-control-allow-credentials', 'true'],
+      ].forEach(pair => {
+        assert.equal(pong.headers[pair[0]], pair[1],
+          `Expected header not found: [${pair[0]}]=[${pair[1]}]`
+        );
       });
     });
 

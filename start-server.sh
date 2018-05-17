@@ -14,5 +14,5 @@ java -version
 # Start local dynamodb and offline plugins
 serverless dynamodb start --migrate &
 sleep 5
-nyc serverless offline &
+nyc serverless offline $SERVERLESS_OFFLINE_EXTRA_ARGS &
 sleep 5
