@@ -69,6 +69,16 @@ describe('Util', async () => {
           `Expected key not found: [${k}], ` +
           `Actual: [${JSON.stringify(pong.data)}]`);
       });
+
+      // Verify CORS headers
+      [
+        ['access-control-allow-origin', '*'],
+        ['access-control-allow-credentials', 'true'],
+      ].forEach(pair => {
+        assert.equal(pong.headers[pair[0]], pair[1],
+          `Expected header not found: [${pair[0]}]=[${pair[1]}]`
+        );
+      });
     });
 
   });
