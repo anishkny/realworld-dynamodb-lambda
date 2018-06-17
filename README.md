@@ -11,8 +11,7 @@
 > ### AWS DynamoDB + Lambda codebase containing real world examples (CRUD, auth, advanced patterns, etc) that adheres to the [RealWorld](https://github.com/gothinkster/realworld-example-apps) spec and API.
 
 
-### *Demo (Coming soon!)*&nbsp;&nbsp;&nbsp;&nbsp;[RealWorld](https://github.com/gothinkster/realworld)&nbsp;&nbsp;&nbsp;&nbsp;[JSDoc](https://anishkny.github.io/realworld-dynamodb-lambda/jsdoc)&nbsp;&nbsp;&nbsp;&nbsp;[Coverage](https://anishkny.github.io/realworld-dynamodb-lambda/coverage)
-
+### [Demo](https://anishkny.github.io/realworld-dynamodb-lambda/test-output/network.html)
 
 This codebase was created to demonstrate a fully fledged fullstack application built with **AWS DynamoDB + Lambda** including CRUD operations, authentication, routing, pagination, and more.
 
@@ -20,11 +19,31 @@ We've gone to great lengths to adhere to the **AWS DynamoDB + Lambda** community
 
 For more information on how to this works with other frontends/backends, head over to the [RealWorld](https://github.com/gothinkster/realworld) repo.
 
-
-# How it works
-
-> Describe the general architecture of your app here
-
 # Getting started
 
-> npm install, npm start, etc.
+*Requires Node 8 or higher*
+
+## Starting the local server
+
+```
+npm install
+npm run start
+```
+
+This should start local DynamoDB emulator and Serverless offline. You can now make API calls against `http://localhost:3000` like this:
+
+```
+curl http://localhost:3000/articles
+
+Serverless: GET /articles (λ: listArticles)
+Serverless: The first request might take a few extra seconds
+Serverless: [200] {"statusCode":200,"headers":{"Access-Control-Allow-Origin":"*","Access-Control-Allow-Credentials":true},"body":"{\"articles\":[]}"}
+```
+
+## Running tests locally
+```
+npm test
+```
+See sample test run [log](https://anishkny.github.io/realworld-dynamodb-lambda/test-output/test.log) and [network traffic](https://anishkny.github.io/realworld-dynamodb-lambda/test-output/network.html).
+
+# How it works

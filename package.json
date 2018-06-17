@@ -1,7 +1,7 @@
 {
   "scripts": {
     "lint": "eslint src/ test/",
-    "test": "npm run lint && AWS_ACCESS_KEY_ID=foo AWS_SECRET_ACCESS_KEY=bar ./test-api-local.sh",
+    "test": "npm run lint && ./test-api-local.sh",
     "start": "./start-server.sh",
     "stop": "./stop-server.sh",
     "deploy": "serverless deploy",
