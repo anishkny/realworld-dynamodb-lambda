@@ -10,12 +10,12 @@
     "postinstall": "serverless dynamodb install 2>&1 | awk 'NF'"
   },
   "devDependencies": {
-    "aws-sdk": "^2.152.0",
+    "aws-sdk": "2.279.1",
     "axios": "^0.18.0",
-    "eslint": "^5.0.0",
+    "eslint": "^5.2.0",
     "mocha": "^5.0.4",
     "node-jre": "^0.2.3",
-    "nyc": "^12.0.1",
+    "nyc": "^12.0.2",
     "serverless": "^1.26.1",
     "serverless-dynamodb-local": "^0.2.28",
     "serverless-offline": "^3.25.6",
