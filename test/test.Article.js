@@ -237,22 +237,18 @@ describe('Article', async () => {
     it('should list articles', async () => {
       const allArticles =
         (await axios.get(`/articles`)).data.articles;
-      console.log('All articles:');
-      console.log(allArticles);
-
       // TODO: Assert on retrieved articles
+      (allArticles);
     });
 
     it('should list articles with tag', async () => {
       const articles_tag_7 =
         (await axios.get(`/articles?tag=tag_7`)).data.articles;
-      console.log('Articles with tag_7:');
-      console.log(articles_tag_7);
+      (articles_tag_7);
 
       const articles_tag_mod_3_2 =
         (await axios.get(`/articles?tag=tag_mod_3_2`)).data.articles;
-      console.log('Articles with tag_mod_3_2:');
-      console.log(articles_tag_mod_3_2);
+      (articles_tag_mod_3_2);
 
       // TODO: Assert on retrieved articles
     });
@@ -261,8 +257,7 @@ describe('Article', async () => {
       const articles_of_authoress = (await axios.get(
           `/articles?author=${globals.authoressUser.username}`))
         .data.articles;
-      console.log(`Articles by [${globals.authoressUser.username}]:`);
-      console.log(articles_of_authoress);
+      (articles_of_authoress);
 
       // TODO: Assert on retrieved articles
     });
@@ -271,8 +266,7 @@ describe('Article', async () => {
       const favorited_articles = (await axios.get(
           `/articles?favorited=${globals.nonAuthorUser.username}`))
         .data.articles;
-      console.log(`Articles favorited by [${globals.nonAuthorUser.username}]:`);
-      console.log(favorited_articles);
+      (favorited_articles);
 
       // TODO: Assert on retrieved articles
     });
@@ -281,15 +275,13 @@ describe('Article', async () => {
       const articles_batch_1 = (await axios.get(
           `/articles?author=${globals.authorUser.username}&limit=2`))
         .data.articles;
-      console.log(`Batch 1 articles by: [${globals.authorUser.username}]:`);
-      console.log(articles_batch_1);
+      (articles_batch_1);
 
       const articles_batch_2 = (await axios.get(
           `/articles?author=${globals.authorUser.username}` +
           `&limit=2&offset=2`))
         .data.articles;
-      console.log(`Batch 2 articles by: [${globals.authorUser.username}]:`);
-      console.log(articles_batch_2);
+      (articles_batch_2);
 
       // TODO: Assert on retrieved articles
     });
@@ -322,8 +314,7 @@ describe('Article', async () => {
       const feed0 = (await axios.get(`/articles/feed`, {
         headers: { Authorization: `Token ${globals.nonAuthorUser.token}` },
       })).data.articles;
-      console.log('Feed0:');
-      console.log(feed0);
+      (feed0);
       // TODO: Assert on feed
 
       // Get feed after following only authoressUser
@@ -334,8 +325,7 @@ describe('Article', async () => {
       const feed1 = (await axios.get(`/articles/feed`, {
         headers: { Authorization: `Token ${globals.nonAuthorUser.token}` },
       })).data.articles;
-      console.log('Feed1:');
-      console.log(feed1);
+      (feed1);
       // TODO: Assert on feed
 
       // Get feed after following authorUser too
@@ -346,8 +336,7 @@ describe('Article', async () => {
       const feed2 = (await axios.get(`/articles/feed`, {
         headers: { Authorization: `Token ${globals.nonAuthorUser.token}` },
       })).data.articles;
-      console.log('Feed2:');
-      console.log(feed2);
+      (feed2);
       // TODO: Assert on feed
     });
 
