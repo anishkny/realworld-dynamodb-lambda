@@ -9,40 +9,33 @@ const jwt = require('jsonwebtoken');
 module.exports = {
 
   /** Create user */
-  async create(event, context, callback) {
+  async create(event) {
     const body = JSON.parse(event.body);
 
     if (!body.user) {
-      Util.ERROR(callback, 'User must be specified.');
-      return;
+      return Util.envelop('User must be specified.', 422);
     }
-
     const newUser = body.user;
     if (!newUser.username) {
-      Util.ERROR(callback, 'Username must be specified.');
-      return;
+      return Util.envelop('Username must be specified.', 422);
     }
     if (!newUser.email) {
-      Util.ERROR(callback, 'Email must be specified.');
-      return;
+      return Util.envelop('Email must be specified.', 422);
     }
     if (!newUser.password) {
-      Util.ERROR(callback, 'Password must be specified.');
-      return;
+      return Util.envelop('Password must be specified.', 422);
     }
 
     // Verify username is not taken
     const userWithThisUsername = await getUserByUsername(newUser.username);
     if (userWithThisUsername.Item) {
-      Util.ERROR(callback, `Username already taken: [${newUser.username}]`);
-      return;
+      return Util.envelop(`Username already taken: [${newUser.username}]`, 422);
     }
 
     // Verify email is not taken
     const userWithThisEmail = await getUserByEmail(newUser.email);
     if (userWithThisEmail.Count !== 0) {
-      Util.ERROR(callback, `Email already taken: [${newUser.email}]`);
-      return;
+      return Util.envelop(`Email already taken: [${newUser.email}]`, 422);
     }
 
     // Add new entry to usersTable
@@ -56,7 +49,7 @@ module.exports = {
       },
     }).promise();
 
-    Util.SUCCESS(callback, {
+    return Util.envelop({
       user: {
         email: newUser.email,
         token: mintToken(newUser.username),
@@ -68,34 +61,29 @@ module.exports = {
   },
 
   /** Login user */
-  async login(event, context, callback) {
+  async login(event) {
     const body = JSON.parse(event.body);
     if (!body.user) {
-      Util.ERROR(callback, 'User must be specified.');
-      return;
+      return Util.envelop('User must be specified.', 422);
     }
     const user = body.user;
     if (!user.email) {
-      Util.ERROR(callback, 'Email must be specified.');
-      return;
+      return Util.envelop('Email must be specified.', 422);
     }
     if (!user.password) {
-      Util.ERROR(callback, 'Password must be specified.');
-      return;
+      return Util.envelop('Password must be specified.', 422);
     }
 
     // Get user with this email
     const userWithThisEmail = await getUserByEmail(user.email);
     if (userWithThisEmail.Count !== 1) {
-      Util.ERROR(callback, `Email not found: [${user.email}]`);
-      return;
+      return Util.envelop(`Email not found: [${user.email}]`, 422);
     }
 
     // Attempt to match password
     if (!bcrypt.compareSync(user.password,
         userWithThisEmail.Items[0].password)) {
-      Util.ERROR(callback, 'Wrong password.');
-      return;
+      return Util.envelop('Wrong password.', 422);
     }
 
     const authenticatedUser = {
@@ -105,17 +93,16 @@ module.exports = {
       bio: userWithThisEmail.Items[0].bio || '',
       image: userWithThisEmail.Items[0].image || '',
     };
-    Util.SUCCESS(callback, { user: authenticatedUser });
+    return Util.envelop({ user: authenticatedUser });
   },
 
   /** Get user */
-  async get(event, context, callback) {
+  async get(event) {
     const authenticatedUser = await authenticateAndGetUser(event);
     if (!authenticatedUser) {
-      Util.ERROR(callback, 'Token not present or invalid.');
-      return;
+      return Util.envelop('Token not present or invalid.', 422);
     }
-    Util.SUCCESS(callback, {
+    return Util.envelop({
       user: {
         email: authenticatedUser.email,
         token: getTokenFromEvent(event),
@@ -129,26 +116,24 @@ module.exports = {
   authenticateAndGetUser,
   getUserByUsername,
 
-  async getProfile(event, context, callback) {
+  async getProfile(event) {
     const username = event.pathParameters.username;
     const authenticatedUser =
       await authenticateAndGetUser(event);
     const profile = await getProfileByUsername(username,
       authenticatedUser);
     if (!profile) {
-      Util.ERROR(callback, `User not found: [${username}]`);
-      return;
+      return Util.envelop(`User not found: [${username}]`, 422);
     }
-    Util.SUCCESS(callback, { profile });
+    return Util.envelop({ profile });
   },
 
   getProfileByUsername,
 
-  async follow(event, context, callback) {
+  async follow(event) {
     const authenticatedUser = await authenticateAndGetUser(event);
     if (!authenticatedUser) {
-      Util.ERROR(callback, 'Token not present or invalid.');
-      return;
+      return Util.envelop('Token not present or invalid.', 422);
     }
     const username = event.pathParameters.username;
     const user = (await getUserByUsername(username)).Item;
@@ -193,7 +178,7 @@ module.exports = {
       image: user.image || '',
       following: shouldFollow,
     };
-    Util.SUCCESS(callback, { profile });
+    return Util.envelop({ profile });
   },
 
   /** Create followed users */

@@ -9,23 +9,20 @@ const slugify = require('slugify');
 module.exports = {
 
   /** Create article */
-  async create(event, context, callback) {
+  async create(event) {
     const authenticatedUser = await User.authenticateAndGetUser(event);
     if (!authenticatedUser) {
-      Util.ERROR(callback, 'Must be logged in.');
-      return;
+      return Util.envelop('Must be logged in.', 422);
     }
 
     const body = JSON.parse(event.body);
     if (!body.article) {
-      Util.ERROR(callback, 'Article must be specified.');
-      return;
+      return Util.envelop('Article must be specified.', 422);
     }
     const articleData = body.article;
     for (const expectedField of ['title', 'description', 'body']) {
       if (!articleData[expectedField]) {
-        Util.ERROR(callback, `${expectedField} must be specified.`);
-        return;
+        return Util.envelop(`${expectedField} must be specified.`, 422);
       }
     }
 
@@ -62,17 +59,16 @@ module.exports = {
       following: false,
     };
 
-    Util.SUCCESS(callback, { article });
+    return Util.envelop({ article });
   },
 
   /** Get article */
-  async get(event, context, callback) {
+  async get(event) {
     const slug = event.pathParameters.slug;
 
     /* istanbul ignore if  */
     if (!slug) {
-      Util.ERROR('Slug must be specified.');
-      return;
+      return Util.envelop('Slug must be specified.', 422);
     }
 
     const article = (await Util.DocumentClient.get({
@@ -80,30 +76,27 @@ module.exports = {
       Key: { slug },
     }).promise()).Item;
     if (!article) {
-      Util.ERROR(callback, `Article not found: [${slug}]`);
-      return;
+      return Util.envelop(`Article not found: [${slug}]`, 422);
     }
 
     const authenticatedUser = await User.authenticateAndGetUser(event);
-    Util.SUCCESS(callback, {
+    return Util.envelop({
       article: await transformRetrievedArticle(article, authenticatedUser)
     });
   },
 
   /** Delete article */
-  async delete(event, context, callback) {
+  async delete(event) {
     const authenticatedUser = await User.authenticateAndGetUser(event);
     if (!authenticatedUser) {
-      Util.ERROR(callback, 'Must be logged in.');
-      return;
+      return Util.envelop('Must be logged in.', 422);
     }
 
     const slug = event.pathParameters.slug;
 
     /* istanbul ignore if  */
     if (!slug) {
-      Util.ERROR('Slug must be specified.');
-      return;
+      return Util.envelop('Slug must be specified.', 422);
     }
 
     const article = (await Util.DocumentClient.get({
@@ -111,15 +104,13 @@ module.exports = {
       Key: { slug },
     }).promise()).Item;
     if (!article) {
-      Util.ERROR(callback, `Article not found: [${slug}]`);
-      return;
+      return Util.envelop(`Article not found: [${slug}]`, 422);
     }
 
     // Ensure article is authored by authenticatedUser
     if (article.author !== authenticatedUser.username) {
-      Util.ERROR(callback,
-        `Article can only be deleted by author: [${article.author}]`);
-      return;
+      return Util.envelop('Article can only be deleted by author: ' +
+        `[${article.author}]`, 422);
     }
 
     await Util.DocumentClient.delete({
@@ -127,24 +118,21 @@ module.exports = {
       Key: { slug },
     }).promise();
 
-    Util.SUCCESS(callback, null);
-    return;
+    return Util.envelop({});
   },
 
   /** Favorite/unfavorite article */
-  async favorite(event, context, callback) {
+  async favorite(event) {
     const authenticatedUser = await User.authenticateAndGetUser(event);
     if (!authenticatedUser) {
-      Util.ERROR(callback, 'Must be logged in.');
-      return;
+      return Util.envelop('Must be logged in.', 422);
     }
 
     const slug = event.pathParameters.slug;
 
     /* istanbul ignore if  */
     if (!slug) {
-      Util.ERROR('Slug must be specified.');
-      return;
+      return Util.envelop('Slug must be specified.', 422);
     }
 
     let article = (await Util.DocumentClient.get({
@@ -152,8 +140,7 @@ module.exports = {
       Key: { slug },
     }).promise()).Item;
     if (!article) {
-      Util.ERROR(callback, `Article not found: [${slug}]`);
-      return;
+      return Util.envelop(`Article not found: [${slug}]`, 422);
     }
 
     // Set/unset favorite bit and count for article
@@ -182,19 +169,19 @@ module.exports = {
 
     article = await transformRetrievedArticle(article);
     article.favorited = shouldFavorite;
-    Util.SUCCESS(callback, { article });
+    return Util.envelop({ article });
   },
 
   /** List articles */
-  async list(event, context, callback) {
+  async list(event) {
     const authenticatedUser = await User.authenticateAndGetUser(event);
     const params = event.queryStringParameters || {};
     const limit = parseInt(params.limit) || 20;
     const offset = parseInt(params.offset) || 0;
     if ((params.tag && params.author) ||
       (params.author && params.favorited) || (params.favorited && params.tag)) {
-      Util.ERROR(callback,
-        'Only one of these can be specified: [tag, author, favorited]');
+      return Util.envelop(
+        'Only one of these can be specified: [tag, author, favorited]', 422);
     }
     const queryParams = {
       TableName: articlesTable,
@@ -215,19 +202,17 @@ module.exports = {
       queryParams.FilterExpression = 'contains(favoritedBy, :favorited)';
       queryParams.ExpressionAttributeValues[':favorited'] = params.favorited;
     }
-
-    Util.SUCCESS(callback, {
+    return Util.envelop({
       articles: await queryEnoughArticles(queryParams, authenticatedUser,
         limit, offset)
     });
   },
 
   /** Get Articles feed */
-  async getFeed(event, context, callback) {
+  async getFeed(event) {
     const authenticatedUser = await User.authenticateAndGetUser(event);
     if (!authenticatedUser) {
-      Util.ERROR(callback, 'Must be logged in.');
-      return;
+      return Util.envelop('Must be logged in.', 422);
     }
 
     const params = event.queryStringParameters || {};
@@ -237,8 +222,7 @@ module.exports = {
     // Get followed users
     const followed = await User.getFollowedUsers(authenticatedUser.username);
     if (!followed.length) {
-      Util.SUCCESS(callback, { articles: [] });
-      return;
+      return Util.envelop({ articles: [] });
     }
 
     const queryParams = {
@@ -266,8 +250,7 @@ module.exports = {
       .filter(e => e !== ':dummy').join(",") +
       ')';
     console.log(`FilterExpression: [${queryParams.FilterExpression}]`);
-
-    Util.SUCCESS(callback, {
+    return Util.envelop({
       articles: await queryEnoughArticles(queryParams, authenticatedUser,
         limit, offset),
     });

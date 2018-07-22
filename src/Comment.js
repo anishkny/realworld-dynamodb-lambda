@@ -10,17 +10,15 @@ const uuidv4 = require('uuid/v4');
 module.exports = {
 
   /** Create comment */
-  async create(event, context, callback) {
+  async create(event) {
     const authenticatedUser = await User.authenticateAndGetUser(event);
     if (!authenticatedUser) {
-      Util.ERROR(callback, 'Must be logged in.');
-      return;
+      return Util.envelop('Must be logged in.', 422);
     }
 
     const body = JSON.parse(event.body);
     if (!body.comment || !body.comment.body) {
-      Util.ERROR(callback, 'Comment must be specified.');
-      return;
+      return Util.envelop('Comment must be specified.', 422);
     }
     const commentBody = body.comment.body;
 
@@ -30,8 +28,7 @@ module.exports = {
       Key: { slug },
     }).promise()).Item;
     if (!article) {
-      Util.ERROR(callback, `Article not found: [${slug}]`);
-      return;
+      return Util.envelop(`Article not found: [${slug}]`, 422);
     }
 
     const timestamp = (new Date()).getTime();
@@ -56,11 +53,11 @@ module.exports = {
       following: false,
     };
 
-    Util.SUCCESS(callback, { comment });
+    return Util.envelop({ comment });
   },
 
   /** Get comments for an article */
-  async get(event, context, callback) {
+  async get(event) {
     const authenticatedUser = await User.authenticateAndGetUser(event);
     const slug = event.pathParameters.slug;
 
@@ -79,15 +76,14 @@ module.exports = {
         authenticatedUser);
     }
 
-    Util.SUCCESS(callback, { comments });
+    return Util.envelop({ comments });
   },
 
   /** Delete comment */
-  async delete(event, context, callback) {
+  async delete(event) {
     const authenticatedUser = await User.authenticateAndGetUser(event);
     if (!authenticatedUser) {
-      Util.ERROR(callback, 'Must be logged in.');
-      return;
+      return Util.envelop('Must be logged in.', 422);
     }
     const commentId = event.pathParameters.id;
 
@@ -98,15 +94,13 @@ module.exports = {
       },
     }).promise()).Item;
     if (!comment) {
-      Util.ERROR(callback, `Comment ID not found: [${commentId}]`);
-      return;
+      return Util.envelop(`Comment ID not found: [${commentId}]`, 422);
     }
 
     // Only comment author can delete comment
     if (comment.author !== authenticatedUser.username) {
-      Util.ERROR(callback,
-        `Only comment author can delete: [${comment.author}]`);
-      return;
+      return Util.envelop(
+        `Only comment author can delete: [${comment.author}]`, 422);
     }
 
     await Util.DocumentClient.delete({
@@ -116,7 +110,7 @@ module.exports = {
       },
     }).promise();
 
-    Util.SUCCESS(callback, null);
+    return Util.envelop({});
   },
 
 };
