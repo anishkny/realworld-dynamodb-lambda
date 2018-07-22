@@ -30,11 +30,14 @@ function MochaAxiosReporter(runner) {
       fs.appendFileSync(NETWORK_DUMP_FILE, resDump);
       return response;
     }, async (error) => {
-      const resDump = '```\n' +
-        `${error.response.status} ${error.response.statusText}\n\n` +
-        JSON.stringify(error.response.data, null, 2) + '\n' +
-        '```\n';
-      fs.appendFileSync(NETWORK_DUMP_FILE, resDump);
+      if (error && error.response && error.response.status &&
+        error.response.statusText) {
+        const resDump = '```\n' +
+          `${error.response.status} ${error.response.statusText}\n\n` +
+          JSON.stringify(error.response.data, null, 2) + '\n' +
+          '```\n';
+        fs.appendFileSync(NETWORK_DUMP_FILE, resDump);
+      }
       return Promise.reject(error);
     });
 
