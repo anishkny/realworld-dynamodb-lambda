@@ -36,7 +36,7 @@ functions:
     events:
       - http:
           method: POST
-          path: /users
+          path: /api/users
           cors: true
 
   loginUser:
@@ -44,7 +44,7 @@ functions:
     events:
       - http:
           method: POST
-          path: /users/login
+          path: /api/users/login
           cors: true
 
   getUser:
@@ -52,7 +52,7 @@ functions:
     events:
       - http:
           method: GET
-          path: /user
+          path: /api/user
           cors: true
 
   getProfile:
@@ -60,7 +60,7 @@ functions:
     events:
       - http:
           method: GET
-          path: /profiles/{username}
+          path: /api/profiles/{username}
           cors: true
 
   followUser:
@@ -68,7 +68,7 @@ functions:
     events:
       - http:
           method: POST
-          path: /profiles/{username}/follow
+          path: /api/profiles/{username}/follow
           cors: true
 
   unfollowUser:
@@ -76,7 +76,7 @@ functions:
     events:
       - http:
           method: DELETE
-          path: /profiles/{username}/follow
+          path: /api/profiles/{username}/follow
           cors: true
 
   ## Articles API
@@ -85,7 +85,7 @@ functions:
     events:
       - http:
           method: POST
-          path: /articles
+          path: /api/articles
           cors: true
 
   getArticle:
@@ -93,7 +93,7 @@ functions:
     events:
       - http:
           method: GET
-          path: /articles/{slug}
+          path: /api/articles/{slug}
           cors: true
 
   deleteArticle:
@@ -101,7 +101,7 @@ functions:
     events:
       - http:
           method: DELETE
-          path: /articles/{slug}
+          path: /api/articles/{slug}
           cors: true
 
   favoriteArticle:
@@ -109,7 +109,7 @@ functions:
     events:
       - http:
           method: POST
-          path: /articles/{slug}/favorite
+          path: /api/articles/{slug}/favorite
           cors: true
 
   unfavoriteArticle:
@@ -117,7 +117,7 @@ functions:
     events:
       - http:
           method: DELETE
-          path: /articles/{slug}/favorite
+          path: /api/articles/{slug}/favorite
           cors: true
 
   listArticles:
@@ -125,7 +125,7 @@ functions:
     events:
       - http:
           method: GET
-          path: /articles
+          path: /api/articles
           cors: true
 
   getArticlesFeed:
@@ -133,7 +133,7 @@ functions:
     events:
       - http:
           method: GET
-          path: /articles/feed
+          path: /api/articles/feed
           cors: true
 
   getTags:
@@ -141,7 +141,7 @@ functions:
     events:
       - http:
           method: GET
-          path: /tags
+          path: /api/tags
           cors: true
 
   ## Comments API
@@ -150,7 +150,7 @@ functions:
     events:
       - http:
           method: POST
-          path: /articles/{slug}/comments
+          path: /api/articles/{slug}/comments
           cors: true
 
   getComments:
@@ -158,7 +158,7 @@ functions:
     events:
       - http:
           method: GET
-          path: /articles/{slug}/comments
+          path: /api/articles/{slug}/comments
           cors: true
 
   deleteComment:
@@ -166,7 +166,7 @@ functions:
     events:
       - http:
           method: DELETE
-          path: /articles/{slug}/comments/{id}
+          path: /api/articles/{slug}/comments/{id}
           cors: true
 
   ## Utils API
@@ -175,13 +175,13 @@ functions:
     events:
       - http:
           method: GET
-          path: /ping
+          path: /api/ping
           cors: true
 
   purgeData:
     handler: src/Util.purgeData
     events:
-      - http: DELETE /__TESTUTILS__/purge
+      - http: DELETE /api/__TESTUTILS__/purge
 
 resources:
   Resources:
