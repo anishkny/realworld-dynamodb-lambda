@@ -136,6 +136,14 @@ functions:
           path: /articles/feed
           cors: true
 
+  getTags:
+    handler: src/Article.getTags
+    events:
+      - http:
+          method: GET
+          path: /tags
+          cors: true
+
   ## Comments API
   createComment:
     handler: src/Comment.create
