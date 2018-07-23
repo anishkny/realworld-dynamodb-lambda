@@ -256,6 +256,33 @@ module.exports = {
     });
   },
 
+  /** Get list of tags */
+  async getTags() {
+    const uniqTags = {};
+
+    let lastEvaluatedKey = null;
+    do {
+      const scanParams = {
+        TableName: articlesTable,
+        AttributesToGet: ['tagList'],
+      };
+      /* istanbul ignore next */
+      if (lastEvaluatedKey) {
+        scanParams.ExclusiveStartKey = lastEvaluatedKey;
+      }
+      const data = await Util.DocumentClient.scan(scanParams).promise();
+      data.Items.forEach(item =>
+        item.tagList.values.forEach(tag =>
+          uniqTags[tag] = 1
+        )
+      );
+      lastEvaluatedKey = data.LastEvaluatedKey;
+    } while (lastEvaluatedKey);
+    const tags = Object.keys(uniqTags);
+
+    return Util.envelop({ tags });
+  },
+
 };
 
 /**

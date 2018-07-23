@@ -347,4 +347,14 @@ describe('Article', async () => {
 
   });
 
+  describe('Tags', async () => {
+
+    it('should get tags', async () => {
+      const tags = (await axios.get('/tags')).data.tags;
+      // TODO: Assert on tags
+      (tags);
+    });
+
+  });
+
 });
