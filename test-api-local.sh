@@ -8,7 +8,7 @@ touch .test_output/network.md
 export NETWORK_DUMP_FILE=.test_output/network.md
 
 set -eo pipefail
-API_URL=http://localhost:3000 mocha 2>&1 | tee .test_output/test.log
+API_URL=http://localhost:3000/api mocha 2>&1 | tee .test_output/test.log
 set +e
 sleep 5
 
