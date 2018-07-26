@@ -30,5 +30,10 @@
   "optionalDependencies": {
     "coveralls": "^3.0.0",
     "jsdoc": "^3.5.5"
+  },
+  "greenkeeper": {
+    "ignore": [
+      "aws-sdk"
+    ]
   }
 }
