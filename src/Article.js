@@ -272,6 +272,7 @@ module.exports = {
       }
       const data = await Util.DocumentClient.scan(scanParams).promise();
       data.Items.forEach(item => {
+        /* istanbul ignore next */
         if (item.tagList && item.tagList.values) {
           item.tagList.values.forEach(tag => uniqTags[tag] = 1);
         }
