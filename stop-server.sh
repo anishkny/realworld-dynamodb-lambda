@@ -1,3 +1,6 @@
 #!/usr/bin/env bash
 set -x
-lsof -ti:3000 -ti:8000 | xargs kill || true
+SERVER_PIDS=`lsof -ti:3000 -ti:8000`
+if [ -n "$SERVER_PIDS" ]; then
+  kill $SERVER_PIDS
+fi
