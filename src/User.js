@@ -149,7 +149,15 @@ module.exports = {
           [authenticatedUser.username]);
       }
     } else {
-      // TODO: Implement unfollow logic
+      if (user.followers &&
+        user.followers.values.includes(authenticatedUser.username)) {
+        user.followers.values = user.followers.values.filter(
+          e => e != authenticatedUser.username
+        );
+        if (!user.followers.values.length) {
+          delete user.followers;
+        }
+      }
     }
     await Util.DocumentClient.put({
       TableName: usersTable,
@@ -165,7 +173,17 @@ module.exports = {
         authenticatedUser.following = Util.DocumentClient.createSet([username]);
       }
     } else {
-      // TODO: Implement unfollow logic
+      if (authenticatedUser.following &&
+        authenticatedUser.following.values.includes(username)) {
+        authenticatedUser.following.values =
+          authenticatedUser.following.values.filter(
+            e => e != username
+          );
+        /* istanbul ignore next  */
+        if (!authenticatedUser.following.values.length) {
+          delete authenticatedUser.following;
+        }
+      }
     }
     await Util.DocumentClient.put({
       TableName: usersTable,

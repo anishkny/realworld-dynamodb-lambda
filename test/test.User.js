@@ -152,7 +152,7 @@ describe('User', async () => {
 
     // TODO: Add User.getProfile edge cases
 
-    it('should follow user', async () => {
+    it('should follow/unfollow user', async () => {
 
       // Create user who can be followed
       await axios.post(`/users`, {
@@ -208,15 +208,29 @@ describe('User', async () => {
         headers: { 'Authorization': `Token ${secondFollowerUser.token}` },
       })).data.profile;
       (secondFollowedProfile); // TODO: Assert on this
-    });
 
-    it('should unfollow user', async () => {
       const unfollowedProfile = (await axios({
         method: 'DELETE',
         url: `/profiles/followed_user/follow`,
         headers: { 'Authorization': `Token ${loggedInUser.token}` },
       })).data.profile;
-      (unfollowedProfile);
+      (unfollowedProfile); // TODO: Assert on this
+
+      const reUnfollowedProfile = (await axios({
+        method: 'DELETE',
+        url: `/profiles/followed_user/follow`,
+        headers: { 'Authorization': `Token ${loggedInUser.token}` },
+      })).data.profile;
+      (reUnfollowedProfile); // TODO: Assert on this
+
+      const secondUnfollowedProfile = (await axios({
+        method: 'DELETE',
+        url: `/profiles/followed_user/follow`,
+        headers: { 'Authorization': `Token ${secondFollowerUser.token}` },
+      })).data.profile;
+      (secondUnfollowedProfile); // TODO: Assert on this
+
+
     });
 
     it('should disallow following with bad token', async () => {
