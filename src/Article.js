@@ -271,11 +271,12 @@ module.exports = {
         scanParams.ExclusiveStartKey = lastEvaluatedKey;
       }
       const data = await Util.DocumentClient.scan(scanParams).promise();
-      data.Items.forEach(item =>
-        item.tagList.values.forEach(tag =>
-          uniqTags[tag] = 1
-        )
-      );
+      data.Items.forEach(item => {
+        /* istanbul ignore next */
+        if (item.tagList && item.tagList.values) {
+          item.tagList.values.forEach(tag => uniqTags[tag] = 1);
+        }
+      });
       lastEvaluatedKey = data.LastEvaluatedKey;
     } while (lastEvaluatedKey);
     const tags = Object.keys(uniqTags);
