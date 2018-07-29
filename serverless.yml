@@ -55,6 +55,14 @@ functions:
           path: /api/user
           cors: true
 
+  updateUser:
+    handler: src/User.update
+    events:
+      - http:
+          method: PUT
+          path: /api/user
+          cors: true
+
   getProfile:
     handler: src/User.getProfile
     events:

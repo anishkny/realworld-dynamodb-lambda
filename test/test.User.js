@@ -243,6 +243,59 @@ describe('User', async () => {
 
   });
 
+  describe('Update', async () => {
+
+    it('should update user', async () => {
+      const userMutations = [{
+        email: `updated-${username}@email.com`,
+      }, {
+        password: 'newpassword',
+      }, {
+        bio: 'newbio',
+      }, {
+        image: 'newimage',
+      }, ];
+      for (let i = 0; i < userMutations.length; ++i) {
+        const userMutation = userMutations[i];
+        const updatedUser = (await axios.put('/user', {
+          user: userMutation,
+        }, {
+          headers: { 'Authorization': `Token ${loggedInUser.token}` },
+        })).data.user;
+        if (!userMutation.password) {
+          const field = Object.keys(userMutation)[0];
+          assert.equal(updatedUser[field], userMutation[field]);
+        }
+        (updatedUser); // TODO: Assert on updatedUser
+      }
+    });
+
+    it('should disallow missing token/email in update', async () => {
+      await axios.put(`/user`).catch(res => {
+        TestUtil.assertError(res, /Token not present or invalid/);
+      });
+      await axios.put(`/user`, {}, {
+        headers: { 'Authorization': `Token ${loggedInUser.token}` },
+      }).catch(res => {
+        TestUtil.assertError(res, /User must be specified/);
+      });
+    });
+
+    it('should disallow reusing email', async () => {
+      const newUser = await TestUtil.createTestUser(
+        `user2-${Math.random().toString(36)}`);
+      await axios.put(`/user`, {
+        user: { email: newUser.email },
+      }, {
+        headers: { 'Authorization': `Token ${newUser.token}` },
+      }).catch(res => {
+        TestUtil.assertError(res, /Email already taken/);
+      });
+
+    });
+
+  });
+
 });
 
 function assertUserEquals(actual, expected) {

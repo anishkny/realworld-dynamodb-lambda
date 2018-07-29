@@ -113,6 +113,64 @@ module.exports = {
     });
   },
 
+  /** Update user */
+  async update(event) {
+    const authenticatedUser = await authenticateAndGetUser(event);
+    if (!authenticatedUser) {
+      return Util.envelop('Token not present or invalid.', 422);
+    }
+    const body = JSON.parse(event.body);
+    const user = body.user;
+    if (!user) {
+      return Util.envelop('User must be specified.', 422);
+    }
+    const updatedUser = {
+      username: authenticatedUser.username,
+    };
+    if (user.email) {
+      // Verify email is not taken
+      const userWithThisEmail = await getUserByEmail(user.email);
+      if (userWithThisEmail.Count !== 0) {
+        return Util.envelop(`Email already taken: [${user.email}]`, 422);
+      }
+      updatedUser.email = user.email;
+    }
+    if (user.password) {
+      updatedUser.password = bcrypt.hashSync(user.password, 5);
+    }
+    if (user.image) {
+      updatedUser.image = user.image;
+    }
+    if (user.bio) {
+      updatedUser.bio = user.bio;
+    }
+
+    await Util.DocumentClient.put({
+      TableName: usersTable,
+      Item: updatedUser,
+    }).promise();
+
+    // Decorate updatedUser and return it
+    if (updatedUser.password) {
+      delete updatedUser.password;
+    }
+    if (!updatedUser.email) {
+      updatedUser.email = authenticatedUser.email;
+    }
+    if (!updatedUser.image) {
+      updatedUser.image = authenticatedUser.image || '';
+    }
+    if (!updatedUser.bio) {
+      updatedUser.bio = authenticatedUser.bio || '';
+    }
+    updatedUser.token = getTokenFromEvent(event);
+
+    return Util.envelop({
+      user: updatedUser,
+    });
+
+  },
+
   authenticateAndGetUser,
   getUserByUsername,
 
