@@ -55,6 +55,8 @@ See sample test run [log](https://anishkny.github.io/realworld-dynamodb-lambda/t
 ## Overview
 This repo uses [Serverless Framework](https://serverless.com) to describe, test and deploy the [RealWorld REST API](https://github.com/gothinkster/realworld/blob/master/api/README.md#endpoints) to [AWS Lambda](https://aws.amazon.com/lambda/). AWS Lambda provides "serverless" cloud functions as a service. [AWS API Gateway](https://aws.amazon.com/api-gateway/) is used to expose the deployed Lambda functions as a HTTP REST API.
 
+![Architecture Diagram](architecture.svg)
+
 ## API
 The API is described in the [`serverless.yml`](serverless.yml) file. For example the following snippet instructs AWS Lambda to execute the `create` method in [`src/User.js`](src/User.js) whenever a `POST` method is called on `/api/users`:
 ```
