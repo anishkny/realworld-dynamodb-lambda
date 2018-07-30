@@ -126,6 +126,82 @@ describe('Article', async () => {
 
   });
 
+  describe('Update', async () => {
+
+    it('should update article', async () => {
+      let updatedArticle;
+
+      updatedArticle = (await axios.put(
+        `/articles/${globals.createdArticleWithTags.slug}`, {
+          article: { title: 'newtitle' },
+        }, {
+          headers: { Authorization: `Token ${globals.authorUser.token}` },
+        })).data.article;
+      assert.equal(updatedArticle.title, 'newtitle');
+
+      updatedArticle = (await axios.put(
+        `/articles/${globals.createdArticleWithTags.slug}`, {
+          article: { description: 'newdescription' },
+        }, {
+          headers: { Authorization: `Token ${globals.authorUser.token}` },
+        })).data.article;
+      assert.equal(updatedArticle.description, 'newdescription');
+
+      updatedArticle = (await axios.put(
+        `/articles/${globals.createdArticleWithTags.slug}`, {
+          article: { body: 'newbody' },
+        }, {
+          headers: { Authorization: `Token ${globals.authorUser.token}` },
+        })).data.article;
+      assert.equal(updatedArticle.body, 'newbody');
+
+    });
+
+    it('should disallow missing mutation', async () => {
+      await axios.put(`/articles/${globals.createdArticleWithTags.slug}`, {})
+        .catch(res => {
+          TestUtil.assertError(res, /Article mutation must be specified/);
+        });
+    });
+
+    it('should disallow empty mutation', async () => {
+      await axios.put(`/articles/${globals.createdArticleWithTags.slug}`, {
+        article: {},
+      }).catch(res => {
+        TestUtil.assertError(res, /At least one field must be specified/);
+      });
+    });
+
+    it('should disallow unauthenticated update', async () => {
+      await axios.put(`/articles/${globals.createdArticleWithTags.slug}`, {
+        article: { title: 'newtitle' },
+      }).catch(res => {
+        TestUtil.assertError(res, /Must be logged in/);
+      });
+    });
+
+    it('should disallow updating non-existent article', async () => {
+      await axios.put(`/articles/foo-${globals.createdArticleWithTags.slug}`, {
+        article: { title: 'newtitle' },
+      }, {
+        headers: { Authorization: `Token ${globals.authorUser.token}` },
+      }).catch(res => {
+        TestUtil.assertError(res, /Article not found/);
+      });
+    });
+
+    it('should disallow non-author from updating', async () => {
+      await axios.put(`/articles/${globals.createdArticleWithTags.slug}`, {
+        article: { title: 'newtitle' },
+      }, {
+        headers: { Authorization: `Token ${globals.authoressUser.token}` },
+      }).catch(res => {
+        TestUtil.assertError(res, /Article can only be updated by author/);
+      });
+    });
+
+  });
+
   describe('Favorite', async () => {
 
     it('should favorite article', async () => {

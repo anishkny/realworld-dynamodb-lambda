@@ -104,6 +104,14 @@ functions:
           path: /api/articles/{slug}
           cors: true
 
+  udpateArticle:
+    handler: src/Article.update
+    events:
+      - http:
+          method: PUT
+          path: /api/articles/{slug}
+          cors: true
+
   deleteArticle:
     handler: src/Article.delete
     events:
