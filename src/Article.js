@@ -85,6 +85,70 @@ module.exports = {
     });
   },
 
+  /** Update article */
+  async update(event) {
+    const body = JSON.parse(event.body);
+    const articleMutation = body.article;
+    if (!articleMutation) {
+      return Util.envelop('Article mutation must be specified.', 422);
+    }
+
+    // Ensure at least one mutation is requested
+    if (!articleMutation.title &&
+      !articleMutation.description && !articleMutation.body) {
+      return Util.envelop(
+        'At least one field must be specified: [title, description, article].',
+        422);
+    }
+
+    const authenticatedUser = await User.authenticateAndGetUser(event);
+    if (!authenticatedUser) {
+      return Util.envelop('Must be logged in.', 422);
+    }
+
+    const slug = event.pathParameters.slug;
+
+    /* istanbul ignore if  */
+    if (!slug) {
+      return Util.envelop('Slug must be specified.', 422);
+    }
+
+    const article = (await Util.DocumentClient.get({
+      TableName: articlesTable,
+      Key: { slug },
+    }).promise()).Item;
+    if (!article) {
+      return Util.envelop(`Article not found: [${slug}]`, 422);
+    }
+
+    // Ensure article is authored by authenticatedUser
+    if (article.author !== authenticatedUser.username) {
+      return Util.envelop('Article can only be updated by author: ' +
+        `[${article.author}]`, 422);
+    }
+
+    // Apply mutations to retrieved article
+    ['title', 'description', 'body'].forEach(field => {
+      if (articleMutation[field]) {
+        article[field] = articleMutation[field];
+      }
+    });
+    await Util.DocumentClient.put({
+      TableName: articlesTable,
+      Item: article,
+    }).promise();
+
+    const updatedArticle = (await Util.DocumentClient.get({
+      TableName: articlesTable,
+      Key: { slug },
+    }).promise()).Item;
+
+    return Util.envelop({
+      article: await transformRetrievedArticle(
+        updatedArticle, authenticatedUser),
+    });
+  },
+
   /** Delete article */
   async delete(event) {
     const authenticatedUser = await User.authenticateAndGetUser(event);
