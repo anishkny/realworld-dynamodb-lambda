@@ -21,6 +21,12 @@ For more information on how to this works with other frontends/backends, head ov
 
 *Requires Node 8 or higher*
 
+Clone this repo, and cd into it:
+```
+git clone https://github.com/anishkny/realworld-dynamodb-lambda
+cd realworld-dynamodb-lambda
+```
+
 ## Starting the local server
 
 ```
