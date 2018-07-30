@@ -79,3 +79,15 @@ resources:
         AttributeDefinitions:
         ...
 ```
+
+## Deployment
+To deploy the code to AWS, simply execute:
+```
+npm run deploy
+```
+This will use `serverless` to deploy the API as described in `serverless.yml`.
+
+Once deployed, you can test the deployed API by executing:
+```
+npm run test:deployed
+```
