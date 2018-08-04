@@ -34,12 +34,12 @@ npm install
 npm run start
 ```
 
-This should start local DynamoDB emulator and Serverless offline. You can now make API calls against `http://localhost:3000` like this:
+This should start local DynamoDB emulator and Serverless offline. You can now make API calls against `http://localhost:3000/api` like this:
 
 ```
-curl http://localhost:3000/articles
+curl http://localhost:3000/api/articles
 
-Serverless: GET /articles (λ: listArticles)
+Serverless: GET /api/articles (λ: listArticles)
 Serverless: The first request might take a few extra seconds
 Serverless: [200] {"statusCode":200,"headers":{"Access-Control-Allow-Origin":"*","Access-Control-Allow-Credentials":true},"body":"{\"articles\":[]}"}
 ```
