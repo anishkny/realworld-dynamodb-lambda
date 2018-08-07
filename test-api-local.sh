@@ -1,16 +1,16 @@
 #!/usr/bin/env bash
-set -x
-
-SERVERLESS_OFFLINE_EXTRA_ARGS="--dontPrintOutput" ./start-server.sh
-
 rm -rf .test_output && mkdir -p .test_output
+
+echo -n 'Starting server (see .test_output/server.log)... '
+./start-server.sh > .test_output/server.log 2>&1
+echo 'Done!'
+
 touch .test_output/network.md
 export NETWORK_DUMP_FILE=.test_output/network.md
 
 set -eo pipefail
-API_URL=http://localhost:3000/api mocha 2>&1 | tee .test_output/test.log
+API_URL=http://localhost:3000/api mocha
 set +e
-sleep 5
 
 cat << EOF > .test_output/network.html
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -32,6 +32,11 @@ cat << EOF > .test_output/network.html
 </style>
 <article class="markdown-body">
 EOF
-showdown makehtml --input $NETWORK_DUMP_FILE >> .test_output/network.html
+showdown --quiet makehtml --input $NETWORK_DUMP_FILE >> .test_output/network.html
 
-./stop-server.sh
+echo -n 'Stopping server (see .test_output/server.log)... '
+sleep 5
+./stop-server.sh >> .test_output/server.log 2>&1
+echo 'Done!'
+
+nyc report

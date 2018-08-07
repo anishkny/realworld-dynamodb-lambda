@@ -48,7 +48,7 @@ Serverless: [200] {"statusCode":200,"headers":{"Access-Control-Allow-Origin":"*"
 ```
 npm test
 ```
-See sample test run [log](https://anishkny.github.io/realworld-dynamodb-lambda/test-output/test.log) and [network traffic](https://anishkny.github.io/realworld-dynamodb-lambda/test-output/network.html).
+See sample test run [log](https://travis-ci.org/anishkny/realworld-dynamodb-lambda) and [network traffic](https://anishkny.github.io/realworld-dynamodb-lambda/test-output/network.html).
 
 # How it works
 
