@@ -10,6 +10,7 @@ cache:
 after_script:
   - sleep 10
   - cat ./coverage/lcov.info | npx coveralls
+  - cat .test_output/server.log
 
 before_deploy:
   - rm -rf gh-pages
