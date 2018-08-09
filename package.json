@@ -1,4 +1,15 @@
 {
+  "name": "realworld-dynamodb-lambda",
+  "version": "1.0.0",
+  "description": "A serverless backend implementation for RealWorld using AWS DynamoDB + Lambda",
+  "keywords": [
+    "realworld",
+    "aws",
+    "lambda",
+    "dynamodb",
+    "serverless"
+  ],
+  "license": "MIT",
   "scripts": {
     "lint": "eslint src/ test/",
     "test": "npm run lint && ./test-api-local.sh",
