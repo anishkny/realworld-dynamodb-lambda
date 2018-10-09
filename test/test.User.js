@@ -234,7 +234,7 @@ describe('User', async () => {
     });
 
     it('should disallow following with bad token', async () => {
-      await await axios({
+      await axios({
         method: 'POST',
         url: `/profiles/followed_user/follow`,
       }).catch(res =>
