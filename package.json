@@ -28,7 +28,7 @@
     "node-jre": "^0.2.3",
     "nyc": "^12.0.2",
     "serverless": "^1.26.1",
-    "serverless-dynamodb-local": "^0.2.28",
+    "serverless-dynamodb-local": "0.2.35",
     "serverless-offline": "^3.25.6",
     "showdown": "^1.8.6"
   },
