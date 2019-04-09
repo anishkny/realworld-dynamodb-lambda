@@ -4,6 +4,8 @@ provider:
   name: aws
   runtime: nodejs8.10
   region: us-east-1
+  apiGateway:
+    minimumCompressionSize: 0
   environment:
     DYNAMODB_NAMESPACE: ${opt:stage, "dev"}
   iamRoleStatements:
