@@ -22,6 +22,7 @@ module.exports = {
     'no-trailing-spaces': 'error',
     'no-var': 'error',
     'prefer-const': 'error',
+    'require-atomic-updates': 'off',
     'semi': 'error',
     'space-before-function-paren': ['error', {
       'anonymous': 'always',
