@@ -26,7 +26,7 @@
     "eslint": "^6.6.0",
     "mocha": "^6.2.2",
     "node-jre": "^0.2.3",
-    "nyc": "^14.1.1",
+    "nyc": "^15.0.1",
     "serverless": "^1.57.0",
     "serverless-dynamodb-local": "0.2.35",
     "serverless-offline": "^4.10.6",
