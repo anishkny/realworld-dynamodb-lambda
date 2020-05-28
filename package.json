@@ -29,7 +29,7 @@
     "nyc": "^14.1.1",
     "serverless": "^1.57.0",
     "serverless-dynamodb-local": "0.2.35",
-    "serverless-offline": "^4.10.6",
+    "serverless-offline": "^6.3.0",
     "showdown": "^1.9.1"
   },
   "dependencies": {
