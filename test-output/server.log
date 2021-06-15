@@ -1,0 +1,376 @@
++./stop-server.sh
+++lsof -ti:3000 -ti:8000
++SERVER_PIDS=
++'[' -n '' ']'
+++find node_modules/node-jre -type f -name java
++export JRE_PATH=node_modules/node-jre/jre/jre1.8.0_131/bin/java
++JRE_PATH=node_modules/node-jre/jre/jre1.8.0_131/bin/java
+++dirname node_modules/node-jre/jre/jre1.8.0_131/bin/java
++export JRE_PATH=node_modules/node-jre/jre/jre1.8.0_131/bin
++JRE_PATH=node_modules/node-jre/jre/jre1.8.0_131/bin
+++pwd
++export JRE_PATH=/home/travis/build/anishkny/realworld-dynamodb-lambda/node_modules/node-jre/jre/jre1.8.0_131/bin
++JRE_PATH=/home/travis/build/anishkny/realworld-dynamodb-lambda/node_modules/node-jre/jre/jre1.8.0_131/bin
++export PATH=/home/travis/build/anishkny/realworld-dynamodb-lambda/node_modules/node-jre/jre/jre1.8.0_131/bin:/home/travis/.nvm/versions/node/v14.17.0/lib/node_modules/npm/node_modules/npm-lifecycle/node-gyp-bin:/home/travis/build/anishkny/realworld-dynamodb-lambda/node_modules/.bin:/home/travis/.rvm/gems/ruby-2.5.3/bin:/home/travis/.rvm/gems/ruby-2.5.3@global/bin:/home/travis/.rvm/rubies/ruby-2.5.3/bin:/home/travis/.rvm/bin:./node_modules/.bin:/home/travis/bin:/home/travis/.local/bin:/usr/local/lib/jvm/openjdk11/bin:/opt/pyenv/shims:/home/travis/.phpenv/shims:/home/travis/perl5/perlbrew/bin:/home/travis/.nvm/versions/node/v14.17.0/bin:/home/travis/gopath/bin:/home/travis/.gimme/versions/go1.11.1.linux.amd64/bin:/usr/local/maven-3.6.3/bin:/usr/local/cmake-3.12.4/bin:/usr/local/clang-7.0.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin:/home/travis/.phpenv/bin:/opt/pyenv/bin:/home/travis/.yarn/bin
++PATH=/home/travis/build/anishkny/realworld-dynamodb-lambda/node_modules/node-jre/jre/jre1.8.0_131/bin:/home/travis/.nvm/versions/node/v14.17.0/lib/node_modules/npm/node_modules/npm-lifecycle/node-gyp-bin:/home/travis/build/anishkny/realworld-dynamodb-lambda/node_modules/.bin:/home/travis/.rvm/gems/ruby-2.5.3/bin:/home/travis/.rvm/gems/ruby-2.5.3@global/bin:/home/travis/.rvm/rubies/ruby-2.5.3/bin:/home/travis/.rvm/bin:./node_modules/.bin:/home/travis/bin:/home/travis/.local/bin:/usr/local/lib/jvm/openjdk11/bin:/opt/pyenv/shims:/home/travis/.phpenv/shims:/home/travis/perl5/perlbrew/bin:/home/travis/.nvm/versions/node/v14.17.0/bin:/home/travis/gopath/bin:/home/travis/.gimme/versions/go1.11.1.linux.amd64/bin:/usr/local/maven-3.6.3/bin:/usr/local/cmake-3.12.4/bin:/usr/local/clang-7.0.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin:/home/travis/.phpenv/bin:/opt/pyenv/bin:/home/travis/.yarn/bin
++set -e
++which java
+/home/travis/build/anishkny/realworld-dynamodb-lambda/node_modules/node-jre/jre/jre1.8.0_131/bin/java
++java -version
+java version "1.8.0_131"
+Java(TM) SE Runtime Environment (build 1.8.0_131-b11)
+Java HotSpot(TM) 64-Bit Server VM (build 25.131-b11, mixed mode)
++export AWS_ACCESS_KEY_ID=foo
++AWS_ACCESS_KEY_ID=foo
++export AWS_SECRET_ACCESS_KEY=bar
++AWS_SECRET_ACCESS_KEY=bar
++sleep 5
++serverless dynamodb start --migrate
+Dynamodb Local Started, Visit: http://localhost:8000/shell
+Serverless: DynamoDB - created table realworld-dev-users
+Serverless: DynamoDB - created table realworld-dev-articles
+Serverless: DynamoDB - created table realworld-dev-comments
++sleep 5
++nyc serverless offline
+Serverless: Starting Offline: dev/us-east-1.
+
+Serverless: Routes for createUser:
+Serverless: POST /api/users
+
+Serverless: Routes for loginUser:
+Serverless: POST /api/users/login
+
+Serverless: Routes for getUser:
+Serverless: GET /api/user
+
+Serverless: Routes for updateUser:
+Serverless: PUT /api/user
+
+Serverless: Routes for getProfile:
+Serverless: GET /api/profiles/{username}
+
+Serverless: Routes for followUser:
+Serverless: POST /api/profiles/{username}/follow
+
+Serverless: Routes for unfollowUser:
+Serverless: DELETE /api/profiles/{username}/follow
+
+Serverless: Routes for createArticle:
+Serverless: POST /api/articles
+
+Serverless: Routes for getArticle:
+Serverless: GET /api/articles/{slug}
+
+Serverless: Routes for udpateArticle:
+Serverless: PUT /api/articles/{slug}
+
+Serverless: Routes for deleteArticle:
+Serverless: DELETE /api/articles/{slug}
+
+Serverless: Routes for favoriteArticle:
+Serverless: POST /api/articles/{slug}/favorite
+
+Serverless: Routes for unfavoriteArticle:
+Serverless: DELETE /api/articles/{slug}/favorite
+
+Serverless: Routes for listArticles:
+Serverless: GET /api/articles
+
+Serverless: Routes for getArticlesFeed:
+Serverless: GET /api/articles/feed
+
+Serverless: Routes for getTags:
+Serverless: GET /api/tags
+
+Serverless: Routes for createComment:
+Serverless: POST /api/articles/{slug}/comments
+
+Serverless: Routes for getComments:
+Serverless: GET /api/articles/{slug}/comments
+
+Serverless: Routes for deleteComment:
+Serverless: DELETE /api/articles/{slug}/comments/{id}
+
+Serverless: Routes for ping:
+Serverless: GET /api/ping
+
+Serverless: Routes for purgeData:
+Serverless: DELETE /api/__TESTUTILS__/purge
+
+Serverless: Offline listening on http://localhost:3000
+
+Serverless: DELETE /api/__TESTUTILS__/purge (λ: purgeData)
+
+Serverless: POST /api/users (λ: createUser)
+
+Serverless: POST /api/users (λ: createUser)
+
+Serverless: POST /api/users (λ: createUser)
+
+Serverless: POST /api/articles (λ: createArticle)
+
+Serverless: POST /api/articles (λ: createArticle)
+
+Serverless: POST /api/articles (λ: createArticle)
+
+Serverless: POST /api/articles (λ: createArticle)
+
+Serverless: POST /api/articles (λ: createArticle)
+
+Serverless: POST /api/articles (λ: createArticle)
+
+Serverless: POST /api/articles (λ: createArticle)
+
+Serverless: GET /api/articles/title-ayr35a (λ: getArticle)
+
+Serverless: GET /api/articles/title-qyr4nh (λ: getArticle)
+
+Serverless: GET /api/articles/zvhtkq (λ: getArticle)
+
+Serverless: PUT /api/articles/title-qyr4nh (λ: udpateArticle)
+
+Serverless: PUT /api/articles/title-qyr4nh (λ: udpateArticle)
+
+Serverless: PUT /api/articles/title-qyr4nh (λ: udpateArticle)
+
+Serverless: PUT /api/articles/title-qyr4nh (λ: udpateArticle)
+
+Serverless: PUT /api/articles/title-qyr4nh (λ: udpateArticle)
+
+Serverless: PUT /api/articles/title-qyr4nh (λ: udpateArticle)
+
+Serverless: PUT /api/articles/foo-title-qyr4nh (λ: udpateArticle)
+
+Serverless: PUT /api/articles/title-qyr4nh (λ: udpateArticle)
+
+Serverless: POST /api/articles/title-ayr35a/favorite (λ: favoriteArticle)
+
+Serverless: GET /api/articles/title-ayr35a (λ: getArticle)
+
+Serverless: POST /api/articles/title-ayr35a/favorite (λ: favoriteArticle)
+
+Serverless: POST /api/articles/title-ayr35a_foo/favorite (λ: favoriteArticle)
+
+Serverless: DELETE /api/articles/title-ayr35a/favorite (λ: unfavoriteArticle)
+
+Serverless: DELETE /api/articles/title-ayr35a (λ: deleteArticle)
+
+Serverless: GET /api/articles/title-ayr35a (λ: getArticle)
+
+Serverless: DELETE /api/articles/foo (λ: deleteArticle)
+
+Serverless: DELETE /api/articles/foobar (λ: deleteArticle)
+
+Serverless: DELETE /api/articles/title-qyr4nh (λ: deleteArticle)
+
+Serverless: POST /api/articles (λ: createArticle)
+
+Serverless: POST /api/articles (λ: createArticle)
+
+Serverless: POST /api/articles (λ: createArticle)
+
+Serverless: POST /api/articles (λ: createArticle)
+
+Serverless: POST /api/articles (λ: createArticle)
+
+Serverless: POST /api/articles (λ: createArticle)
+
+Serverless: POST /api/articles (λ: createArticle)
+
+Serverless: POST /api/articles (λ: createArticle)
+
+Serverless: POST /api/articles (λ: createArticle)
+
+Serverless: POST /api/articles (λ: createArticle)
+
+Serverless: POST /api/articles (λ: createArticle)
+
+Serverless: POST /api/articles (λ: createArticle)
+
+Serverless: POST /api/articles (λ: createArticle)
+
+Serverless: POST /api/articles (λ: createArticle)
+
+Serverless: POST /api/articles (λ: createArticle)
+
+Serverless: POST /api/articles (λ: createArticle)
+
+Serverless: POST /api/articles (λ: createArticle)
+
+Serverless: POST /api/articles (λ: createArticle)
+
+Serverless: POST /api/articles (λ: createArticle)
+
+Serverless: POST /api/articles (λ: createArticle)
+
+Serverless: GET /api/articles (λ: listArticles)
+
+Serverless: GET /api/articles (λ: listArticles)
+
+Serverless: GET /api/articles (λ: listArticles)
+
+Serverless: GET /api/articles (λ: listArticles)
+
+Serverless: GET /api/articles (λ: listArticles)
+
+Serverless: GET /api/articles (λ: listArticles)
+
+Serverless: GET /api/articles (λ: listArticles)
+
+Serverless: GET /api/articles (λ: listArticles)
+
+Serverless: GET /api/articles (λ: listArticles)
+
+Serverless: GET /api/articles (λ: listArticles)
+
+Serverless: GET /api/articles (λ: listArticles)
+
+Serverless: GET /api/articles/feed (λ: getArticlesFeed)
+
+Serverless: POST /api/profiles/authoress-7ue3fa/follow (λ: followUser)
+
+Serverless: GET /api/articles/feed (λ: getArticlesFeed)
+FilterExpression: [author IN (:author0)]
+
+Serverless: POST /api/profiles/author-vr9rct/follow (λ: followUser)
+
+Serverless: GET /api/articles/feed (λ: getArticlesFeed)
+FilterExpression: [author IN (:author0,:author1)]
+
+Serverless: GET /api/articles/feed (λ: getArticlesFeed)
+
+Serverless: GET /api/tags (λ: getTags)
+
+Serverless: POST /api/users (λ: createUser)
+
+Serverless: POST /api/users (λ: createUser)
+
+Serverless: POST /api/articles (λ: createArticle)
+
+Serverless: POST /api/articles/title-lbtdsj/comments (λ: createComment)
+
+Serverless: POST /api/articles/title-lbtdsj/comments (λ: createComment)
+
+Serverless: POST /api/articles/title-lbtdsj/comments (λ: createComment)
+
+Serverless: POST /api/articles/title-lbtdsj/comments (λ: createComment)
+
+Serverless: POST /api/articles/title-lbtdsj/comments (λ: createComment)
+
+Serverless: POST /api/articles/title-lbtdsj/comments (λ: createComment)
+
+Serverless: POST /api/articles/title-lbtdsj/comments (λ: createComment)
+
+Serverless: POST /api/articles/title-lbtdsj/comments (λ: createComment)
+
+Serverless: POST /api/articles/title-lbtdsj/comments (λ: createComment)
+
+Serverless: POST /api/articles/title-lbtdsj/comments (λ: createComment)
+
+Serverless: POST /api/articles/title-lbtdsj/comments (λ: createComment)
+
+Serverless: POST /api/articles/title-lbtdsj/comments (λ: createComment)
+
+Serverless: POST /api/articles/foobar/comments (λ: createComment)
+
+Serverless: GET /api/articles/title-lbtdsj/comments (λ: getComments)
+
+Serverless: DELETE /api/articles/title-lbtdsj/comments/d151f97e-ab5c-4617-864e-60033ea27440 (λ: deleteComment)
+
+Serverless: DELETE /api/articles/title-lbtdsj/comments/41c7214b-c28c-4782-b4e8-ac3f17973011 (λ: deleteComment)
+
+Serverless: DELETE /api/articles/title-lbtdsj/comments/41c7214b-c28c-4782-b4e8-ac3f17973011 (λ: deleteComment)
+
+Serverless: DELETE /api/articles/title-lbtdsj/comments/foobar_id (λ: deleteComment)
+
+Serverless: POST /api/users (λ: createUser)
+
+Serverless: POST /api/users (λ: createUser)
+
+Serverless: POST /api/users (λ: createUser)
+
+Serverless: POST /api/users (λ: createUser)
+
+Serverless: POST /api/users (λ: createUser)
+
+Serverless: POST /api/users (λ: createUser)
+
+Serverless: POST /api/users (λ: createUser)
+
+Serverless: POST /api/users/login (λ: loginUser)
+
+Serverless: POST /api/users/login (λ: loginUser)
+
+Serverless: POST /api/users/login (λ: loginUser)
+
+Serverless: POST /api/users/login (λ: loginUser)
+
+Serverless: POST /api/users/login (λ: loginUser)
+
+Serverless: POST /api/users/login (λ: loginUser)
+
+Serverless: GET /api/user (λ: getUser)
+
+Serverless: GET /api/user (λ: getUser)
+
+Serverless: GET /api/user (λ: getUser)
+
+Serverless: GET /api/user (λ: getUser)
+
+Serverless: GET /api/user (λ: getUser)
+
+Serverless: GET /api/profiles/user1-0.xnkrk8n2y9r (λ: getProfile)
+
+Serverless: GET /api/profiles/foo_0.w1y1y64g5s9 (λ: getProfile)
+
+Serverless: POST /api/users (λ: createUser)
+
+Serverless: POST /api/profiles/followed_user/follow (λ: followUser)
+
+Serverless: POST /api/profiles/followed_user/follow (λ: followUser)
+
+Serverless: GET /api/profiles/followed_user (λ: getProfile)
+
+Serverless: GET /api/profiles/followed_user (λ: getProfile)
+
+Serverless: POST /api/users (λ: createUser)
+
+Serverless: POST /api/profiles/followed_user/follow (λ: followUser)
+
+Serverless: DELETE /api/profiles/followed_user/follow (λ: unfollowUser)
+
+Serverless: DELETE /api/profiles/followed_user/follow (λ: unfollowUser)
+
+Serverless: DELETE /api/profiles/followed_user/follow (λ: unfollowUser)
+
+Serverless: POST /api/profiles/followed_user/follow (λ: followUser)
+
+Serverless: PUT /api/user (λ: updateUser)
+
+Serverless: PUT /api/user (λ: updateUser)
+
+Serverless: PUT /api/user (λ: updateUser)
+
+Serverless: PUT /api/user (λ: updateUser)
+
+Serverless: PUT /api/user (λ: updateUser)
+
+Serverless: PUT /api/user (λ: updateUser)
+
+Serverless: POST /api/users (λ: createUser)
+
+Serverless: PUT /api/user (λ: updateUser)
+
+Serverless: GET /api/ping (λ: ping)
+Serverless: Got SIGTERM signal. Offline Halting...
+Serverless: Halting offline server
+------------|----------|----------|----------|----------|-------------------|
+File        |  % Stmts | % Branch |  % Funcs |  % Lines | Uncovered Line #s |
+------------|----------|----------|----------|----------|-------------------|
+All files   |      100 |      100 |      100 |      100 |                   |
+ Article.js |      100 |      100 |      100 |      100 |                   |
+ Comment.js |      100 |      100 |      100 |      100 |                   |
+ User.js    |      100 |      100 |      100 |      100 |                   |
+ Util.js    |      100 |      100 |      100 |      100 |                   |
+------------|----------|----------|----------|----------|-------------------|
+DynamoDB Local failed to start with code 143
