@@ -268,7 +268,8 @@ module.exports = {
     }
     return Util.envelop({
       articles: await queryEnoughArticles(queryParams, authenticatedUser,
-        limit, offset)
+        limit, offset),
+      articlesCount: await countArticles(queryParams, authenticatedUser)
     });
   },
 
@@ -317,6 +318,7 @@ module.exports = {
     return Util.envelop({
       articles: await queryEnoughArticles(queryParams, authenticatedUser,
         limit, offset),
+      articlesCount: await countArticles(queryParams, authenticatedUser)
     });
   },
 
@@ -377,6 +379,20 @@ async function queryEnoughArticles(queryParams, authenticatedUser,
     articlePromises.push(transformRetrievedArticle(a, authenticatedUser)));
   const articles = await Promise.all(articlePromises);
   return articles;
+}
+
+/**
+ * Given queryParams, return the number of articles that match.
+ */
+async function countArticles(queryParams, authenticatedUser,
+                                   limit, offset) {
+
+  const countQueryParams = Object.assign({}, queryParams, { Select: "COUNT" })
+  
+  const queryResult = await Util.DocumentClient.query(countQueryParams)
+      .promise();
+  
+  return queryResult.Count;
 }
 
 /**
