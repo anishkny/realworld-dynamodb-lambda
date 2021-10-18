@@ -2,7 +2,7 @@ service: realworld
 
 provider:
   name: aws
-  runtime: nodejs8.10
+  runtime: nodejs14.x
   region: us-east-1
   environment:
     DYNAMODB_NAMESPACE: ${opt:stage, "dev"}
