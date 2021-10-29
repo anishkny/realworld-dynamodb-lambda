@@ -104,7 +104,7 @@ functions:
           path: /api/articles/{slug}
           cors: true
 
-  udpateArticle:
+  updateArticle:
     handler: src/Article.update
     events:
       - http:
