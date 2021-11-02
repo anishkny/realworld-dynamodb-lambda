@@ -1,0 +1,2260 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: The AWS CloudFormation template for this Serverless application
+Paramters:
+  DeploymentBucket:
+    Type: String
+  Environment:
+    Type: String
+    Default: dev
+    AllowedValues:
+    - dev
+    - prod
+  CreateResources:
+    Type: Number
+    MinValue: 0
+    MaxValue: 1
+Conditions:
+  CreateRetainedResources:
+    Fn::Equals:
+    - !Ref CreateResources
+    - 1
+Resources:
+  CreateUserLogGroup:
+    Type: AWS::Logs::LogGroup
+    Condition: CreateRetainedResources
+    DeletionPolicy: Retain
+    Properties:
+      LogGroupName: !Sub /aws/lambda/realworld-${Environment}-createUser
+  LoginUserLogGroup:
+    Type: AWS::Logs::LogGroup
+    Condition: CreateRetainedResources
+    DeletionPolicy: Retain
+    Properties:
+      LogGroupName: !Sub /aws/lambda/realworld-${Environment}-loginUser
+  GetUserLogGroup:
+    Type: AWS::Logs::LogGroup
+    Condition: CreateRetainedResources
+    DeletionPolicy: Retain
+    Properties:
+      LogGroupName: !Sub /aws/lambda/realworld-${Environment}-getUser
+  UpdateUserLogGroup:
+    Type: AWS::Logs::LogGroup
+    Condition: CreateRetainedResources
+    DeletionPolicy: Retain
+    Properties:
+      LogGroupName: !Sub /aws/lambda/realworld-${Environment}-updateUser
+  GetProfileLogGroup:
+    Type: AWS::Logs::LogGroup
+    Condition: CreateRetainedResources
+    DeletionPolicy: Retain
+    Properties:
+      LogGroupName: !Sub /aws/lambda/realworld-${Environment}-getProfile
+  FollowUserLogGroup:
+    Type: AWS::Logs::LogGroup
+    Condition: CreateRetainedResources
+    DeletionPolicy: Retain
+    Properties:
+      LogGroupName: !Sub /aws/lambda/realworld-${Environment}-followUser
+  UnfollowUserLogGroup:
+    Type: AWS::Logs::LogGroup
+    Condition: CreateRetainedResources
+    DeletionPolicy: Retain
+    Properties:
+      LogGroupName: !Sub /aws/lambda/realworld-${Environment}-unfollowUser
+  CreateArticleLogGroup:
+    Type: AWS::Logs::LogGroup
+    Condition: CreateRetainedResources
+    DeletionPolicy: Retain
+    Properties:
+      LogGroupName: !Sub /aws/lambda/realworld-${Environment}-createArticle
+  GetArticleLogGroup:
+    Type: AWS::Logs::LogGroup
+    Condition: CreateRetainedResources
+    DeletionPolicy: Retain
+    Properties:
+      LogGroupName: !Sub /aws/lambda/realworld-${Environment}-getArticle
+  UpdateArticleLogGroup:
+    Type: AWS::Logs::LogGroup
+    Condition: CreateRetainedResources
+    DeletionPolicy: Retain
+    Properties:
+      LogGroupName: !Sub /aws/lambda/realworld-${Environment}-updateArticle
+  DeleteArticleLogGroup:
+    Type: AWS::Logs::LogGroup
+    Condition: CreateRetainedResources
+    DeletionPolicy: Retain
+    Properties:
+      LogGroupName: !Sub /aws/lambda/realworld-${Environment}-deleteArticle
+  FavoriteArticleLogGroup:
+    Type: AWS::Logs::LogGroup
+    Condition: CreateRetainedResources
+    DeletionPolicy: Retain
+    Properties:
+      LogGroupName: !Sub /aws/lambda/realworld-${Environment}-favoriteArticle
+  UnfavoriteArticleLogGroup:
+    Type: AWS::Logs::LogGroup
+    Condition: CreateRetainedResources
+    DeletionPolicy: Retain
+    Properties:
+      LogGroupName: !Sub /aws/lambda/realworld-${Environment}-unfavoriteArticle
+  ListArticlesLogGroup:
+    Type: AWS::Logs::LogGroup
+    Condition: CreateRetainedResources
+    DeletionPolicy: Retain
+    Properties:
+      LogGroupName: !Sub /aws/lambda/realworld-${Environment}-listArticles
+  GetArticlesFeedLogGroup:
+    Type: AWS::Logs::LogGroup
+    Condition: CreateRetainedResources
+    DeletionPolicy: Retain
+    Properties:
+      LogGroupName: !Sub /aws/lambda/realworld-${Environment}-getArticlesFeed
+  GetTagsLogGroup:
+    Type: AWS::Logs::LogGroup
+    Condition: CreateRetainedResources
+    DeletionPolicy: Retain
+    Properties:
+      LogGroupName: !Sub /aws/lambda/realworld-${Environment}-getTags
+  CreateCommentLogGroup:
+    Type: AWS::Logs::LogGroup
+    Condition: CreateRetainedResources
+    DeletionPolicy: Retain
+    Properties:
+      LogGroupName: !Sub /aws/lambda/realworld-${Environment}-createComment
+  GetCommentsLogGroup:
+    Type: AWS::Logs::LogGroup
+    Condition: CreateRetainedResources
+    DeletionPolicy: Retain
+    Properties:
+      LogGroupName: !Sub /aws/lambda/realworld-${Environment}-getComments
+  DeleteCommentLogGroup:
+    Type: AWS::Logs::LogGroup
+    Condition: CreateRetainedResources
+    DeletionPolicy: Retain
+    Properties:
+      LogGroupName: !Sub /aws/lambda/realworld-${Environment}-deleteComment
+  PingLogGroup:
+    Type: AWS::Logs::LogGroup
+    Condition: CreateRetainedResources
+    DeletionPolicy: Retain
+    Properties:
+      LogGroupName: !Sub /aws/lambda/realworld-${Environment}-ping
+  PurgeDataLogGroup:
+    Type: AWS::Logs::LogGroup
+    Condition: CreateRetainedResources
+    DeletionPolicy: Retain
+    Properties:
+      LogGroupName: !Sub /aws/lambda/realworld-${Environment}-purgeData
+  LambdaExecutionRole:
+    Type: AWS::IAM::Role
+    DeletionPolicy: Delete
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Policies:
+        - PolicyName: !Join 
+            - '-'
+            - - realworld
+              - dev
+              - lambda
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - logs:CreateLogStream
+                  - logs:CreateLogGroup
+                Resource:
+                  - !Sub arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/realworld-dev*:*
+              - Effect: Allow
+                Action:
+                  - logs:PutLogEvents
+                Resource:
+                  - !Sub arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/realworld-dev*:*:*
+              - Effect: Allow
+                Action:
+                  - dynamodb:Query
+                  - dynamodb:Scan
+                  - dynamodb:GetItem
+                  - dynamodb:PutItem
+                  - dynamodb:UpdateItem
+                  - dynamodb:DeleteItem
+                Resource: arn:aws:dynamodb:us-east-1:*:table/*
+      Path: /
+      RoleName: !Join 
+        - '-'
+        - - realworld
+          - dev
+          - !Ref AWS::Region
+          - lambdaRole
+  CreateUserLambdaFunction:
+    Type: AWS::Lambda::Function
+    DeletionPolicy: Delete
+    Properties:
+      Code:
+        S3Bucket: !Ref ServerlessDeploymentBucket
+        S3Key: !Sub serverless/realworld/${Environment}/backend.zip
+      Handler: src/User.create
+      Runtime: nodejs14.x
+      FunctionName: !Sub realworld-${Environment}-createUser
+      MemorySize: 1024
+      Timeout: 6
+      Environment:
+        Variables:
+          DYNAMODB_NAMESPACE: dev
+      Role: !GetAtt 
+        - LambdaExecutionRole
+        - Arn
+    DependsOn:
+      - CreateUserLogGroup
+  LoginUserLambdaFunction:
+    Type: AWS::Lambda::Function
+    DeletionPolicy: Delete
+    Properties:
+      Code:
+        S3Bucket: !Ref ServerlessDeploymentBucket
+        S3Key: !Sub serverless/realworld/${Environment}/backend.zip
+      Handler: src/User.login
+      Runtime: nodejs14.x
+      FunctionName: !Sub realworld-${Environment}-loginUser
+      MemorySize: 1024
+      Timeout: 6
+      Environment:
+        Variables:
+          DYNAMODB_NAMESPACE: dev
+      Role: !GetAtt 
+        - LambdaExecutionRole
+        - Arn
+    DependsOn:
+      - LoginUserLogGroup
+  GetUserLambdaFunction:
+    Type: AWS::Lambda::Function
+    DeletionPolicy: Delete
+    Properties:
+      Code:
+        S3Bucket: !Ref ServerlessDeploymentBucket
+        S3Key: !Sub serverless/realworld/${Environment}/backend.zip
+      Handler: src/User.get
+      Runtime: nodejs14.x
+      FunctionName: !Sub realworld-${Environment}-getUser
+      MemorySize: 1024
+      Timeout: 6
+      Environment:
+        Variables:
+          DYNAMODB_NAMESPACE: dev
+      Role: !GetAtt 
+        - LambdaExecutionRole
+        - Arn
+    DependsOn:
+      - GetUserLogGroup
+  UpdateUserLambdaFunction:
+    Type: AWS::Lambda::Function
+    DeletionPolicy: Delete
+    Properties:
+      Code:
+        S3Bucket: !Ref ServerlessDeploymentBucket
+        S3Key: !Sub serverless/realworld/${Environment}/backend.zip
+      Handler: src/User.update
+      Runtime: nodejs14.x
+      FunctionName: !Sub realworld-${Environment}-updateUser
+      MemorySize: 1024
+      Timeout: 6
+      Environment:
+        Variables:
+          DYNAMODB_NAMESPACE: dev
+      Role: !GetAtt 
+        - LambdaExecutionRole
+        - Arn
+    DependsOn:
+      - UpdateUserLogGroup
+  GetProfileLambdaFunction:
+    Type: AWS::Lambda::Function
+    DeletionPolicy: Delete
+    Properties:
+      Code:
+        S3Bucket: !Ref ServerlessDeploymentBucket
+        S3Key: !Sub serverless/realworld/${Environment}/backend.zip
+      Handler: src/User.getProfile
+      Runtime: nodejs14.x
+      FunctionName: !Sub realworld-${Environment}-getProfile
+      MemorySize: 1024
+      Timeout: 6
+      Environment:
+        Variables:
+          DYNAMODB_NAMESPACE: dev
+      Role: !GetAtt 
+        - LambdaExecutionRole
+        - Arn
+    DependsOn:
+      - GetProfileLogGroup
+  FollowUserLambdaFunction:
+    Type: AWS::Lambda::Function
+    DeletionPolicy: Delete
+    Properties:
+      Code:
+        S3Bucket: !Ref ServerlessDeploymentBucket
+        S3Key: !Sub serverless/realworld/${Environment}/backend.zip
+      Handler: src/User.follow
+      Runtime: nodejs14.x
+      FunctionName: !Sub realworld-${Environment}-followUser
+      MemorySize: 1024
+      Timeout: 6
+      Environment:
+        Variables:
+          DYNAMODB_NAMESPACE: dev
+      Role: !GetAtt 
+        - LambdaExecutionRole
+        - Arn
+    DependsOn:
+      - FollowUserLogGroup
+  UnfollowUserLambdaFunction:
+    Type: AWS::Lambda::Function
+    DeletionPolicy: Delete
+    Properties:
+      Code:
+        S3Bucket: !Ref ServerlessDeploymentBucket
+        S3Key: !Sub serverless/realworld/${Environment}/backend.zip
+      Handler: src/User.follow
+      Runtime: nodejs14.x
+      FunctionName: !Sub realworld-${Environment}-unfollowUser
+      MemorySize: 1024
+      Timeout: 6
+      Environment:
+        Variables:
+          DYNAMODB_NAMESPACE: dev
+      Role: !GetAtt 
+        - LambdaExecutionRole
+        - Arn
+    DependsOn:
+      - UnfollowUserLogGroup
+  CreateArticleLambdaFunction:
+    Type: AWS::Lambda::Function
+    DeletionPolicy: Delete
+    Properties:
+      Code:
+        S3Bucket: !Ref ServerlessDeploymentBucket
+        S3Key: !Sub serverless/realworld/${Environment}/backend.zip
+      Handler: src/Article.create
+      Runtime: nodejs14.x
+      FunctionName: !Sub realworld-${Environment}-createArticle
+      MemorySize: 1024
+      Timeout: 6
+      Environment:
+        Variables:
+          DYNAMODB_NAMESPACE: dev
+      Role: !GetAtt 
+        - LambdaExecutionRole
+        - Arn
+    DependsOn:
+      - CreateArticleLogGroup
+  GetArticleLambdaFunction:
+    Type: AWS::Lambda::Function
+    DeletionPolicy: Delete
+    Properties:
+      Code:
+        S3Bucket: !Ref ServerlessDeploymentBucket
+        S3Key: !Sub serverless/realworld/${Environment}/backend.zip
+      Handler: src/Article.get
+      Runtime: nodejs14.x
+      FunctionName: !Sub realworld-${Environment}-getArticle
+      MemorySize: 1024
+      Timeout: 6
+      Environment:
+        Variables:
+          DYNAMODB_NAMESPACE: dev
+      Role: !GetAtt 
+        - LambdaExecutionRole
+        - Arn
+    DependsOn:
+      - GetArticleLogGroup
+  UpdateArticleLambdaFunction:
+    Type: AWS::Lambda::Function
+    DeletionPolicy: Delete
+    Properties:
+      Code:
+        S3Bucket: !Ref ServerlessDeploymentBucket
+        S3Key: !Sub serverless/realworld/${Environment}/backend.zip
+      Handler: src/Article.update
+      Runtime: nodejs14.x
+      FunctionName: !Sub realworld-${Environment}-updateArticle
+      MemorySize: 1024
+      Timeout: 6
+      Environment:
+        Variables:
+          DYNAMODB_NAMESPACE: dev
+      Role: !GetAtt 
+        - LambdaExecutionRole
+        - Arn
+    DependsOn:
+      - UpdateArticleLogGroup
+  DeleteArticleLambdaFunction:
+    Type: AWS::Lambda::Function
+    DeletionPolicy: Delete
+    Properties:
+      Code:
+        S3Bucket: !Ref ServerlessDeploymentBucket
+        S3Key: !Sub serverless/realworld/${Environment}/backend.zip
+      Handler: src/Article.delete
+      Runtime: nodejs14.x
+      FunctionName: !Sub realworld-${Environment}-deleteArticle
+      MemorySize: 1024
+      Timeout: 6
+      Environment:
+        Variables:
+          DYNAMODB_NAMESPACE: dev
+      Role: !GetAtt 
+        - LambdaExecutionRole
+        - Arn
+    DependsOn:
+      - DeleteArticleLogGroup
+  FavoriteArticleLambdaFunction:
+    Type: AWS::Lambda::Function
+    DeletionPolicy: Delete
+    Properties:
+      Code:
+        S3Bucket: !Ref ServerlessDeploymentBucket
+        S3Key: !Sub serverless/realworld/${Environment}/backend.zip
+      Handler: src/Article.favorite
+      Runtime: nodejs14.x
+      FunctionName: !Sub realworld-${Environment}-favoriteArticle
+      MemorySize: 1024
+      Timeout: 6
+      Environment:
+        Variables:
+          DYNAMODB_NAMESPACE: dev
+      Role: !GetAtt 
+        - LambdaExecutionRole
+        - Arn
+    DependsOn:
+      - FavoriteArticleLogGroup
+  UnfavoriteArticleLambdaFunction:
+    Type: AWS::Lambda::Function
+    DeletionPolicy: Delete
+    Properties:
+      Code:
+        S3Bucket: !Ref ServerlessDeploymentBucket
+        S3Key: !Sub serverless/realworld/${Environment}/backend.zip
+      Handler: src/Article.favorite
+      Runtime: nodejs14.x
+      FunctionName: !Sub realworld-${Environment}-unfavoriteArticle
+      MemorySize: 1024
+      Timeout: 6
+      Environment:
+        Variables:
+          DYNAMODB_NAMESPACE: dev
+      Role: !GetAtt 
+        - LambdaExecutionRole
+        - Arn
+    DependsOn:
+      - UnfavoriteArticleLogGroup
+  ListArticlesLambdaFunction:
+    Type: AWS::Lambda::Function
+    DeletionPolicy: Delete
+    Properties:
+      Code:
+        S3Bucket: !Ref ServerlessDeploymentBucket
+        S3Key: !Sub serverless/realworld/${Environment}/backend.zip
+      Handler: src/Article.list
+      Runtime: nodejs14.x
+      FunctionName: !Sub realworld-${Environment}-listArticles
+      MemorySize: 1024
+      Timeout: 6
+      Environment:
+        Variables:
+          DYNAMODB_NAMESPACE: dev
+      Role: !GetAtt 
+        - LambdaExecutionRole
+        - Arn
+    DependsOn:
+      - ListArticlesLogGroup
+  GetArticlesFeedLambdaFunction:
+    Type: AWS::Lambda::Function
+    DeletionPolicy: Delete
+    Properties:
+      Code:
+        S3Bucket: !Ref ServerlessDeploymentBucket
+        S3Key: !Sub serverless/realworld/${Environment}/backend.zip
+      Handler: src/Article.getFeed
+      Runtime: nodejs14.x
+      FunctionName: !Sub realworld-${Environment}-getArticlesFeed
+      MemorySize: 1024
+      Timeout: 6
+      Environment:
+        Variables:
+          DYNAMODB_NAMESPACE: dev
+      Role: !GetAtt 
+        - LambdaExecutionRole
+        - Arn
+    DependsOn:
+      - GetArticlesFeedLogGroup
+  GetTagsLambdaFunction:
+    Type: AWS::Lambda::Function
+    DeletionPolicy: Delete
+    Properties:
+      Code:
+        S3Bucket: !Ref ServerlessDeploymentBucket
+        S3Key: !Sub serverless/realworld/${Environment}/backend.zip
+      Handler: src/Article.getTags
+      Runtime: nodejs14.x
+      FunctionName: !Sub realworld-${Environment}-getTags
+      MemorySize: 1024
+      Timeout: 6
+      Environment:
+        Variables:
+          DYNAMODB_NAMESPACE: dev
+      Role: !GetAtt 
+        - LambdaExecutionRole
+        - Arn
+    DependsOn:
+      - GetTagsLogGroup
+  CreateCommentLambdaFunction:
+    Type: AWS::Lambda::Function
+    DeletionPolicy: Delete
+    Properties:
+      Code:
+        S3Bucket: !Ref ServerlessDeploymentBucket
+        S3Key: !Sub serverless/realworld/${Environment}/backend.zip
+      Handler: src/Comment.create
+      Runtime: nodejs14.x
+      FunctionName: !Sub realworld-${Environment}-createComment
+      MemorySize: 1024
+      Timeout: 6
+      Environment:
+        Variables:
+          DYNAMODB_NAMESPACE: dev
+      Role: !GetAtt 
+        - LambdaExecutionRole
+        - Arn
+    DependsOn:
+      - CreateCommentLogGroup
+  GetCommentsLambdaFunction:
+    Type: AWS::Lambda::Function
+    DeletionPolicy: Delete
+    Properties:
+      Code:
+        S3Bucket: !Ref ServerlessDeploymentBucket
+        S3Key: !Sub serverless/realworld/${Environment}/backend.zip
+      Handler: src/Comment.get
+      Runtime: nodejs14.x
+      FunctionName: !Sub realworld-${Environment}-getComments
+      MemorySize: 1024
+      Timeout: 6
+      Environment:
+        Variables:
+          DYNAMODB_NAMESPACE: dev
+      Role: !GetAtt 
+        - LambdaExecutionRole
+        - Arn
+    DependsOn:
+      - GetCommentsLogGroup
+  DeleteCommentLambdaFunction:
+    Type: AWS::Lambda::Function
+    DeletionPolicy: Delete
+    Properties:
+      Code:
+        S3Bucket: !Ref ServerlessDeploymentBucket
+        S3Key: !Sub serverless/realworld/${Environment}/backend.zip
+      Handler: src/Comment.delete
+      Runtime: nodejs14.x
+      FunctionName: !Sub realworld-${Environment}-deleteComment
+      MemorySize: 1024
+      Timeout: 6
+      Environment:
+        Variables:
+          DYNAMODB_NAMESPACE: dev
+      Role: !GetAtt 
+        - LambdaExecutionRole
+        - Arn
+    DependsOn:
+      - DeleteCommentLogGroup
+  PingLambdaFunction:
+    Type: AWS::Lambda::Function
+    DeletionPolicy: Delete
+    Properties:
+      Code:
+        S3Bucket: !Ref ServerlessDeploymentBucket
+        S3Key: !Sub serverless/realworld/${Environment}/backend.zip
+      Handler: src/Util.ping
+      Runtime: nodejs14.x
+      FunctionName: !Sub realworld-${Environment}-ping
+      MemorySize: 1024
+      Timeout: 6
+      Environment:
+        Variables:
+          DYNAMODB_NAMESPACE: dev
+      Role: !GetAtt 
+        - LambdaExecutionRole
+        - Arn
+    DependsOn:
+      - PingLogGroup
+  PurgeDataLambdaFunction:
+    Type: AWS::Lambda::Function
+    DeletionPolicy: Delete
+    Properties:
+      Code:
+        S3Bucket: !Ref ServerlessDeploymentBucket
+        S3Key: !Sub serverless/realworld/${Environment}/backend.zip
+      Handler: src/Util.purgeData
+      Runtime: nodejs14.x
+      FunctionName: !Sub realworld-${Environment}-purgeData
+      MemorySize: 1024
+      Timeout: 6
+      Environment:
+        Variables:
+          DYNAMODB_NAMESPACE: dev
+      Role: !GetAtt 
+        - LambdaExecutionRole
+        - Arn
+    DependsOn:
+      - PurgeDataLogGroup
+  ApiGatewayRestApi:
+    Type: AWS::ApiGateway::RestApi
+    DeletionPolicy: Delete
+    Properties:
+      Name: !Sub ${Environment}-realworld
+      EndpointConfiguration:
+        Types:
+          - EDGE
+      Policy: ''
+  ApiGatewayResourceApi:
+    Type: AWS::ApiGateway::Resource
+    DeletionPolicy: Delete
+    Properties:
+      ParentId: !GetAtt 
+        - ApiGatewayRestApi
+        - RootResourceId
+      PathPart: api
+      RestApiId: !Ref ApiGatewayRestApi
+  ApiGatewayResourceApiUsers:
+    Type: AWS::ApiGateway::Resource
+    DeletionPolicy: Delete
+    Properties:
+      ParentId: !Ref ApiGatewayResourceApi
+      PathPart: users
+      RestApiId: !Ref ApiGatewayRestApi
+  ApiGatewayResourceApiUsersLogin:
+    Type: AWS::ApiGateway::Resource
+    DeletionPolicy: Delete
+    Properties:
+      ParentId: !Ref ApiGatewayResourceApiUsers
+      PathPart: login
+      RestApiId: !Ref ApiGatewayRestApi
+  ApiGatewayResourceApiUser:
+    Type: AWS::ApiGateway::Resource
+    DeletionPolicy: Delete
+    Properties:
+      ParentId: !Ref ApiGatewayResourceApi
+      PathPart: user
+      RestApiId: !Ref ApiGatewayRestApi
+  ApiGatewayResourceApiProfiles:
+    Type: AWS::ApiGateway::Resource
+    DeletionPolicy: Delete
+    Properties:
+      ParentId: !Ref ApiGatewayResourceApi
+      PathPart: profiles
+      RestApiId: !Ref ApiGatewayRestApi
+  ApiGatewayResourceApiProfilesUsernameVar:
+    Type: AWS::ApiGateway::Resource
+    DeletionPolicy: Delete
+    Properties:
+      ParentId: !Ref ApiGatewayResourceApiProfiles
+      PathPart: '{username}'
+      RestApiId: !Ref ApiGatewayRestApi
+  ApiGatewayResourceApiProfilesUsernameVarFollow:
+    Type: AWS::ApiGateway::Resource
+    DeletionPolicy: Delete
+    Properties:
+      ParentId: !Ref ApiGatewayResourceApiProfilesUsernameVar
+      PathPart: follow
+      RestApiId: !Ref ApiGatewayRestApi
+  ApiGatewayResourceApiArticles:
+    Type: AWS::ApiGateway::Resource
+    DeletionPolicy: Delete
+    Properties:
+      ParentId: !Ref ApiGatewayResourceApi
+      PathPart: articles
+      RestApiId: !Ref ApiGatewayRestApi
+  ApiGatewayResourceApiArticlesSlugVar:
+    Type: AWS::ApiGateway::Resource
+    DeletionPolicy: Delete
+    Properties:
+      ParentId: !Ref ApiGatewayResourceApiArticles
+      PathPart: '{slug}'
+      RestApiId: !Ref ApiGatewayRestApi
+  ApiGatewayResourceApiArticlesSlugVarFavorite:
+    Type: AWS::ApiGateway::Resource
+    DeletionPolicy: Delete
+    Properties:
+      ParentId: !Ref ApiGatewayResourceApiArticlesSlugVar
+      PathPart: favorite
+      RestApiId: !Ref ApiGatewayRestApi
+  ApiGatewayResourceApiArticlesSlugVarComments:
+    Type: AWS::ApiGateway::Resource
+    DeletionPolicy: Delete
+    Properties:
+      ParentId: !Ref ApiGatewayResourceApiArticlesSlugVar
+      PathPart: comments
+      RestApiId: !Ref ApiGatewayRestApi
+  ApiGatewayResourceApiArticlesSlugVarCommentsIdVar:
+    Type: AWS::ApiGateway::Resource
+    DeletionPolicy: Delete
+    Properties:
+      ParentId: !Ref ApiGatewayResourceApiArticlesSlugVarComments
+      PathPart: '{id}'
+      RestApiId: !Ref ApiGatewayRestApi
+  ApiGatewayResourceApiArticlesFeed:
+    Type: AWS::ApiGateway::Resource
+    DeletionPolicy: Delete
+    Properties:
+      ParentId: !Ref ApiGatewayResourceApiArticles
+      PathPart: feed
+      RestApiId: !Ref ApiGatewayRestApi
+  ApiGatewayResourceApiTags:
+    Type: AWS::ApiGateway::Resource
+    DeletionPolicy: Delete
+    Properties:
+      ParentId: !Ref ApiGatewayResourceApi
+      PathPart: tags
+      RestApiId: !Ref ApiGatewayRestApi
+  ApiGatewayResourceApiPing:
+    Type: AWS::ApiGateway::Resource
+    DeletionPolicy: Delete
+    Properties:
+      ParentId: !Ref ApiGatewayResourceApi
+      PathPart: ping
+      RestApiId: !Ref ApiGatewayRestApi
+  ApiGatewayResourceApiTestutils:
+    Type: AWS::ApiGateway::Resource
+    DeletionPolicy: Delete
+    Properties:
+      ParentId: !Ref ApiGatewayResourceApi
+      PathPart: __TESTUTILS__
+      RestApiId: !Ref ApiGatewayRestApi
+  ApiGatewayResourceApiTestutilsPurge:
+    Type: AWS::ApiGateway::Resource
+    DeletionPolicy: Delete
+    Properties:
+      ParentId: !Ref ApiGatewayResourceApiTestutils
+      PathPart: purge
+      RestApiId: !Ref ApiGatewayRestApi
+  ApiGatewayMethodApiUsersOptions:
+    Type: AWS::ApiGateway::Method
+    DeletionPolicy: Delete
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: OPTIONS
+      MethodResponses:
+        - StatusCode: '200'
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Origin: true
+            method.response.header.Access-Control-Allow-Headers: true
+            method.response.header.Access-Control-Allow-Methods: true
+          ResponseModels: {}
+      RequestParameters: {}
+      Integration:
+        Type: MOCK
+        RequestTemplates:
+          application/json: '{statusCode:200}'
+        ContentHandling: CONVERT_TO_TEXT
+        IntegrationResponses:
+          - StatusCode: '200'
+            ResponseParameters:
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+              method.response.header.Access-Control-Allow-Headers: >-
+                'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'
+              method.response.header.Access-Control-Allow-Methods: '''OPTIONS,POST'''
+            ResponseTemplates:
+              application/json: ''
+      ResourceId: !Ref ApiGatewayResourceApiUsers
+      RestApiId: !Ref ApiGatewayRestApi
+  ApiGatewayMethodApiUsersLoginOptions:
+    Type: AWS::ApiGateway::Method
+    DeletionPolicy: Delete
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: OPTIONS
+      MethodResponses:
+        - StatusCode: '200'
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Origin: true
+            method.response.header.Access-Control-Allow-Headers: true
+            method.response.header.Access-Control-Allow-Methods: true
+          ResponseModels: {}
+      RequestParameters: {}
+      Integration:
+        Type: MOCK
+        RequestTemplates:
+          application/json: '{statusCode:200}'
+        ContentHandling: CONVERT_TO_TEXT
+        IntegrationResponses:
+          - StatusCode: '200'
+            ResponseParameters:
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+              method.response.header.Access-Control-Allow-Headers: >-
+                'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'
+              method.response.header.Access-Control-Allow-Methods: '''OPTIONS,POST'''
+            ResponseTemplates:
+              application/json: ''
+      ResourceId: !Ref ApiGatewayResourceApiUsersLogin
+      RestApiId: !Ref ApiGatewayRestApi
+  ApiGatewayMethodApiUserOptions:
+    Type: AWS::ApiGateway::Method
+    DeletionPolicy: Delete
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: OPTIONS
+      MethodResponses:
+        - StatusCode: '200'
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Origin: true
+            method.response.header.Access-Control-Allow-Headers: true
+            method.response.header.Access-Control-Allow-Methods: true
+          ResponseModels: {}
+      RequestParameters: {}
+      Integration:
+        Type: MOCK
+        RequestTemplates:
+          application/json: '{statusCode:200}'
+        ContentHandling: CONVERT_TO_TEXT
+        IntegrationResponses:
+          - StatusCode: '200'
+            ResponseParameters:
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+              method.response.header.Access-Control-Allow-Headers: >-
+                'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'
+              method.response.header.Access-Control-Allow-Methods: '''OPTIONS,PUT,GET'''
+            ResponseTemplates:
+              application/json: ''
+      ResourceId: !Ref ApiGatewayResourceApiUser
+      RestApiId: !Ref ApiGatewayRestApi
+  ApiGatewayMethodApiProfilesUsernameVarOptions:
+    Type: AWS::ApiGateway::Method
+    DeletionPolicy: Delete
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: OPTIONS
+      MethodResponses:
+        - StatusCode: '200'
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Origin: true
+            method.response.header.Access-Control-Allow-Headers: true
+            method.response.header.Access-Control-Allow-Methods: true
+          ResponseModels: {}
+      RequestParameters: {}
+      Integration:
+        Type: MOCK
+        RequestTemplates:
+          application/json: '{statusCode:200}'
+        ContentHandling: CONVERT_TO_TEXT
+        IntegrationResponses:
+          - StatusCode: '200'
+            ResponseParameters:
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+              method.response.header.Access-Control-Allow-Headers: >-
+                'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'
+              method.response.header.Access-Control-Allow-Methods: '''OPTIONS,GET'''
+            ResponseTemplates:
+              application/json: ''
+      ResourceId: !Ref ApiGatewayResourceApiProfilesUsernameVar
+      RestApiId: !Ref ApiGatewayRestApi
+  ApiGatewayMethodApiProfilesUsernameVarFollowOptions:
+    Type: AWS::ApiGateway::Method
+    DeletionPolicy: Delete
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: OPTIONS
+      MethodResponses:
+        - StatusCode: '200'
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Origin: true
+            method.response.header.Access-Control-Allow-Headers: true
+            method.response.header.Access-Control-Allow-Methods: true
+          ResponseModels: {}
+      RequestParameters: {}
+      Integration:
+        Type: MOCK
+        RequestTemplates:
+          application/json: '{statusCode:200}'
+        ContentHandling: CONVERT_TO_TEXT
+        IntegrationResponses:
+          - StatusCode: '200'
+            ResponseParameters:
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+              method.response.header.Access-Control-Allow-Headers: >-
+                'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'
+              method.response.header.Access-Control-Allow-Methods: '''OPTIONS,DELETE,POST'''
+            ResponseTemplates:
+              application/json: ''
+      ResourceId: !Ref ApiGatewayResourceApiProfilesUsernameVarFollow
+      RestApiId: !Ref ApiGatewayRestApi
+  ApiGatewayMethodApiArticlesOptions:
+    Type: AWS::ApiGateway::Method
+    DeletionPolicy: Delete
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: OPTIONS
+      MethodResponses:
+        - StatusCode: '200'
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Origin: true
+            method.response.header.Access-Control-Allow-Headers: true
+            method.response.header.Access-Control-Allow-Methods: true
+          ResponseModels: {}
+      RequestParameters: {}
+      Integration:
+        Type: MOCK
+        RequestTemplates:
+          application/json: '{statusCode:200}'
+        ContentHandling: CONVERT_TO_TEXT
+        IntegrationResponses:
+          - StatusCode: '200'
+            ResponseParameters:
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+              method.response.header.Access-Control-Allow-Headers: >-
+                'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'
+              method.response.header.Access-Control-Allow-Methods: '''OPTIONS,GET,POST'''
+            ResponseTemplates:
+              application/json: ''
+      ResourceId: !Ref ApiGatewayResourceApiArticles
+      RestApiId: !Ref ApiGatewayRestApi
+  ApiGatewayMethodApiArticlesSlugVarOptions:
+    Type: AWS::ApiGateway::Method
+    DeletionPolicy: Delete
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: OPTIONS
+      MethodResponses:
+        - StatusCode: '200'
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Origin: true
+            method.response.header.Access-Control-Allow-Headers: true
+            method.response.header.Access-Control-Allow-Methods: true
+          ResponseModels: {}
+      RequestParameters: {}
+      Integration:
+        Type: MOCK
+        RequestTemplates:
+          application/json: '{statusCode:200}'
+        ContentHandling: CONVERT_TO_TEXT
+        IntegrationResponses:
+          - StatusCode: '200'
+            ResponseParameters:
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+              method.response.header.Access-Control-Allow-Headers: >-
+                'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'
+              method.response.header.Access-Control-Allow-Methods: '''OPTIONS,DELETE,PUT,GET'''
+            ResponseTemplates:
+              application/json: ''
+      ResourceId: !Ref ApiGatewayResourceApiArticlesSlugVar
+      RestApiId: !Ref ApiGatewayRestApi
+  ApiGatewayMethodApiArticlesSlugVarFavoriteOptions:
+    Type: AWS::ApiGateway::Method
+    DeletionPolicy: Delete
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: OPTIONS
+      MethodResponses:
+        - StatusCode: '200'
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Origin: true
+            method.response.header.Access-Control-Allow-Headers: true
+            method.response.header.Access-Control-Allow-Methods: true
+          ResponseModels: {}
+      RequestParameters: {}
+      Integration:
+        Type: MOCK
+        RequestTemplates:
+          application/json: '{statusCode:200}'
+        ContentHandling: CONVERT_TO_TEXT
+        IntegrationResponses:
+          - StatusCode: '200'
+            ResponseParameters:
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+              method.response.header.Access-Control-Allow-Headers: >-
+                'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'
+              method.response.header.Access-Control-Allow-Methods: '''OPTIONS,DELETE,POST'''
+            ResponseTemplates:
+              application/json: ''
+      ResourceId: !Ref ApiGatewayResourceApiArticlesSlugVarFavorite
+      RestApiId: !Ref ApiGatewayRestApi
+  ApiGatewayMethodApiArticlesFeedOptions:
+    Type: AWS::ApiGateway::Method
+    DeletionPolicy: Delete
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: OPTIONS
+      MethodResponses:
+        - StatusCode: '200'
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Origin: true
+            method.response.header.Access-Control-Allow-Headers: true
+            method.response.header.Access-Control-Allow-Methods: true
+          ResponseModels: {}
+      RequestParameters: {}
+      Integration:
+        Type: MOCK
+        RequestTemplates:
+          application/json: '{statusCode:200}'
+        ContentHandling: CONVERT_TO_TEXT
+        IntegrationResponses:
+          - StatusCode: '200'
+            ResponseParameters:
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+              method.response.header.Access-Control-Allow-Headers: >-
+                'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'
+              method.response.header.Access-Control-Allow-Methods: '''OPTIONS,GET'''
+            ResponseTemplates:
+              application/json: ''
+      ResourceId: !Ref ApiGatewayResourceApiArticlesFeed
+      RestApiId: !Ref ApiGatewayRestApi
+  ApiGatewayMethodApiTagsOptions:
+    Type: AWS::ApiGateway::Method
+    DeletionPolicy: Delete
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: OPTIONS
+      MethodResponses:
+        - StatusCode: '200'
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Origin: true
+            method.response.header.Access-Control-Allow-Headers: true
+            method.response.header.Access-Control-Allow-Methods: true
+          ResponseModels: {}
+      RequestParameters: {}
+      Integration:
+        Type: MOCK
+        RequestTemplates:
+          application/json: '{statusCode:200}'
+        ContentHandling: CONVERT_TO_TEXT
+        IntegrationResponses:
+          - StatusCode: '200'
+            ResponseParameters:
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+              method.response.header.Access-Control-Allow-Headers: >-
+                'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'
+              method.response.header.Access-Control-Allow-Methods: '''OPTIONS,GET'''
+            ResponseTemplates:
+              application/json: ''
+      ResourceId: !Ref ApiGatewayResourceApiTags
+      RestApiId: !Ref ApiGatewayRestApi
+  ApiGatewayMethodApiArticlesSlugVarCommentsOptions:
+    Type: AWS::ApiGateway::Method
+    DeletionPolicy: Delete
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: OPTIONS
+      MethodResponses:
+        - StatusCode: '200'
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Origin: true
+            method.response.header.Access-Control-Allow-Headers: true
+            method.response.header.Access-Control-Allow-Methods: true
+          ResponseModels: {}
+      RequestParameters: {}
+      Integration:
+        Type: MOCK
+        RequestTemplates:
+          application/json: '{statusCode:200}'
+        ContentHandling: CONVERT_TO_TEXT
+        IntegrationResponses:
+          - StatusCode: '200'
+            ResponseParameters:
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+              method.response.header.Access-Control-Allow-Headers: >-
+                'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'
+              method.response.header.Access-Control-Allow-Methods: '''OPTIONS,GET,POST'''
+            ResponseTemplates:
+              application/json: ''
+      ResourceId: !Ref ApiGatewayResourceApiArticlesSlugVarComments
+      RestApiId: !Ref ApiGatewayRestApi
+  ApiGatewayMethodApiArticlesSlugVarCommentsIdVarOptions:
+    Type: AWS::ApiGateway::Method
+    DeletionPolicy: Delete
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: OPTIONS
+      MethodResponses:
+        - StatusCode: '200'
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Origin: true
+            method.response.header.Access-Control-Allow-Headers: true
+            method.response.header.Access-Control-Allow-Methods: true
+          ResponseModels: {}
+      RequestParameters: {}
+      Integration:
+        Type: MOCK
+        RequestTemplates:
+          application/json: '{statusCode:200}'
+        ContentHandling: CONVERT_TO_TEXT
+        IntegrationResponses:
+          - StatusCode: '200'
+            ResponseParameters:
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+              method.response.header.Access-Control-Allow-Headers: >-
+                'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'
+              method.response.header.Access-Control-Allow-Methods: '''OPTIONS,DELETE'''
+            ResponseTemplates:
+              application/json: ''
+      ResourceId: !Ref ApiGatewayResourceApiArticlesSlugVarCommentsIdVar
+      RestApiId: !Ref ApiGatewayRestApi
+  ApiGatewayMethodApiPingOptions:
+    Type: AWS::ApiGateway::Method
+    DeletionPolicy: Delete
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: OPTIONS
+      MethodResponses:
+        - StatusCode: '200'
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Origin: true
+            method.response.header.Access-Control-Allow-Headers: true
+            method.response.header.Access-Control-Allow-Methods: true
+          ResponseModels: {}
+      RequestParameters: {}
+      Integration:
+        Type: MOCK
+        RequestTemplates:
+          application/json: '{statusCode:200}'
+        ContentHandling: CONVERT_TO_TEXT
+        IntegrationResponses:
+          - StatusCode: '200'
+            ResponseParameters:
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+              method.response.header.Access-Control-Allow-Headers: >-
+                'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'
+              method.response.header.Access-Control-Allow-Methods: '''OPTIONS,GET'''
+            ResponseTemplates:
+              application/json: ''
+      ResourceId: !Ref ApiGatewayResourceApiPing
+      RestApiId: !Ref ApiGatewayRestApi
+  ApiGatewayMethodApiUsersPost:
+    Type: AWS::ApiGateway::Method
+    DeletionPolicy: Delete
+    Properties:
+      HttpMethod: POST
+      RequestParameters: {}
+      ResourceId: !Ref ApiGatewayResourceApiUsers
+      RestApiId: !Ref ApiGatewayRestApi
+      ApiKeyRequired: false
+      AuthorizationType: NONE
+      Integration:
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Join 
+          - ''
+          - - 'arn:'
+            - !Ref 'AWS::Partition'
+            - ':apigateway:'
+            - !Ref 'AWS::Region'
+            - ':lambda:path/2015-03-31/functions/'
+            - !GetAtt 
+              - CreateUserLambdaFunction
+              - Arn
+            - /invocations
+      MethodResponses: []
+    DependsOn:
+      - CreateUserLambdaPermissionApiGateway
+  ApiGatewayMethodApiUsersLoginPost:
+    Type: AWS::ApiGateway::Method
+    DeletionPolicy: Delete
+    Properties:
+      HttpMethod: POST
+      RequestParameters: {}
+      ResourceId: !Ref ApiGatewayResourceApiUsersLogin
+      RestApiId: !Ref ApiGatewayRestApi
+      ApiKeyRequired: false
+      AuthorizationType: NONE
+      Integration:
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Join 
+          - ''
+          - - 'arn:'
+            - !Ref 'AWS::Partition'
+            - ':apigateway:'
+            - !Ref 'AWS::Region'
+            - ':lambda:path/2015-03-31/functions/'
+            - !GetAtt 
+              - LoginUserLambdaFunction
+              - Arn
+            - /invocations
+      MethodResponses: []
+    DependsOn:
+      - LoginUserLambdaPermissionApiGateway
+  ApiGatewayMethodApiUserGet:
+    Type: AWS::ApiGateway::Method
+    DeletionPolicy: Delete
+    Properties:
+      HttpMethod: GET
+      RequestParameters: {}
+      ResourceId: !Ref ApiGatewayResourceApiUser
+      RestApiId: !Ref ApiGatewayRestApi
+      ApiKeyRequired: false
+      AuthorizationType: NONE
+      Integration:
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Join 
+          - ''
+          - - 'arn:'
+            - !Ref 'AWS::Partition'
+            - ':apigateway:'
+            - !Ref 'AWS::Region'
+            - ':lambda:path/2015-03-31/functions/'
+            - !GetAtt 
+              - GetUserLambdaFunction
+              - Arn
+            - /invocations
+      MethodResponses: []
+    DependsOn:
+      - GetUserLambdaPermissionApiGateway
+  ApiGatewayMethodApiUserPut:
+    Type: AWS::ApiGateway::Method
+    DeletionPolicy: Delete
+    Properties:
+      HttpMethod: PUT
+      RequestParameters: {}
+      ResourceId: !Ref ApiGatewayResourceApiUser
+      RestApiId: !Ref ApiGatewayRestApi
+      ApiKeyRequired: false
+      AuthorizationType: NONE
+      Integration:
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Join 
+          - ''
+          - - 'arn:'
+            - !Ref 'AWS::Partition'
+            - ':apigateway:'
+            - !Ref 'AWS::Region'
+            - ':lambda:path/2015-03-31/functions/'
+            - !GetAtt 
+              - UpdateUserLambdaFunction
+              - Arn
+            - /invocations
+      MethodResponses: []
+    DependsOn:
+      - UpdateUserLambdaPermissionApiGateway
+  ApiGatewayMethodApiProfilesUsernameVarGet:
+    Type: AWS::ApiGateway::Method
+    DeletionPolicy: Delete
+    Properties:
+      HttpMethod: GET
+      RequestParameters: {}
+      ResourceId: !Ref ApiGatewayResourceApiProfilesUsernameVar
+      RestApiId: !Ref ApiGatewayRestApi
+      ApiKeyRequired: false
+      AuthorizationType: NONE
+      Integration:
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Join 
+          - ''
+          - - 'arn:'
+            - !Ref 'AWS::Partition'
+            - ':apigateway:'
+            - !Ref 'AWS::Region'
+            - ':lambda:path/2015-03-31/functions/'
+            - !GetAtt 
+              - GetProfileLambdaFunction
+              - Arn
+            - /invocations
+      MethodResponses: []
+    DependsOn:
+      - GetProfileLambdaPermissionApiGateway
+  ApiGatewayMethodApiProfilesUsernameVarFollowPost:
+    Type: AWS::ApiGateway::Method
+    DeletionPolicy: Delete
+    Properties:
+      HttpMethod: POST
+      RequestParameters: {}
+      ResourceId: !Ref ApiGatewayResourceApiProfilesUsernameVarFollow
+      RestApiId: !Ref ApiGatewayRestApi
+      ApiKeyRequired: false
+      AuthorizationType: NONE
+      Integration:
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Join 
+          - ''
+          - - 'arn:'
+            - !Ref 'AWS::Partition'
+            - ':apigateway:'
+            - !Ref 'AWS::Region'
+            - ':lambda:path/2015-03-31/functions/'
+            - !GetAtt 
+              - FollowUserLambdaFunction
+              - Arn
+            - /invocations
+      MethodResponses: []
+    DependsOn:
+      - FollowUserLambdaPermissionApiGateway
+  ApiGatewayMethodApiProfilesUsernameVarFollowDelete:
+    Type: AWS::ApiGateway::Method
+    DeletionPolicy: Delete
+    Properties:
+      HttpMethod: DELETE
+      RequestParameters: {}
+      ResourceId: !Ref ApiGatewayResourceApiProfilesUsernameVarFollow
+      RestApiId: !Ref ApiGatewayRestApi
+      ApiKeyRequired: false
+      AuthorizationType: NONE
+      Integration:
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Join 
+          - ''
+          - - 'arn:'
+            - !Ref 'AWS::Partition'
+            - ':apigateway:'
+            - !Ref 'AWS::Region'
+            - ':lambda:path/2015-03-31/functions/'
+            - !GetAtt 
+              - UnfollowUserLambdaFunction
+              - Arn
+            - /invocations
+      MethodResponses: []
+    DependsOn:
+      - UnfollowUserLambdaPermissionApiGateway
+  ApiGatewayMethodApiArticlesPost:
+    Type: AWS::ApiGateway::Method
+    DeletionPolicy: Delete
+    Properties:
+      HttpMethod: POST
+      RequestParameters: {}
+      ResourceId: !Ref ApiGatewayResourceApiArticles
+      RestApiId: !Ref ApiGatewayRestApi
+      ApiKeyRequired: false
+      AuthorizationType: NONE
+      Integration:
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Join 
+          - ''
+          - - 'arn:'
+            - !Ref 'AWS::Partition'
+            - ':apigateway:'
+            - !Ref 'AWS::Region'
+            - ':lambda:path/2015-03-31/functions/'
+            - !GetAtt 
+              - CreateArticleLambdaFunction
+              - Arn
+            - /invocations
+      MethodResponses: []
+    DependsOn:
+      - CreateArticleLambdaPermissionApiGateway
+  ApiGatewayMethodApiArticlesSlugVarGet:
+    Type: AWS::ApiGateway::Method
+    DeletionPolicy: Delete
+    Properties:
+      HttpMethod: GET
+      RequestParameters: {}
+      ResourceId: !Ref ApiGatewayResourceApiArticlesSlugVar
+      RestApiId: !Ref ApiGatewayRestApi
+      ApiKeyRequired: false
+      AuthorizationType: NONE
+      Integration:
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Join 
+          - ''
+          - - 'arn:'
+            - !Ref 'AWS::Partition'
+            - ':apigateway:'
+            - !Ref 'AWS::Region'
+            - ':lambda:path/2015-03-31/functions/'
+            - !GetAtt 
+              - GetArticleLambdaFunction
+              - Arn
+            - /invocations
+      MethodResponses: []
+    DependsOn:
+      - GetArticleLambdaPermissionApiGateway
+  ApiGatewayMethodApiArticlesSlugVarPut:
+    Type: AWS::ApiGateway::Method
+    DeletionPolicy: Delete
+    Properties:
+      HttpMethod: PUT
+      RequestParameters: {}
+      ResourceId: !Ref ApiGatewayResourceApiArticlesSlugVar
+      RestApiId: !Ref ApiGatewayRestApi
+      ApiKeyRequired: false
+      AuthorizationType: NONE
+      Integration:
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Join 
+          - ''
+          - - 'arn:'
+            - !Ref 'AWS::Partition'
+            - ':apigateway:'
+            - !Ref 'AWS::Region'
+            - ':lambda:path/2015-03-31/functions/'
+            - !GetAtt 
+              - UpdateArticleLambdaFunction
+              - Arn
+            - /invocations
+      MethodResponses: []
+    DependsOn:
+      - UpdateArticleLambdaPermissionApiGateway
+  ApiGatewayMethodApiArticlesSlugVarDelete:
+    Type: AWS::ApiGateway::Method
+    DeletionPolicy: Delete
+    Properties:
+      HttpMethod: DELETE
+      RequestParameters: {}
+      ResourceId: !Ref ApiGatewayResourceApiArticlesSlugVar
+      RestApiId: !Ref ApiGatewayRestApi
+      ApiKeyRequired: false
+      AuthorizationType: NONE
+      Integration:
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Join 
+          - ''
+          - - 'arn:'
+            - !Ref 'AWS::Partition'
+            - ':apigateway:'
+            - !Ref 'AWS::Region'
+            - ':lambda:path/2015-03-31/functions/'
+            - !GetAtt 
+              - DeleteArticleLambdaFunction
+              - Arn
+            - /invocations
+      MethodResponses: []
+    DependsOn:
+      - DeleteArticleLambdaPermissionApiGateway
+  ApiGatewayMethodApiArticlesSlugVarFavoritePost:
+    Type: AWS::ApiGateway::Method
+    DeletionPolicy: Delete
+    Properties:
+      HttpMethod: POST
+      RequestParameters: {}
+      ResourceId: !Ref ApiGatewayResourceApiArticlesSlugVarFavorite
+      RestApiId: !Ref ApiGatewayRestApi
+      ApiKeyRequired: false
+      AuthorizationType: NONE
+      Integration:
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Join 
+          - ''
+          - - 'arn:'
+            - !Ref 'AWS::Partition'
+            - ':apigateway:'
+            - !Ref 'AWS::Region'
+            - ':lambda:path/2015-03-31/functions/'
+            - !GetAtt 
+              - FavoriteArticleLambdaFunction
+              - Arn
+            - /invocations
+      MethodResponses: []
+    DependsOn:
+      - FavoriteArticleLambdaPermissionApiGateway
+  ApiGatewayMethodApiArticlesSlugVarFavoriteDelete:
+    Type: AWS::ApiGateway::Method
+    DeletionPolicy: Delete
+    Properties:
+      HttpMethod: DELETE
+      RequestParameters: {}
+      ResourceId: !Ref ApiGatewayResourceApiArticlesSlugVarFavorite
+      RestApiId: !Ref ApiGatewayRestApi
+      ApiKeyRequired: false
+      AuthorizationType: NONE
+      Integration:
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Join 
+          - ''
+          - - 'arn:'
+            - !Ref 'AWS::Partition'
+            - ':apigateway:'
+            - !Ref 'AWS::Region'
+            - ':lambda:path/2015-03-31/functions/'
+            - !GetAtt 
+              - UnfavoriteArticleLambdaFunction
+              - Arn
+            - /invocations
+      MethodResponses: []
+    DependsOn:
+      - UnfavoriteArticleLambdaPermissionApiGateway
+  ApiGatewayMethodApiArticlesGet:
+    Type: AWS::ApiGateway::Method
+    DeletionPolicy: Delete
+    Properties:
+      HttpMethod: GET
+      RequestParameters: {}
+      ResourceId: !Ref ApiGatewayResourceApiArticles
+      RestApiId: !Ref ApiGatewayRestApi
+      ApiKeyRequired: false
+      AuthorizationType: NONE
+      Integration:
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Join 
+          - ''
+          - - 'arn:'
+            - !Ref 'AWS::Partition'
+            - ':apigateway:'
+            - !Ref 'AWS::Region'
+            - ':lambda:path/2015-03-31/functions/'
+            - !GetAtt 
+              - ListArticlesLambdaFunction
+              - Arn
+            - /invocations
+      MethodResponses: []
+    DependsOn:
+      - ListArticlesLambdaPermissionApiGateway
+  ApiGatewayMethodApiArticlesFeedGet:
+    Type: AWS::ApiGateway::Method
+    DeletionPolicy: Delete
+    Properties:
+      HttpMethod: GET
+      RequestParameters: {}
+      ResourceId: !Ref ApiGatewayResourceApiArticlesFeed
+      RestApiId: !Ref ApiGatewayRestApi
+      ApiKeyRequired: false
+      AuthorizationType: NONE
+      Integration:
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Join 
+          - ''
+          - - 'arn:'
+            - !Ref 'AWS::Partition'
+            - ':apigateway:'
+            - !Ref 'AWS::Region'
+            - ':lambda:path/2015-03-31/functions/'
+            - !GetAtt 
+              - GetArticlesFeedLambdaFunction
+              - Arn
+            - /invocations
+      MethodResponses: []
+    DependsOn:
+      - GetArticlesFeedLambdaPermissionApiGateway
+  ApiGatewayMethodApiTagsGet:
+    Type: AWS::ApiGateway::Method
+    DeletionPolicy: Delete
+    Properties:
+      HttpMethod: GET
+      RequestParameters: {}
+      ResourceId: !Ref ApiGatewayResourceApiTags
+      RestApiId: !Ref ApiGatewayRestApi
+      ApiKeyRequired: false
+      AuthorizationType: NONE
+      Integration:
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Join 
+          - ''
+          - - 'arn:'
+            - !Ref 'AWS::Partition'
+            - ':apigateway:'
+            - !Ref 'AWS::Region'
+            - ':lambda:path/2015-03-31/functions/'
+            - !GetAtt 
+              - GetTagsLambdaFunction
+              - Arn
+            - /invocations
+      MethodResponses: []
+    DependsOn:
+      - GetTagsLambdaPermissionApiGateway
+  ApiGatewayMethodApiArticlesSlugVarCommentsPost:
+    Type: AWS::ApiGateway::Method
+    DeletionPolicy: Delete
+    Properties:
+      HttpMethod: POST
+      RequestParameters: {}
+      ResourceId: !Ref ApiGatewayResourceApiArticlesSlugVarComments
+      RestApiId: !Ref ApiGatewayRestApi
+      ApiKeyRequired: false
+      AuthorizationType: NONE
+      Integration:
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Join 
+          - ''
+          - - 'arn:'
+            - !Ref 'AWS::Partition'
+            - ':apigateway:'
+            - !Ref 'AWS::Region'
+            - ':lambda:path/2015-03-31/functions/'
+            - !GetAtt 
+              - CreateCommentLambdaFunction
+              - Arn
+            - /invocations
+      MethodResponses: []
+    DependsOn:
+      - CreateCommentLambdaPermissionApiGateway
+  ApiGatewayMethodApiArticlesSlugVarCommentsGet:
+    Type: AWS::ApiGateway::Method
+    DeletionPolicy: Delete
+    Properties:
+      HttpMethod: GET
+      RequestParameters: {}
+      ResourceId: !Ref ApiGatewayResourceApiArticlesSlugVarComments
+      RestApiId: !Ref ApiGatewayRestApi
+      ApiKeyRequired: false
+      AuthorizationType: NONE
+      Integration:
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Join 
+          - ''
+          - - 'arn:'
+            - !Ref 'AWS::Partition'
+            - ':apigateway:'
+            - !Ref 'AWS::Region'
+            - ':lambda:path/2015-03-31/functions/'
+            - !GetAtt 
+              - GetCommentsLambdaFunction
+              - Arn
+            - /invocations
+      MethodResponses: []
+    DependsOn:
+      - GetCommentsLambdaPermissionApiGateway
+  ApiGatewayMethodApiArticlesSlugVarCommentsIdVarDelete:
+    Type: AWS::ApiGateway::Method
+    DeletionPolicy: Delete
+    Properties:
+      HttpMethod: DELETE
+      RequestParameters: {}
+      ResourceId: !Ref ApiGatewayResourceApiArticlesSlugVarCommentsIdVar
+      RestApiId: !Ref ApiGatewayRestApi
+      ApiKeyRequired: false
+      AuthorizationType: NONE
+      Integration:
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Join 
+          - ''
+          - - 'arn:'
+            - !Ref 'AWS::Partition'
+            - ':apigateway:'
+            - !Ref 'AWS::Region'
+            - ':lambda:path/2015-03-31/functions/'
+            - !GetAtt 
+              - DeleteCommentLambdaFunction
+              - Arn
+            - /invocations
+      MethodResponses: []
+    DependsOn:
+      - DeleteCommentLambdaPermissionApiGateway
+  ApiGatewayMethodApiPingGet:
+    Type: AWS::ApiGateway::Method
+    DeletionPolicy: Delete
+    Properties:
+      HttpMethod: GET
+      RequestParameters: {}
+      ResourceId: !Ref ApiGatewayResourceApiPing
+      RestApiId: !Ref ApiGatewayRestApi
+      ApiKeyRequired: false
+      AuthorizationType: NONE
+      Integration:
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Join 
+          - ''
+          - - 'arn:'
+            - !Ref 'AWS::Partition'
+            - ':apigateway:'
+            - !Ref 'AWS::Region'
+            - ':lambda:path/2015-03-31/functions/'
+            - !GetAtt 
+              - PingLambdaFunction
+              - Arn
+            - /invocations
+      MethodResponses: []
+    DependsOn:
+      - PingLambdaPermissionApiGateway
+  ApiGatewayMethodApiTestutilsPurgeDelete:
+    Type: AWS::ApiGateway::Method
+    DeletionPolicy: Delete
+    Properties:
+      HttpMethod: DELETE
+      RequestParameters: {}
+      ResourceId: !Ref ApiGatewayResourceApiTestutilsPurge
+      RestApiId: !Ref ApiGatewayRestApi
+      ApiKeyRequired: false
+      AuthorizationType: NONE
+      Integration:
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Join 
+          - ''
+          - - 'arn:'
+            - !Ref 'AWS::Partition'
+            - ':apigateway:'
+            - !Ref 'AWS::Region'
+            - ':lambda:path/2015-03-31/functions/'
+            - !GetAtt 
+              - PurgeDataLambdaFunction
+              - Arn
+            - /invocations
+      MethodResponses: []
+    DependsOn:
+      - PurgeDataLambdaPermissionApiGateway
+  ApiGatewayDeployment1635658236387:
+    Type: AWS::ApiGateway::Deployment
+    Properties:
+      RestApiId: !Ref ApiGatewayRestApi
+      StageName: dev
+    DependsOn:
+      - ApiGatewayMethodApiUsersOptions
+      - ApiGatewayMethodApiUsersLoginOptions
+      - ApiGatewayMethodApiUserOptions
+      - ApiGatewayMethodApiProfilesUsernameVarOptions
+      - ApiGatewayMethodApiProfilesUsernameVarFollowOptions
+      - ApiGatewayMethodApiArticlesOptions
+      - ApiGatewayMethodApiArticlesSlugVarOptions
+      - ApiGatewayMethodApiArticlesSlugVarFavoriteOptions
+      - ApiGatewayMethodApiArticlesFeedOptions
+      - ApiGatewayMethodApiTagsOptions
+      - ApiGatewayMethodApiArticlesSlugVarCommentsOptions
+      - ApiGatewayMethodApiArticlesSlugVarCommentsIdVarOptions
+      - ApiGatewayMethodApiPingOptions
+      - ApiGatewayMethodApiUsersPost
+      - ApiGatewayMethodApiUsersLoginPost
+      - ApiGatewayMethodApiUserGet
+      - ApiGatewayMethodApiUserPut
+      - ApiGatewayMethodApiProfilesUsernameVarGet
+      - ApiGatewayMethodApiProfilesUsernameVarFollowPost
+      - ApiGatewayMethodApiProfilesUsernameVarFollowDelete
+      - ApiGatewayMethodApiArticlesPost
+      - ApiGatewayMethodApiArticlesSlugVarGet
+      - ApiGatewayMethodApiArticlesSlugVarPut
+      - ApiGatewayMethodApiArticlesSlugVarDelete
+      - ApiGatewayMethodApiArticlesSlugVarFavoritePost
+      - ApiGatewayMethodApiArticlesSlugVarFavoriteDelete
+      - ApiGatewayMethodApiArticlesGet
+      - ApiGatewayMethodApiArticlesFeedGet
+      - ApiGatewayMethodApiTagsGet
+      - ApiGatewayMethodApiArticlesSlugVarCommentsPost
+      - ApiGatewayMethodApiArticlesSlugVarCommentsGet
+      - ApiGatewayMethodApiArticlesSlugVarCommentsIdVarDelete
+      - ApiGatewayMethodApiPingGet
+      - ApiGatewayMethodApiTestutilsPurgeDelete
+  CreateUserLambdaPermissionApiGateway:
+    Type: AWS::Lambda::Permission
+    DeletionPolicy: Delete
+    Properties:
+      FunctionName: !GetAtt 
+        - CreateUserLambdaFunction
+        - Arn
+      Action: 'lambda:InvokeFunction'
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Join 
+        - ''
+        - - 'arn:'
+          - !Ref 'AWS::Partition'
+          - ':execute-api:'
+          - !Ref 'AWS::Region'
+          - ':'
+          - !Ref 'AWS::AccountId'
+          - ':'
+          - !Ref ApiGatewayRestApi
+          - /*/*
+  LoginUserLambdaPermissionApiGateway:
+    Type: AWS::Lambda::Permission
+    DeletionPolicy: Delete
+    Properties:
+      FunctionName: !GetAtt 
+        - LoginUserLambdaFunction
+        - Arn
+      Action: 'lambda:InvokeFunction'
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Join 
+        - ''
+        - - 'arn:'
+          - !Ref 'AWS::Partition'
+          - ':execute-api:'
+          - !Ref 'AWS::Region'
+          - ':'
+          - !Ref 'AWS::AccountId'
+          - ':'
+          - !Ref ApiGatewayRestApi
+          - /*/*
+  GetUserLambdaPermissionApiGateway:
+    Type: AWS::Lambda::Permission
+    DeletionPolicy: Delete
+    Properties:
+      FunctionName: !GetAtt 
+        - GetUserLambdaFunction
+        - Arn
+      Action: 'lambda:InvokeFunction'
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Join 
+        - ''
+        - - 'arn:'
+          - !Ref 'AWS::Partition'
+          - ':execute-api:'
+          - !Ref 'AWS::Region'
+          - ':'
+          - !Ref 'AWS::AccountId'
+          - ':'
+          - !Ref ApiGatewayRestApi
+          - /*/*
+  UpdateUserLambdaPermissionApiGateway:
+    Type: AWS::Lambda::Permission
+    DeletionPolicy: Delete
+    Properties:
+      FunctionName: !GetAtt 
+        - UpdateUserLambdaFunction
+        - Arn
+      Action: 'lambda:InvokeFunction'
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Join 
+        - ''
+        - - 'arn:'
+          - !Ref 'AWS::Partition'
+          - ':execute-api:'
+          - !Ref 'AWS::Region'
+          - ':'
+          - !Ref 'AWS::AccountId'
+          - ':'
+          - !Ref ApiGatewayRestApi
+          - /*/*
+  GetProfileLambdaPermissionApiGateway:
+    Type: AWS::Lambda::Permission
+    DeletionPolicy: Delete
+    Properties:
+      FunctionName: !GetAtt 
+        - GetProfileLambdaFunction
+        - Arn
+      Action: 'lambda:InvokeFunction'
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Join 
+        - ''
+        - - 'arn:'
+          - !Ref 'AWS::Partition'
+          - ':execute-api:'
+          - !Ref 'AWS::Region'
+          - ':'
+          - !Ref 'AWS::AccountId'
+          - ':'
+          - !Ref ApiGatewayRestApi
+          - /*/*
+  FollowUserLambdaPermissionApiGateway:
+    Type: AWS::Lambda::Permission
+    DeletionPolicy: Delete
+    Properties:
+      FunctionName: !GetAtt 
+        - FollowUserLambdaFunction
+        - Arn
+      Action: 'lambda:InvokeFunction'
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Join 
+        - ''
+        - - 'arn:'
+          - !Ref 'AWS::Partition'
+          - ':execute-api:'
+          - !Ref 'AWS::Region'
+          - ':'
+          - !Ref 'AWS::AccountId'
+          - ':'
+          - !Ref ApiGatewayRestApi
+          - /*/*
+  UnfollowUserLambdaPermissionApiGateway:
+    Type: AWS::Lambda::Permission
+    DeletionPolicy: Delete
+    Properties:
+      FunctionName: !GetAtt 
+        - UnfollowUserLambdaFunction
+        - Arn
+      Action: 'lambda:InvokeFunction'
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Join 
+        - ''
+        - - 'arn:'
+          - !Ref 'AWS::Partition'
+          - ':execute-api:'
+          - !Ref 'AWS::Region'
+          - ':'
+          - !Ref 'AWS::AccountId'
+          - ':'
+          - !Ref ApiGatewayRestApi
+          - /*/*
+  CreateArticleLambdaPermissionApiGateway:
+    Type: AWS::Lambda::Permission
+    DeletionPolicy: Delete
+    Properties:
+      FunctionName: !GetAtt 
+        - CreateArticleLambdaFunction
+        - Arn
+      Action: 'lambda:InvokeFunction'
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Join 
+        - ''
+        - - 'arn:'
+          - !Ref 'AWS::Partition'
+          - ':execute-api:'
+          - !Ref 'AWS::Region'
+          - ':'
+          - !Ref 'AWS::AccountId'
+          - ':'
+          - !Ref ApiGatewayRestApi
+          - /*/*
+  GetArticleLambdaPermissionApiGateway:
+    Type: AWS::Lambda::Permission
+    DeletionPolicy: Delete
+    Properties:
+      FunctionName: !GetAtt 
+        - GetArticleLambdaFunction
+        - Arn
+      Action: 'lambda:InvokeFunction'
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Join 
+        - ''
+        - - 'arn:'
+          - !Ref 'AWS::Partition'
+          - ':execute-api:'
+          - !Ref 'AWS::Region'
+          - ':'
+          - !Ref 'AWS::AccountId'
+          - ':'
+          - !Ref ApiGatewayRestApi
+          - /*/*
+  UpdateArticleLambdaPermissionApiGateway:
+    Type: AWS::Lambda::Permission
+    DeletionPolicy: Delete
+    Properties:
+      FunctionName: !GetAtt 
+        - UpdateArticleLambdaFunction
+        - Arn
+      Action: 'lambda:InvokeFunction'
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Join 
+        - ''
+        - - 'arn:'
+          - !Ref 'AWS::Partition'
+          - ':execute-api:'
+          - !Ref 'AWS::Region'
+          - ':'
+          - !Ref 'AWS::AccountId'
+          - ':'
+          - !Ref ApiGatewayRestApi
+          - /*/*
+  DeleteArticleLambdaPermissionApiGateway:
+    Type: AWS::Lambda::Permission
+    DeletionPolicy: Delete
+    Properties:
+      FunctionName: !GetAtt 
+        - DeleteArticleLambdaFunction
+        - Arn
+      Action: 'lambda:InvokeFunction'
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Join 
+        - ''
+        - - 'arn:'
+          - !Ref 'AWS::Partition'
+          - ':execute-api:'
+          - !Ref 'AWS::Region'
+          - ':'
+          - !Ref 'AWS::AccountId'
+          - ':'
+          - !Ref ApiGatewayRestApi
+          - /*/*
+  FavoriteArticleLambdaPermissionApiGateway:
+    Type: AWS::Lambda::Permission
+    DeletionPolicy: Delete
+    Properties:
+      FunctionName: !GetAtt 
+        - FavoriteArticleLambdaFunction
+        - Arn
+      Action: 'lambda:InvokeFunction'
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Join 
+        - ''
+        - - 'arn:'
+          - !Ref 'AWS::Partition'
+          - ':execute-api:'
+          - !Ref 'AWS::Region'
+          - ':'
+          - !Ref 'AWS::AccountId'
+          - ':'
+          - !Ref ApiGatewayRestApi
+          - /*/*
+  UnfavoriteArticleLambdaPermissionApiGateway:
+    Type: AWS::Lambda::Permission
+    DeletionPolicy: Delete
+    Properties:
+      FunctionName: !GetAtt 
+        - UnfavoriteArticleLambdaFunction
+        - Arn
+      Action: 'lambda:InvokeFunction'
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Join 
+        - ''
+        - - 'arn:'
+          - !Ref 'AWS::Partition'
+          - ':execute-api:'
+          - !Ref 'AWS::Region'
+          - ':'
+          - !Ref 'AWS::AccountId'
+          - ':'
+          - !Ref ApiGatewayRestApi
+          - /*/*
+  ListArticlesLambdaPermissionApiGateway:
+    Type: AWS::Lambda::Permission
+    DeletionPolicy: Delete
+    Properties:
+      FunctionName: !GetAtt 
+        - ListArticlesLambdaFunction
+        - Arn
+      Action: 'lambda:InvokeFunction'
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Join 
+        - ''
+        - - 'arn:'
+          - !Ref 'AWS::Partition'
+          - ':execute-api:'
+          - !Ref 'AWS::Region'
+          - ':'
+          - !Ref 'AWS::AccountId'
+          - ':'
+          - !Ref ApiGatewayRestApi
+          - /*/*
+  GetArticlesFeedLambdaPermissionApiGateway:
+    Type: AWS::Lambda::Permission
+    DeletionPolicy: Delete
+    Properties:
+      FunctionName: !GetAtt 
+        - GetArticlesFeedLambdaFunction
+        - Arn
+      Action: 'lambda:InvokeFunction'
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Join 
+        - ''
+        - - 'arn:'
+          - !Ref 'AWS::Partition'
+          - ':execute-api:'
+          - !Ref 'AWS::Region'
+          - ':'
+          - !Ref 'AWS::AccountId'
+          - ':'
+          - !Ref ApiGatewayRestApi
+          - /*/*
+  GetTagsLambdaPermissionApiGateway:
+    Type: AWS::Lambda::Permission
+    DeletionPolicy: Delete
+    Properties:
+      FunctionName: !GetAtt 
+        - GetTagsLambdaFunction
+        - Arn
+      Action: 'lambda:InvokeFunction'
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Join 
+        - ''
+        - - 'arn:'
+          - !Ref 'AWS::Partition'
+          - ':execute-api:'
+          - !Ref 'AWS::Region'
+          - ':'
+          - !Ref 'AWS::AccountId'
+          - ':'
+          - !Ref ApiGatewayRestApi
+          - /*/*
+  CreateCommentLambdaPermissionApiGateway:
+    Type: AWS::Lambda::Permission
+    DeletionPolicy: Delete
+    Properties:
+      FunctionName: !GetAtt 
+        - CreateCommentLambdaFunction
+        - Arn
+      Action: 'lambda:InvokeFunction'
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Join 
+        - ''
+        - - 'arn:'
+          - !Ref 'AWS::Partition'
+          - ':execute-api:'
+          - !Ref 'AWS::Region'
+          - ':'
+          - !Ref 'AWS::AccountId'
+          - ':'
+          - !Ref ApiGatewayRestApi
+          - /*/*
+  GetCommentsLambdaPermissionApiGateway:
+    Type: AWS::Lambda::Permission
+    DeletionPolicy: Delete
+    Properties:
+      FunctionName: !GetAtt 
+        - GetCommentsLambdaFunction
+        - Arn
+      Action: 'lambda:InvokeFunction'
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Join 
+        - ''
+        - - 'arn:'
+          - !Ref 'AWS::Partition'
+          - ':execute-api:'
+          - !Ref 'AWS::Region'
+          - ':'
+          - !Ref 'AWS::AccountId'
+          - ':'
+          - !Ref ApiGatewayRestApi
+          - /*/*
+  DeleteCommentLambdaPermissionApiGateway:
+    Type: AWS::Lambda::Permission
+    DeletionPolicy: Delete
+    Properties:
+      FunctionName: !GetAtt 
+        - DeleteCommentLambdaFunction
+        - Arn
+      Action: 'lambda:InvokeFunction'
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Join 
+        - ''
+        - - 'arn:'
+          - !Ref 'AWS::Partition'
+          - ':execute-api:'
+          - !Ref 'AWS::Region'
+          - ':'
+          - !Ref 'AWS::AccountId'
+          - ':'
+          - !Ref ApiGatewayRestApi
+          - /*/*
+  PingLambdaPermissionApiGateway:
+    Type: AWS::Lambda::Permission
+    DeletionPolicy: Delete
+    Properties:
+      FunctionName: !GetAtt 
+        - PingLambdaFunction
+        - Arn
+      Action: 'lambda:InvokeFunction'
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Join 
+        - ''
+        - - 'arn:'
+          - !Ref 'AWS::Partition'
+          - ':execute-api:'
+          - !Ref 'AWS::Region'
+          - ':'
+          - !Ref 'AWS::AccountId'
+          - ':'
+          - !Ref ApiGatewayRestApi
+          - /*/*
+  PurgeDataLambdaPermissionApiGateway:
+    Type: AWS::Lambda::Permission
+    DeletionPolicy: Delete
+    Properties:
+      FunctionName: !GetAtt 
+        - PurgeDataLambdaFunction
+        - Arn
+      Action: 'lambda:InvokeFunction'
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Join 
+        - ''
+        - - 'arn:'
+          - !Ref 'AWS::Partition'
+          - ':execute-api:'
+          - !Ref 'AWS::Region'
+          - ':'
+          - !Ref 'AWS::AccountId'
+          - ':'
+          - !Ref ApiGatewayRestApi
+          - /*/*
+  UsersDynamoDBTable:
+    Type: AWS::DynamoDB::Table
+    Condition: CreateRetainedResources
+    DeletionPolicy: Retain
+    Properties:
+      AttributeDefinitions:
+        - AttributeName: username
+          AttributeType: S
+        - AttributeName: email
+          AttributeType: S
+      KeySchema:
+        - AttributeName: username
+          KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
+      GlobalSecondaryIndexes:
+        - IndexName: email
+          KeySchema:
+            - AttributeName: email
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+          ProvisionedThroughput:
+            ReadCapacityUnits: 1
+            WriteCapacityUnits: 1
+  ArticlesDynamoDBTable:
+    Type: AWS::DynamoDB::Table
+    Condition: CreateRetainedResources
+    DeletionPolicy: Retain
+    Properties:
+      AttributeDefinitions:
+        - AttributeName: slug
+          AttributeType: S
+        - AttributeName: dummy
+          AttributeType: S
+        - AttributeName: updatedAt
+          AttributeType: 'N'
+      KeySchema:
+        - AttributeName: slug
+          KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
+      GlobalSecondaryIndexes:
+        - IndexName: updatedAt
+          KeySchema:
+            - AttributeName: dummy
+              KeyType: HASH
+            - AttributeName: updatedAt
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+          ProvisionedThroughput:
+            ReadCapacityUnits: 1
+            WriteCapacityUnits: 1
+  CommentsDynamoDBTable:
+    Type: AWS::DynamoDB::Table
+    Condition: CreateRetainedResources
+    DeletionPolicy: Retain
+    Properties:
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+        - AttributeName: slug
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
+      GlobalSecondaryIndexes:
+        - IndexName: article
+          KeySchema:
+            - AttributeName: slug
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+          ProvisionedThroughput:
+            ReadCapacityUnits: 1
+            WriteCapacityUnits: 1
+Outputs:
+  ServiceEndpoint:
+    Description: URL of the service endpoint
+    Value: !Join 
+      - ''
+      - - 'https://'
+        - !Ref ApiGatewayRestApi
+        - .execute-api.
+        - !Ref AWS::Region
+        - .
+        - !Ref AWS::URLSuffix
+        - /
+        - !Ref ${Environment}
+    Export:
+      Name: !Sub realworld-${Environment}-ServiceEndpoint
