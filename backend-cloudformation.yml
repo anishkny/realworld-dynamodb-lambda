@@ -162,7 +162,7 @@ Resources:
         - PolicyName: !Join 
             - '-'
             - - realworld
-              - dev
+              - !Ref Environment
               - lambda
           PolicyDocument:
             Version: 2012-10-17
@@ -172,12 +172,12 @@ Resources:
                   - logs:CreateLogStream
                   - logs:CreateLogGroup
                 Resource:
-                  - !Sub arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/realworld-dev*:*
+                  - !Sub arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/realworld-${Environment}*:*
               - Effect: Allow
                 Action:
                   - logs:PutLogEvents
                 Resource:
-                  - !Sub arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/realworld-dev*:*:*
+                  - !Sub arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/realworld-${Environment}*:*:*
               - Effect: Allow
                 Action:
                   - dynamodb:Query
@@ -191,7 +191,7 @@ Resources:
       RoleName: !Join 
         - '-'
         - - realworld
-          - dev
+          - !Ref Environment
           - !Ref AWS::Region
           - lambdaRole
   CreateUserLambdaFunction:
@@ -208,7 +208,7 @@ Resources:
       Timeout: 6
       Environment:
         Variables:
-          DYNAMODB_NAMESPACE: dev
+          DYNAMODB_NAMESPACE: !Ref Environment
       Role: !GetAtt 
         - LambdaExecutionRole
         - Arn
@@ -228,7 +228,7 @@ Resources:
       Timeout: 6
       Environment:
         Variables:
-          DYNAMODB_NAMESPACE: dev
+          DYNAMODB_NAMESPACE: !Ref Environment
       Role: !GetAtt 
         - LambdaExecutionRole
         - Arn
@@ -248,7 +248,7 @@ Resources:
       Timeout: 6
       Environment:
         Variables:
-          DYNAMODB_NAMESPACE: dev
+          DYNAMODB_NAMESPACE: !Ref Environment
       Role: !GetAtt 
         - LambdaExecutionRole
         - Arn
@@ -268,7 +268,7 @@ Resources:
       Timeout: 6
       Environment:
         Variables:
-          DYNAMODB_NAMESPACE: dev
+          DYNAMODB_NAMESPACE: !Ref Environment
       Role: !GetAtt 
         - LambdaExecutionRole
         - Arn
@@ -288,7 +288,7 @@ Resources:
       Timeout: 6
       Environment:
         Variables:
-          DYNAMODB_NAMESPACE: dev
+          DYNAMODB_NAMESPACE: !Ref Environment
       Role: !GetAtt 
         - LambdaExecutionRole
         - Arn
@@ -308,7 +308,7 @@ Resources:
       Timeout: 6
       Environment:
         Variables:
-          DYNAMODB_NAMESPACE: dev
+          DYNAMODB_NAMESPACE: !Ref Environment
       Role: !GetAtt 
         - LambdaExecutionRole
         - Arn
@@ -328,7 +328,7 @@ Resources:
       Timeout: 6
       Environment:
         Variables:
-          DYNAMODB_NAMESPACE: dev
+          DYNAMODB_NAMESPACE: !Ref Environment
       Role: !GetAtt 
         - LambdaExecutionRole
         - Arn
@@ -348,7 +348,7 @@ Resources:
       Timeout: 6
       Environment:
         Variables:
-          DYNAMODB_NAMESPACE: dev
+          DYNAMODB_NAMESPACE: !Ref Environment
       Role: !GetAtt 
         - LambdaExecutionRole
         - Arn
@@ -368,7 +368,7 @@ Resources:
       Timeout: 6
       Environment:
         Variables:
-          DYNAMODB_NAMESPACE: dev
+          DYNAMODB_NAMESPACE: !Ref Environment
       Role: !GetAtt 
         - LambdaExecutionRole
         - Arn
@@ -388,7 +388,7 @@ Resources:
       Timeout: 6
       Environment:
         Variables:
-          DYNAMODB_NAMESPACE: dev
+          DYNAMODB_NAMESPACE: !Ref Environment
       Role: !GetAtt 
         - LambdaExecutionRole
         - Arn
@@ -408,7 +408,7 @@ Resources:
       Timeout: 6
       Environment:
         Variables:
-          DYNAMODB_NAMESPACE: dev
+          DYNAMODB_NAMESPACE: !Ref Environment
       Role: !GetAtt 
         - LambdaExecutionRole
         - Arn
@@ -428,7 +428,7 @@ Resources:
       Timeout: 6
       Environment:
         Variables:
-          DYNAMODB_NAMESPACE: dev
+          DYNAMODB_NAMESPACE: !Ref Environment
       Role: !GetAtt 
         - LambdaExecutionRole
         - Arn
@@ -448,7 +448,7 @@ Resources:
       Timeout: 6
       Environment:
         Variables:
-          DYNAMODB_NAMESPACE: dev
+          DYNAMODB_NAMESPACE: !Ref Environment
       Role: !GetAtt 
         - LambdaExecutionRole
         - Arn
@@ -468,7 +468,7 @@ Resources:
       Timeout: 6
       Environment:
         Variables:
-          DYNAMODB_NAMESPACE: dev
+          DYNAMODB_NAMESPACE: !Ref Environment
       Role: !GetAtt 
         - LambdaExecutionRole
         - Arn
@@ -488,7 +488,7 @@ Resources:
       Timeout: 6
       Environment:
         Variables:
-          DYNAMODB_NAMESPACE: dev
+          DYNAMODB_NAMESPACE: !Ref Environment
       Role: !GetAtt 
         - LambdaExecutionRole
         - Arn
@@ -508,7 +508,7 @@ Resources:
       Timeout: 6
       Environment:
         Variables:
-          DYNAMODB_NAMESPACE: dev
+          DYNAMODB_NAMESPACE: !Ref Environment
       Role: !GetAtt 
         - LambdaExecutionRole
         - Arn
@@ -528,7 +528,7 @@ Resources:
       Timeout: 6
       Environment:
         Variables:
-          DYNAMODB_NAMESPACE: dev
+          DYNAMODB_NAMESPACE: !Ref Environment
       Role: !GetAtt 
         - LambdaExecutionRole
         - Arn
@@ -548,7 +548,7 @@ Resources:
       Timeout: 6
       Environment:
         Variables:
-          DYNAMODB_NAMESPACE: dev
+          DYNAMODB_NAMESPACE: !Ref Environment
       Role: !GetAtt 
         - LambdaExecutionRole
         - Arn
@@ -568,7 +568,7 @@ Resources:
       Timeout: 6
       Environment:
         Variables:
-          DYNAMODB_NAMESPACE: dev
+          DYNAMODB_NAMESPACE: !Ref Environment
       Role: !GetAtt 
         - LambdaExecutionRole
         - Arn
@@ -588,7 +588,7 @@ Resources:
       Timeout: 6
       Environment:
         Variables:
-          DYNAMODB_NAMESPACE: dev
+          DYNAMODB_NAMESPACE: !Ref Environment
       Role: !GetAtt 
         - LambdaExecutionRole
         - Arn
@@ -608,7 +608,7 @@ Resources:
       Timeout: 6
       Environment:
         Variables:
-          DYNAMODB_NAMESPACE: dev
+          DYNAMODB_NAMESPACE: !Ref Environment
       Role: !GetAtt 
         - LambdaExecutionRole
         - Arn
@@ -1701,11 +1701,11 @@ Resources:
       MethodResponses: []
     DependsOn:
       - PurgeDataLambdaPermissionApiGateway
-  ApiGatewayDeployment1635658236387:
+  ApiGatewayDeployment:
     Type: AWS::ApiGateway::Deployment
     Properties:
       RestApiId: !Ref ApiGatewayRestApi
-      StageName: dev
+      StageName: !Ref Environment
     DependsOn:
       - ApiGatewayMethodApiUsersOptions
       - ApiGatewayMethodApiUsersLoginOptions
@@ -2174,6 +2174,8 @@ Resources:
       KeySchema:
         - AttributeName: username
           KeyType: HASH
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: True
       ProvisionedThroughput:
         ReadCapacityUnits: 1
         WriteCapacityUnits: 1
@@ -2202,6 +2204,8 @@ Resources:
       KeySchema:
         - AttributeName: slug
           KeyType: HASH
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: True
       ProvisionedThroughput:
         ReadCapacityUnits: 1
         WriteCapacityUnits: 1
@@ -2230,6 +2234,8 @@ Resources:
       KeySchema:
         - AttributeName: id
           KeyType: HASH
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: True
       ProvisionedThroughput:
         ReadCapacityUnits: 1
         WriteCapacityUnits: 1
