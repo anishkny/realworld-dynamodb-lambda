@@ -2,15 +2,15 @@ version: 0.1
 phases:
   install:
     commands:
-    - echo Install started on "$(date)".
-    - npm install
-    - echo Install finished on "$(date)".
+      - echo Install started on "$(date)".
+      - npm install
+      - echo Install finished on "$(date)".
   build:
     commands:
-    - echo Build started on "$(date)".
-    - zip -qr backend.zip .
-    - echo Build finished on "${date}".
+      - echo Build started on "$(date)".
+      - zip -qr backend.zip .
+      - echo Build finished on "${date}".
 artifacts:
   files:
-  - backend.zip
-  - backend-cloudformation.yml
+    - backend.zip
+    - backend-cloudformation.yml
