@@ -2,11 +2,18 @@ version: 0.1
 phases:
   install:
     commands:
+    - echo "Install starting at $(date}."
     - npm install
-    - npm install -g serverless
+    - echo "Install finishing at $(date)."
   build:
     commands:
-    - serverless deploy --stage cicd | tee deploy.out
+    - echo "Build starting at $(date)."
+    - zip -qr backend.zip .
+    - echo "Build finishing at $(date)."
   post_build:
     commands:
-      - . ./test-api-local.sh
+      - echo BLONG
+artifacts:
+  files:
+  - backend.zip
+  - backend-cloudformation.yml
