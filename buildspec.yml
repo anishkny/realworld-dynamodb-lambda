@@ -7,9 +7,9 @@ phases:
     - echo "Install finishing at $(date)."
   build:
     commands:
-    - echo "Build starting at $(date)."
-    - zip -qr backend.zip .
-    - echo "Build finishing at $(date)."
+#    - echo "Build starting at $(date)."
+#    - zip -qr backend.zip .
+#    - echo "Build finishing at $(date)."
   post_build:
     commands:
       - echo BLONG
