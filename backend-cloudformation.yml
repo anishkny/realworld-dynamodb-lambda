@@ -2248,6 +2248,6 @@ Outputs:
         - .
         - !Ref AWS::URLSuffix
         - /
-        - !Ref ${Environment}
+        - !Ref Environment
     Export:
       Name: !Sub 'realworld-${Environment}-ServiceEndpoint'
