@@ -14,12 +14,13 @@ phases:
     commands:
       - echo BLONG
 artifacts:
-  files:
-  - backend.zip
-  name: BackendZip
-  discard-paths: yes
   s3-prefix: backend/
   secondary-artifacts:
+    BackendZip:
+      files:
+      - backend.zip
+      name: BackendZip
+      discard-paths: yes
     BackendTemplate:
       files:
       - backend-cloudformation.yml
