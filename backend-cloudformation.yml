@@ -754,7 +754,7 @@ Resources:
         - StatusCode: '200'
           ResponseParameters:
             method.response.header.Access-Control-Allow-Origin: true
-            method.response.header.Access-Control-Allow-Headers: true
+#            method.response.header.Access-Control-Allow-Headers: true
             method.response.header.Access-Control-Allow-Methods: true
           ResponseModels: {}
       RequestParameters: {}
@@ -767,8 +767,8 @@ Resources:
           - StatusCode: '200'
             ResponseParameters:
               method.response.header.Access-Control-Allow-Origin: '''*'''
-              method.response.header.Access-Control-Allow-Headers: >-
-                Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent
+#              method.response.header.Access-Control-Allow-Headers: >-
+#                Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent
               method.response.header.Access-Control-Allow-Methods: '''OPTIONS,POST'''
             ResponseTemplates:
               application/json: ''
@@ -784,7 +784,7 @@ Resources:
         - StatusCode: '200'
           ResponseParameters:
             method.response.header.Access-Control-Allow-Origin: true
-            method.response.header.Access-Control-Allow-Headers: true
+#            method.response.header.Access-Control-Allow-Headers: true
             method.response.header.Access-Control-Allow-Methods: true
           ResponseModels: {}
       RequestParameters: {}
@@ -797,8 +797,8 @@ Resources:
           - StatusCode: '200'
             ResponseParameters:
               method.response.header.Access-Control-Allow-Origin: '''*'''
-              method.response.header.Access-Control-Allow-Headers: >-
-                Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent
+#              method.response.header.Access-Control-Allow-Headers: >-
+#                Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent
               method.response.header.Access-Control-Allow-Methods: '''OPTIONS,POST'''
             ResponseTemplates:
               application/json: ''
@@ -814,7 +814,7 @@ Resources:
         - StatusCode: '200'
           ResponseParameters:
             method.response.header.Access-Control-Allow-Origin: true
-            method.response.header.Access-Control-Allow-Headers: true
+#            method.response.header.Access-Control-Allow-Headers: true
             method.response.header.Access-Control-Allow-Methods: true
           ResponseModels: {}
       RequestParameters: {}
@@ -827,8 +827,8 @@ Resources:
           - StatusCode: '200'
             ResponseParameters:
               method.response.header.Access-Control-Allow-Origin: '''*'''
-              method.response.header.Access-Control-Allow-Headers: >-
-                Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent
+#              method.response.header.Access-Control-Allow-Headers: >-
+#                Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent
               method.response.header.Access-Control-Allow-Methods: '''OPTIONS,PUT,GET'''
             ResponseTemplates:
               application/json: ''
@@ -844,7 +844,7 @@ Resources:
         - StatusCode: '200'
           ResponseParameters:
             method.response.header.Access-Control-Allow-Origin: true
-            method.response.header.Access-Control-Allow-Headers: true
+#            method.response.header.Access-Control-Allow-Headers: true
             method.response.header.Access-Control-Allow-Methods: true
           ResponseModels: {}
       RequestParameters: {}
@@ -857,8 +857,8 @@ Resources:
           - StatusCode: '200'
             ResponseParameters:
               method.response.header.Access-Control-Allow-Origin: '''*'''
-              method.response.header.Access-Control-Allow-Headers: >-
-                Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent
+#              method.response.header.Access-Control-Allow-Headers: >-
+#                Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent
               method.response.header.Access-Control-Allow-Methods: '''OPTIONS,GET'''
             ResponseTemplates:
               application/json: ''
@@ -874,7 +874,7 @@ Resources:
         - StatusCode: '200'
           ResponseParameters:
             method.response.header.Access-Control-Allow-Origin: true
-            method.response.header.Access-Control-Allow-Headers: true
+#            method.response.header.Access-Control-Allow-Headers: true
             method.response.header.Access-Control-Allow-Methods: true
           ResponseModels: {}
       RequestParameters: {}
@@ -887,8 +887,8 @@ Resources:
           - StatusCode: '200'
             ResponseParameters:
               method.response.header.Access-Control-Allow-Origin: '''*'''
-              method.response.header.Access-Control-Allow-Headers: >-
-                Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent
+#              method.response.header.Access-Control-Allow-Headers: >-
+#                Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent
               method.response.header.Access-Control-Allow-Methods: '''OPTIONS,DELETE,POST'''
             ResponseTemplates:
               application/json: ''
@@ -904,7 +904,7 @@ Resources:
         - StatusCode: '200'
           ResponseParameters:
             method.response.header.Access-Control-Allow-Origin: true
-            method.response.header.Access-Control-Allow-Headers: true
+#            method.response.header.Access-Control-Allow-Headers: true
             method.response.header.Access-Control-Allow-Methods: true
           ResponseModels: {}
       RequestParameters: {}
@@ -917,8 +917,8 @@ Resources:
           - StatusCode: '200'
             ResponseParameters:
               method.response.header.Access-Control-Allow-Origin: '''*'''
-              method.response.header.Access-Control-Allow-Headers: >-
-                Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent
+#              method.response.header.Access-Control-Allow-Headers: >-
+#                Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent
               method.response.header.Access-Control-Allow-Methods: '''OPTIONS,GET,POST'''
             ResponseTemplates:
               application/json: ''
@@ -934,7 +934,7 @@ Resources:
         - StatusCode: '200'
           ResponseParameters:
             method.response.header.Access-Control-Allow-Origin: true
-            method.response.header.Access-Control-Allow-Headers: true
+#            method.response.header.Access-Control-Allow-Headers: true
             method.response.header.Access-Control-Allow-Methods: true
           ResponseModels: {}
       RequestParameters: {}
@@ -947,8 +947,8 @@ Resources:
           - StatusCode: '200'
             ResponseParameters:
               method.response.header.Access-Control-Allow-Origin: '''*'''
-              method.response.header.Access-Control-Allow-Headers: >-
-                Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent
+#              method.response.header.Access-Control-Allow-Headers: >-
+#                Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent
               method.response.header.Access-Control-Allow-Methods: '''OPTIONS,DELETE,PUT,GET'''
             ResponseTemplates:
               application/json: ''
@@ -964,7 +964,7 @@ Resources:
         - StatusCode: '200'
           ResponseParameters:
             method.response.header.Access-Control-Allow-Origin: true
-            method.response.header.Access-Control-Allow-Headers: true
+#            method.response.header.Access-Control-Allow-Headers: true
             method.response.header.Access-Control-Allow-Methods: true
           ResponseModels: {}
       RequestParameters: {}
@@ -977,8 +977,8 @@ Resources:
           - StatusCode: '200'
             ResponseParameters:
               method.response.header.Access-Control-Allow-Origin: '''*'''
-              method.response.header.Access-Control-Allow-Headers: >-
-                Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent
+#              method.response.header.Access-Control-Allow-Headers: >-
+#                Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent
               method.response.header.Access-Control-Allow-Methods: '''OPTIONS,DELETE,POST'''
             ResponseTemplates:
               application/json: ''
@@ -994,7 +994,7 @@ Resources:
         - StatusCode: '200'
           ResponseParameters:
             method.response.header.Access-Control-Allow-Origin: true
-            method.response.header.Access-Control-Allow-Headers: true
+#            method.response.header.Access-Control-Allow-Headers: true
             method.response.header.Access-Control-Allow-Methods: true
           ResponseModels: {}
       RequestParameters: {}
@@ -1007,8 +1007,8 @@ Resources:
           - StatusCode: '200'
             ResponseParameters:
               method.response.header.Access-Control-Allow-Origin: '''*'''
-              method.response.header.Access-Control-Allow-Headers: >-
-                Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent
+#              method.response.header.Access-Control-Allow-Headers: >-
+#                Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent
               method.response.header.Access-Control-Allow-Methods: '''OPTIONS,GET'''
             ResponseTemplates:
               application/json: ''
@@ -1024,7 +1024,7 @@ Resources:
         - StatusCode: '200'
           ResponseParameters:
             method.response.header.Access-Control-Allow-Origin: true
-            method.response.header.Access-Control-Allow-Headers: true
+#            method.response.header.Access-Control-Allow-Headers: true
             method.response.header.Access-Control-Allow-Methods: true
           ResponseModels: {}
       RequestParameters: {}
@@ -1037,8 +1037,8 @@ Resources:
           - StatusCode: '200'
             ResponseParameters:
               method.response.header.Access-Control-Allow-Origin: '''*'''
-              method.response.header.Access-Control-Allow-Headers: >-
-                Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent
+#              method.response.header.Access-Control-Allow-Headers: >-
+#                Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent
               method.response.header.Access-Control-Allow-Methods: '''OPTIONS,GET'''
             ResponseTemplates:
               application/json: ''
@@ -1054,7 +1054,7 @@ Resources:
         - StatusCode: '200'
           ResponseParameters:
             method.response.header.Access-Control-Allow-Origin: true
-            method.response.header.Access-Control-Allow-Headers: true
+#            method.response.header.Access-Control-Allow-Headers: true
             method.response.header.Access-Control-Allow-Methods: true
           ResponseModels: {}
       RequestParameters: {}
@@ -1067,8 +1067,8 @@ Resources:
           - StatusCode: '200'
             ResponseParameters:
               method.response.header.Access-Control-Allow-Origin: '''*'''
-              method.response.header.Access-Control-Allow-Headers: >-
-                Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent
+#              method.response.header.Access-Control-Allow-Headers: >-
+#                Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent
               method.response.header.Access-Control-Allow-Methods: '''OPTIONS,GET,POST'''
             ResponseTemplates:
               application/json: ''
@@ -1084,7 +1084,7 @@ Resources:
         - StatusCode: '200'
           ResponseParameters:
             method.response.header.Access-Control-Allow-Origin: true
-            method.response.header.Access-Control-Allow-Headers: true
+#            method.response.header.Access-Control-Allow-Headers: true
             method.response.header.Access-Control-Allow-Methods: true
           ResponseModels: {}
       RequestParameters: {}
@@ -1097,8 +1097,8 @@ Resources:
           - StatusCode: '200'
             ResponseParameters:
               method.response.header.Access-Control-Allow-Origin: '''*'''
-              method.response.header.Access-Control-Allow-Headers: >-
-                Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent
+#              method.response.header.Access-Control-Allow-Headers: >-
+#                Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent
               method.response.header.Access-Control-Allow-Methods: '''OPTIONS,DELETE'''
             ResponseTemplates:
               application/json: ''
@@ -1114,7 +1114,7 @@ Resources:
         - StatusCode: '200'
           ResponseParameters:
             method.response.header.Access-Control-Allow-Origin: true
-            method.response.header.Access-Control-Allow-Headers: true
+#            method.response.header.Access-Control-Allow-Headers: true
             method.response.header.Access-Control-Allow-Methods: true
           ResponseModels: {}
       RequestParameters: {}
@@ -1127,8 +1127,8 @@ Resources:
           - StatusCode: '200'
             ResponseParameters:
               method.response.header.Access-Control-Allow-Origin: '''*'''
-              method.response.header.Access-Control-Allow-Headers: >-
-                Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent
+#              method.response.header.Access-Control-Allow-Headers: >-
+#                Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent
               method.response.header.Access-Control-Allow-Methods: '''OPTIONS,GET'''
             ResponseTemplates:
               application/json: ''
