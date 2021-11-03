@@ -24,127 +24,127 @@ Resources:
     Condition: CreateRetainedResources
     DeletionPolicy: Retain
     Properties:
-      LogGroupName: !Sub /aws/lambda/realworld-${Environment}-createUser
+      LogGroupName: !Sub '/aws/lambda/realworld-${Environment}-createUser'
   LoginUserLogGroup:
     Type: AWS::Logs::LogGroup
     Condition: CreateRetainedResources
     DeletionPolicy: Retain
     Properties:
-      LogGroupName: !Sub /aws/lambda/realworld-${Environment}-loginUser
+      LogGroupName: !Sub '/aws/lambda/realworld-${Environment}-loginUser'
   GetUserLogGroup:
     Type: AWS::Logs::LogGroup
     Condition: CreateRetainedResources
     DeletionPolicy: Retain
     Properties:
-      LogGroupName: !Sub /aws/lambda/realworld-${Environment}-getUser
+      LogGroupName: !Sub '/aws/lambda/realworld-${Environment}-getUser'
   UpdateUserLogGroup:
     Type: AWS::Logs::LogGroup
     Condition: CreateRetainedResources
     DeletionPolicy: Retain
     Properties:
-      LogGroupName: !Sub /aws/lambda/realworld-${Environment}-updateUser
+      LogGroupName: !Sub '/aws/lambda/realworld-${Environment}-updateUser'
   GetProfileLogGroup:
     Type: AWS::Logs::LogGroup
     Condition: CreateRetainedResources
     DeletionPolicy: Retain
     Properties:
-      LogGroupName: !Sub /aws/lambda/realworld-${Environment}-getProfile
+      LogGroupName: !Sub '/aws/lambda/realworld-${Environment}-getProfile'
   FollowUserLogGroup:
     Type: AWS::Logs::LogGroup
     Condition: CreateRetainedResources
     DeletionPolicy: Retain
     Properties:
-      LogGroupName: !Sub /aws/lambda/realworld-${Environment}-followUser
+      LogGroupName: !Sub '/aws/lambda/realworld-${Environment}-followUser'
   UnfollowUserLogGroup:
     Type: AWS::Logs::LogGroup
     Condition: CreateRetainedResources
     DeletionPolicy: Retain
     Properties:
-      LogGroupName: !Sub /aws/lambda/realworld-${Environment}-unfollowUser
+      LogGroupName: !Sub '/aws/lambda/realworld-${Environment}-unfollowUser'
   CreateArticleLogGroup:
     Type: AWS::Logs::LogGroup
     Condition: CreateRetainedResources
     DeletionPolicy: Retain
     Properties:
-      LogGroupName: !Sub /aws/lambda/realworld-${Environment}-createArticle
+      LogGroupName: !Sub '/aws/lambda/realworld-${Environment}-createArticle'
   GetArticleLogGroup:
     Type: AWS::Logs::LogGroup
     Condition: CreateRetainedResources
     DeletionPolicy: Retain
     Properties:
-      LogGroupName: !Sub /aws/lambda/realworld-${Environment}-getArticle
+      LogGroupName: !Sub '/aws/lambda/realworld-${Environment}-getArticle'
   UpdateArticleLogGroup:
     Type: AWS::Logs::LogGroup
     Condition: CreateRetainedResources
     DeletionPolicy: Retain
     Properties:
-      LogGroupName: !Sub /aws/lambda/realworld-${Environment}-updateArticle
+      LogGroupName: !Sub '/aws/lambda/realworld-${Environment}-updateArticle'
   DeleteArticleLogGroup:
     Type: AWS::Logs::LogGroup
     Condition: CreateRetainedResources
     DeletionPolicy: Retain
     Properties:
-      LogGroupName: !Sub /aws/lambda/realworld-${Environment}-deleteArticle
+      LogGroupName: !Sub '/aws/lambda/realworld-${Environment}-deleteArticle'
   FavoriteArticleLogGroup:
     Type: AWS::Logs::LogGroup
     Condition: CreateRetainedResources
     DeletionPolicy: Retain
     Properties:
-      LogGroupName: !Sub /aws/lambda/realworld-${Environment}-favoriteArticle
+      LogGroupName: !Sub '/aws/lambda/realworld-${Environment}-favoriteArticle'
   UnfavoriteArticleLogGroup:
     Type: AWS::Logs::LogGroup
     Condition: CreateRetainedResources
     DeletionPolicy: Retain
     Properties:
-      LogGroupName: !Sub /aws/lambda/realworld-${Environment}-unfavoriteArticle
+      LogGroupName: !Sub '/aws/lambda/realworld-${Environment}-unfavoriteArticle'
   ListArticlesLogGroup:
     Type: AWS::Logs::LogGroup
     Condition: CreateRetainedResources
     DeletionPolicy: Retain
     Properties:
-      LogGroupName: !Sub /aws/lambda/realworld-${Environment}-listArticles
+      LogGroupName: !Sub '/aws/lambda/realworld-${Environment}-listArticles'
   GetArticlesFeedLogGroup:
     Type: AWS::Logs::LogGroup
     Condition: CreateRetainedResources
     DeletionPolicy: Retain
     Properties:
-      LogGroupName: !Sub /aws/lambda/realworld-${Environment}-getArticlesFeed
+      LogGroupName: !Sub '/aws/lambda/realworld-${Environment}-getArticlesFeed'
   GetTagsLogGroup:
     Type: AWS::Logs::LogGroup
     Condition: CreateRetainedResources
     DeletionPolicy: Retain
     Properties:
-      LogGroupName: !Sub /aws/lambda/realworld-${Environment}-getTags
+      LogGroupName: !Sub '/aws/lambda/realworld-${Environment}-getTags'
   CreateCommentLogGroup:
     Type: AWS::Logs::LogGroup
     Condition: CreateRetainedResources
     DeletionPolicy: Retain
     Properties:
-      LogGroupName: !Sub /aws/lambda/realworld-${Environment}-createComment
+      LogGroupName: !Sub '/aws/lambda/realworld-${Environment}-createComment'
   GetCommentsLogGroup:
     Type: AWS::Logs::LogGroup
     Condition: CreateRetainedResources
     DeletionPolicy: Retain
     Properties:
-      LogGroupName: !Sub /aws/lambda/realworld-${Environment}-getComments
+      LogGroupName: !Sub '/aws/lambda/realworld-${Environment}-getComments'
   DeleteCommentLogGroup:
     Type: AWS::Logs::LogGroup
     Condition: CreateRetainedResources
     DeletionPolicy: Retain
     Properties:
-      LogGroupName: !Sub /aws/lambda/realworld-${Environment}-deleteComment
+      LogGroupName: !Sub '/aws/lambda/realworld-${Environment}-deleteComment'
   PingLogGroup:
     Type: AWS::Logs::LogGroup
     Condition: CreateRetainedResources
     DeletionPolicy: Retain
     Properties:
-      LogGroupName: !Sub /aws/lambda/realworld-${Environment}-ping
+      LogGroupName: !Sub '/aws/lambda/realworld-${Environment}-ping'
   PurgeDataLogGroup:
     Type: AWS::Logs::LogGroup
     Condition: CreateRetainedResources
     DeletionPolicy: Retain
     Properties:
-      LogGroupName: !Sub /aws/lambda/realworld-${Environment}-purgeData
+      LogGroupName: !Sub '/aws/lambda/realworld-${Environment}-purgeData'
   LambdaExecutionRole:
     Type: AWS::IAM::Role
     DeletionPolicy: Delete
@@ -172,12 +172,12 @@ Resources:
                   - logs:CreateLogStream
                   - logs:CreateLogGroup
                 Resource:
-                  - !Sub arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/realworld-${Environment}*:*
+                  - !Sub 'arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/realworld-${Environment}*:*'
               - Effect: Allow
                 Action:
                   - logs:PutLogEvents
                 Resource:
-                  - !Sub arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/realworld-${Environment}*:*:*
+                  - !Sub 'arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/realworld-${Environment}*:*:*'
               - Effect: Allow
                 Action:
                   - dynamodb:Query
@@ -200,10 +200,10 @@ Resources:
     Properties:
       Code:
         S3Bucket: !Ref ServerlessDeploymentBucket
-        S3Key: !Sub serverless/realworld/${Environment}/backend.zip
+        S3Key: !Sub 'serverless/realworld/${Environment}/backend.zip'
       Handler: src/User.create
       Runtime: nodejs14.x
-      FunctionName: !Sub realworld-${Environment}-createUser
+      FunctionName: !Sub 'realworld-${Environment}-createUser'
       MemorySize: 1024
       Timeout: 6
       Environment:
@@ -220,10 +220,10 @@ Resources:
     Properties:
       Code:
         S3Bucket: !Ref ServerlessDeploymentBucket
-        S3Key: !Sub serverless/realworld/${Environment}/backend.zip
+        S3Key: !Sub 'serverless/realworld/${Environment}/backend.zip'
       Handler: src/User.login
       Runtime: nodejs14.x
-      FunctionName: !Sub realworld-${Environment}-loginUser
+      FunctionName: !Sub 'realworld-${Environment}-loginUser'
       MemorySize: 1024
       Timeout: 6
       Environment:
@@ -240,10 +240,10 @@ Resources:
     Properties:
       Code:
         S3Bucket: !Ref ServerlessDeploymentBucket
-        S3Key: !Sub serverless/realworld/${Environment}/backend.zip
+        S3Key: !Sub 'serverless/realworld/${Environment}/backend.zip'
       Handler: src/User.get
       Runtime: nodejs14.x
-      FunctionName: !Sub realworld-${Environment}-getUser
+      FunctionName: !Sub 'realworld-${Environment}-getUser'
       MemorySize: 1024
       Timeout: 6
       Environment:
@@ -260,10 +260,10 @@ Resources:
     Properties:
       Code:
         S3Bucket: !Ref ServerlessDeploymentBucket
-        S3Key: !Sub serverless/realworld/${Environment}/backend.zip
+        S3Key: !Sub 'serverless/realworld/${Environment}/backend.zip'
       Handler: src/User.update
       Runtime: nodejs14.x
-      FunctionName: !Sub realworld-${Environment}-updateUser
+      FunctionName: !Sub 'realworld-${Environment}-updateUser'
       MemorySize: 1024
       Timeout: 6
       Environment:
@@ -280,10 +280,10 @@ Resources:
     Properties:
       Code:
         S3Bucket: !Ref ServerlessDeploymentBucket
-        S3Key: !Sub serverless/realworld/${Environment}/backend.zip
+        S3Key: !Sub 'serverless/realworld/${Environment}/backend.zip'
       Handler: src/User.getProfile
       Runtime: nodejs14.x
-      FunctionName: !Sub realworld-${Environment}-getProfile
+      FunctionName: !Sub 'realworld-${Environment}-getProfile'
       MemorySize: 1024
       Timeout: 6
       Environment:
@@ -300,10 +300,10 @@ Resources:
     Properties:
       Code:
         S3Bucket: !Ref ServerlessDeploymentBucket
-        S3Key: !Sub serverless/realworld/${Environment}/backend.zip
+        S3Key: !Sub 'serverless/realworld/${Environment}/backend.zip'
       Handler: src/User.follow
       Runtime: nodejs14.x
-      FunctionName: !Sub realworld-${Environment}-followUser
+      FunctionName: !Sub 'realworld-${Environment}-followUser'
       MemorySize: 1024
       Timeout: 6
       Environment:
@@ -320,10 +320,10 @@ Resources:
     Properties:
       Code:
         S3Bucket: !Ref ServerlessDeploymentBucket
-        S3Key: !Sub serverless/realworld/${Environment}/backend.zip
+        S3Key: !Sub 'serverless/realworld/${Environment}/backend.zip'
       Handler: src/User.follow
       Runtime: nodejs14.x
-      FunctionName: !Sub realworld-${Environment}-unfollowUser
+      FunctionName: !Sub 'realworld-${Environment}-unfollowUser'
       MemorySize: 1024
       Timeout: 6
       Environment:
@@ -340,10 +340,10 @@ Resources:
     Properties:
       Code:
         S3Bucket: !Ref ServerlessDeploymentBucket
-        S3Key: !Sub serverless/realworld/${Environment}/backend.zip
+        S3Key: !Sub 'serverless/realworld/${Environment}/backend.zip'
       Handler: src/Article.create
       Runtime: nodejs14.x
-      FunctionName: !Sub realworld-${Environment}-createArticle
+      FunctionName: !Sub 'realworld-${Environment}-createArticle'
       MemorySize: 1024
       Timeout: 6
       Environment:
@@ -360,10 +360,10 @@ Resources:
     Properties:
       Code:
         S3Bucket: !Ref ServerlessDeploymentBucket
-        S3Key: !Sub serverless/realworld/${Environment}/backend.zip
+        S3Key: !Sub 'serverless/realworld/${Environment}/backend.zip'
       Handler: src/Article.get
       Runtime: nodejs14.x
-      FunctionName: !Sub realworld-${Environment}-getArticle
+      FunctionName: !Sub 'realworld-${Environment}-getArticle'
       MemorySize: 1024
       Timeout: 6
       Environment:
@@ -380,10 +380,10 @@ Resources:
     Properties:
       Code:
         S3Bucket: !Ref ServerlessDeploymentBucket
-        S3Key: !Sub serverless/realworld/${Environment}/backend.zip
+        S3Key: !Sub 'serverless/realworld/${Environment}/backend.zip'
       Handler: src/Article.update
       Runtime: nodejs14.x
-      FunctionName: !Sub realworld-${Environment}-updateArticle
+      FunctionName: !Sub 'realworld-${Environment}-updateArticle'
       MemorySize: 1024
       Timeout: 6
       Environment:
@@ -400,10 +400,10 @@ Resources:
     Properties:
       Code:
         S3Bucket: !Ref ServerlessDeploymentBucket
-        S3Key: !Sub serverless/realworld/${Environment}/backend.zip
+        S3Key: !Sub 'serverless/realworld/${Environment}/backend.zip'
       Handler: src/Article.delete
       Runtime: nodejs14.x
-      FunctionName: !Sub realworld-${Environment}-deleteArticle
+      FunctionName: !Sub 'realworld-${Environment}-deleteArticle'
       MemorySize: 1024
       Timeout: 6
       Environment:
@@ -420,10 +420,10 @@ Resources:
     Properties:
       Code:
         S3Bucket: !Ref ServerlessDeploymentBucket
-        S3Key: !Sub serverless/realworld/${Environment}/backend.zip
+        S3Key: !Sub 'serverless/realworld/${Environment}/backend.zip'
       Handler: src/Article.favorite
       Runtime: nodejs14.x
-      FunctionName: !Sub realworld-${Environment}-favoriteArticle
+      FunctionName: !Sub 'realworld-${Environment}-favoriteArticle'
       MemorySize: 1024
       Timeout: 6
       Environment:
@@ -440,10 +440,10 @@ Resources:
     Properties:
       Code:
         S3Bucket: !Ref ServerlessDeploymentBucket
-        S3Key: !Sub serverless/realworld/${Environment}/backend.zip
+        S3Key: !Sub 'serverless/realworld/${Environment}/backend.zip'
       Handler: src/Article.favorite
       Runtime: nodejs14.x
-      FunctionName: !Sub realworld-${Environment}-unfavoriteArticle
+      FunctionName: !Sub 'realworld-${Environment}-unfavoriteArticle'
       MemorySize: 1024
       Timeout: 6
       Environment:
@@ -460,10 +460,10 @@ Resources:
     Properties:
       Code:
         S3Bucket: !Ref ServerlessDeploymentBucket
-        S3Key: !Sub serverless/realworld/${Environment}/backend.zip
+        S3Key: !Sub 'serverless/realworld/${Environment}/backend.zip'
       Handler: src/Article.list
       Runtime: nodejs14.x
-      FunctionName: !Sub realworld-${Environment}-listArticles
+      FunctionName: !Sub 'realworld-${Environment}-listArticles'
       MemorySize: 1024
       Timeout: 6
       Environment:
@@ -480,10 +480,10 @@ Resources:
     Properties:
       Code:
         S3Bucket: !Ref ServerlessDeploymentBucket
-        S3Key: !Sub serverless/realworld/${Environment}/backend.zip
+        S3Key: !Sub 'serverless/realworld/${Environment}/backend.zip'
       Handler: src/Article.getFeed
       Runtime: nodejs14.x
-      FunctionName: !Sub realworld-${Environment}-getArticlesFeed
+      FunctionName: !Sub 'realworld-${Environment}-getArticlesFeed'
       MemorySize: 1024
       Timeout: 6
       Environment:
@@ -500,10 +500,10 @@ Resources:
     Properties:
       Code:
         S3Bucket: !Ref ServerlessDeploymentBucket
-        S3Key: !Sub serverless/realworld/${Environment}/backend.zip
+        S3Key: !Sub 'serverless/realworld/${Environment}/backend.zip'
       Handler: src/Article.getTags
       Runtime: nodejs14.x
-      FunctionName: !Sub realworld-${Environment}-getTags
+      FunctionName: !Sub 'realworld-${Environment}-getTags'
       MemorySize: 1024
       Timeout: 6
       Environment:
@@ -520,10 +520,10 @@ Resources:
     Properties:
       Code:
         S3Bucket: !Ref ServerlessDeploymentBucket
-        S3Key: !Sub serverless/realworld/${Environment}/backend.zip
+        S3Key: !Sub 'serverless/realworld/${Environment}/backend.zip'
       Handler: src/Comment.create
       Runtime: nodejs14.x
-      FunctionName: !Sub realworld-${Environment}-createComment
+      FunctionName: !Sub 'realworld-${Environment}-createComment'
       MemorySize: 1024
       Timeout: 6
       Environment:
@@ -540,10 +540,10 @@ Resources:
     Properties:
       Code:
         S3Bucket: !Ref ServerlessDeploymentBucket
-        S3Key: !Sub serverless/realworld/${Environment}/backend.zip
+        S3Key: !Sub 'serverless/realworld/${Environment}/backend.zip'
       Handler: src/Comment.get
       Runtime: nodejs14.x
-      FunctionName: !Sub realworld-${Environment}-getComments
+      FunctionName: !Sub 'realworld-${Environment}-getComments'
       MemorySize: 1024
       Timeout: 6
       Environment:
@@ -560,10 +560,10 @@ Resources:
     Properties:
       Code:
         S3Bucket: !Ref ServerlessDeploymentBucket
-        S3Key: !Sub serverless/realworld/${Environment}/backend.zip
+        S3Key: !Sub 'serverless/realworld/${Environment}/backend.zip'
       Handler: src/Comment.delete
       Runtime: nodejs14.x
-      FunctionName: !Sub realworld-${Environment}-deleteComment
+      FunctionName: !Sub 'realworld-${Environment}-deleteComment'
       MemorySize: 1024
       Timeout: 6
       Environment:
@@ -580,10 +580,10 @@ Resources:
     Properties:
       Code:
         S3Bucket: !Ref ServerlessDeploymentBucket
-        S3Key: !Sub serverless/realworld/${Environment}/backend.zip
+        S3Key: !Sub 'serverless/realworld/${Environment}/backend.zip'
       Handler: src/Util.ping
       Runtime: nodejs14.x
-      FunctionName: !Sub realworld-${Environment}-ping
+      FunctionName: !Sub 'realworld-${Environment}-ping'
       MemorySize: 1024
       Timeout: 6
       Environment:
@@ -600,10 +600,10 @@ Resources:
     Properties:
       Code:
         S3Bucket: !Ref ServerlessDeploymentBucket
-        S3Key: !Sub serverless/realworld/${Environment}/backend.zip
+        S3Key: !Sub 'serverless/realworld/${Environment}/backend.zip'
       Handler: src/Util.purgeData
       Runtime: nodejs14.x
-      FunctionName: !Sub realworld-${Environment}-purgeData
+      FunctionName: !Sub 'realworld-${Environment}-purgeData'
       MemorySize: 1024
       Timeout: 6
       Environment:
@@ -618,7 +618,7 @@ Resources:
     Type: AWS::ApiGateway::RestApi
     DeletionPolicy: Delete
     Properties:
-      Name: !Sub ${Environment}-realworld
+      Name: !Sub '${Environment}-realworld'
       EndpointConfiguration:
         Types:
           - EDGE
@@ -767,8 +767,7 @@ Resources:
           - StatusCode: '200'
             ResponseParameters:
               method.response.header.Access-Control-Allow-Origin: '''*'''
-              method.response.header.Access-Control-Allow-Headers: >-
-                'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'
+              method.response.header.Access-Control-Allow-Headers: 'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'
               method.response.header.Access-Control-Allow-Methods: '''OPTIONS,POST'''
             ResponseTemplates:
               application/json: ''
@@ -797,8 +796,7 @@ Resources:
           - StatusCode: '200'
             ResponseParameters:
               method.response.header.Access-Control-Allow-Origin: '''*'''
-              method.response.header.Access-Control-Allow-Headers: >-
-                'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'
+              method.response.header.Access-Control-Allow-Headers: 'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'
               method.response.header.Access-Control-Allow-Methods: '''OPTIONS,POST'''
             ResponseTemplates:
               application/json: ''
@@ -827,8 +825,7 @@ Resources:
           - StatusCode: '200'
             ResponseParameters:
               method.response.header.Access-Control-Allow-Origin: '''*'''
-              method.response.header.Access-Control-Allow-Headers: >-
-                'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'
+              method.response.header.Access-Control-Allow-Headers: 'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'
               method.response.header.Access-Control-Allow-Methods: '''OPTIONS,PUT,GET'''
             ResponseTemplates:
               application/json: ''
@@ -857,8 +854,7 @@ Resources:
           - StatusCode: '200'
             ResponseParameters:
               method.response.header.Access-Control-Allow-Origin: '''*'''
-              method.response.header.Access-Control-Allow-Headers: >-
-                'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'
+              method.response.header.Access-Control-Allow-Headers: 'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'
               method.response.header.Access-Control-Allow-Methods: '''OPTIONS,GET'''
             ResponseTemplates:
               application/json: ''
@@ -887,8 +883,7 @@ Resources:
           - StatusCode: '200'
             ResponseParameters:
               method.response.header.Access-Control-Allow-Origin: '''*'''
-              method.response.header.Access-Control-Allow-Headers: >-
-                'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'
+              method.response.header.Access-Control-Allow-Headers: 'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'
               method.response.header.Access-Control-Allow-Methods: '''OPTIONS,DELETE,POST'''
             ResponseTemplates:
               application/json: ''
@@ -917,8 +912,7 @@ Resources:
           - StatusCode: '200'
             ResponseParameters:
               method.response.header.Access-Control-Allow-Origin: '''*'''
-              method.response.header.Access-Control-Allow-Headers: >-
-                'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'
+              method.response.header.Access-Control-Allow-Headers: 'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'
               method.response.header.Access-Control-Allow-Methods: '''OPTIONS,GET,POST'''
             ResponseTemplates:
               application/json: ''
@@ -947,8 +941,7 @@ Resources:
           - StatusCode: '200'
             ResponseParameters:
               method.response.header.Access-Control-Allow-Origin: '''*'''
-              method.response.header.Access-Control-Allow-Headers: >-
-                'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'
+              method.response.header.Access-Control-Allow-Headers: 'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'
               method.response.header.Access-Control-Allow-Methods: '''OPTIONS,DELETE,PUT,GET'''
             ResponseTemplates:
               application/json: ''
@@ -977,8 +970,7 @@ Resources:
           - StatusCode: '200'
             ResponseParameters:
               method.response.header.Access-Control-Allow-Origin: '''*'''
-              method.response.header.Access-Control-Allow-Headers: >-
-                'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'
+              method.response.header.Access-Control-Allow-Headers: 'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'
               method.response.header.Access-Control-Allow-Methods: '''OPTIONS,DELETE,POST'''
             ResponseTemplates:
               application/json: ''
@@ -1007,8 +999,7 @@ Resources:
           - StatusCode: '200'
             ResponseParameters:
               method.response.header.Access-Control-Allow-Origin: '''*'''
-              method.response.header.Access-Control-Allow-Headers: >-
-                'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'
+              method.response.header.Access-Control-Allow-Headers: 'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'
               method.response.header.Access-Control-Allow-Methods: '''OPTIONS,GET'''
             ResponseTemplates:
               application/json: ''
@@ -1037,8 +1028,7 @@ Resources:
           - StatusCode: '200'
             ResponseParameters:
               method.response.header.Access-Control-Allow-Origin: '''*'''
-              method.response.header.Access-Control-Allow-Headers: >-
-                'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'
+              method.response.header.Access-Control-Allow-Headers: 'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'
               method.response.header.Access-Control-Allow-Methods: '''OPTIONS,GET'''
             ResponseTemplates:
               application/json: ''
@@ -1067,8 +1057,7 @@ Resources:
           - StatusCode: '200'
             ResponseParameters:
               method.response.header.Access-Control-Allow-Origin: '''*'''
-              method.response.header.Access-Control-Allow-Headers: >-
-                'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'
+              method.response.header.Access-Control-Allow-Headers: 'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'
               method.response.header.Access-Control-Allow-Methods: '''OPTIONS,GET,POST'''
             ResponseTemplates:
               application/json: ''
@@ -1097,8 +1086,7 @@ Resources:
           - StatusCode: '200'
             ResponseParameters:
               method.response.header.Access-Control-Allow-Origin: '''*'''
-              method.response.header.Access-Control-Allow-Headers: >-
-                'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'
+              method.response.header.Access-Control-Allow-Headers: 'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'
               method.response.header.Access-Control-Allow-Methods: '''OPTIONS,DELETE'''
             ResponseTemplates:
               application/json: ''
@@ -1127,8 +1115,7 @@ Resources:
           - StatusCode: '200'
             ResponseParameters:
               method.response.header.Access-Control-Allow-Origin: '''*'''
-              method.response.header.Access-Control-Allow-Headers: >-
-                'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'
+              method.response.header.Access-Control-Allow-Headers: 'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'
               method.response.header.Access-Control-Allow-Methods: '''OPTIONS,GET'''
             ResponseTemplates:
               application/json: ''
@@ -2263,4 +2250,4 @@ Outputs:
         - /
         - !Ref ${Environment}
     Export:
-      Name: !Sub realworld-${Environment}-ServiceEndpoint
+      Name: !Sub 'realworld-${Environment}-ServiceEndpoint'
