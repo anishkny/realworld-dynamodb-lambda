@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: The AWS CloudFormation template for this Serverless application
-Paramters:
+Parameters:
   DeploymentBucket:
     Type: String
   Environment:
