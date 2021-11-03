@@ -2,7 +2,7 @@ version: 0.1
 phases:
   install:
     commands:
-    - echo "Install starting at $(date}."
+    - echo "Install starting at $(date)."
     - npm install
     - echo "Install finishing at $(date)."
   build:
