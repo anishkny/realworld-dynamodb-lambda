@@ -16,4 +16,12 @@ phases:
 artifacts:
   files:
   - backend.zip
-  - backend-cloudformation.yml
+  name: BackendZip
+  discard-paths: yes
+  s3-prefix: backend/
+  secondary-artifacts:
+    BackendTemplate:
+      files:
+      - backend-cloudformation.yml
+      name: BackendTemplate
+      discard-paths: yes
