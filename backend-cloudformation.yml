@@ -13,6 +13,8 @@ Parameters:
     Type: Number
     MinValue: 0
     MaxValue: 1
+  DeploymentArtifact:
+    Type: String
 Conditions:
   CreateRetainedResources:
     Fn::Equals:
@@ -200,7 +202,7 @@ Resources:
     Properties:
       Code:
         S3Bucket: !Ref DeploymentBucket
-        S3Key: !Sub 'BackendCodePipeline/BackendZip'
+        S3Key: !Ref DeploymentArtifact
       Handler: src/User.create
       Runtime: nodejs14.x
       FunctionName: !Sub 'realworld-${Environment}-createUser'
@@ -220,7 +222,7 @@ Resources:
     Properties:
       Code:
         S3Bucket: !Ref DeploymentBucket
-        S3Key: !Sub 'BackendCodePipeline/BackendZip'
+        S3Key: !Ref DeploymentArtifact
       Handler: src/User.login
       Runtime: nodejs14.x
       FunctionName: !Sub 'realworld-${Environment}-loginUser'
@@ -240,7 +242,7 @@ Resources:
     Properties:
       Code:
         S3Bucket: !Ref DeploymentBucket
-        S3Key: !Sub 'BackendCodePipeline/BackendZip'
+        S3Key: !Ref DeploymentArtifact
       Handler: src/User.get
       Runtime: nodejs14.x
       FunctionName: !Sub 'realworld-${Environment}-getUser'
@@ -260,7 +262,7 @@ Resources:
     Properties:
       Code:
         S3Bucket: !Ref DeploymentBucket
-        S3Key: !Sub 'BackendCodePipeline/BackendZip'
+        S3Key: !Ref DeploymentArtifact
       Handler: src/User.update
       Runtime: nodejs14.x
       FunctionName: !Sub 'realworld-${Environment}-updateUser'
@@ -280,7 +282,7 @@ Resources:
     Properties:
       Code:
         S3Bucket: !Ref DeploymentBucket
-        S3Key: !Sub 'BackendCodePipeline/BackendZip'
+        S3Key: !Ref DeploymentArtifact
       Handler: src/User.getProfile
       Runtime: nodejs14.x
       FunctionName: !Sub 'realworld-${Environment}-getProfile'
@@ -300,7 +302,7 @@ Resources:
     Properties:
       Code:
         S3Bucket: !Ref DeploymentBucket
-        S3Key: !Sub 'BackendCodePipeline/BackendZip'
+        S3Key: !Ref DeploymentArtifact
       Handler: src/User.follow
       Runtime: nodejs14.x
       FunctionName: !Sub 'realworld-${Environment}-followUser'
@@ -320,7 +322,7 @@ Resources:
     Properties:
       Code:
         S3Bucket: !Ref DeploymentBucket
-        S3Key: !Sub 'BackendCodePipeline/BackendZip'
+        S3Key: !Ref DeploymentArtifact
       Handler: src/User.follow
       Runtime: nodejs14.x
       FunctionName: !Sub 'realworld-${Environment}-unfollowUser'
@@ -340,7 +342,7 @@ Resources:
     Properties:
       Code:
         S3Bucket: !Ref DeploymentBucket
-        S3Key: !Sub 'BackendCodePipeline/BackendZip'
+        S3Key: !Ref DeploymentArtifact
       Handler: src/Article.create
       Runtime: nodejs14.x
       FunctionName: !Sub 'realworld-${Environment}-createArticle'
@@ -360,7 +362,7 @@ Resources:
     Properties:
       Code:
         S3Bucket: !Ref DeploymentBucket
-        S3Key: !Sub 'BackendCodePipeline/BackendZip'
+        S3Key: !Ref DeploymentArtifact
       Handler: src/Article.get
       Runtime: nodejs14.x
       FunctionName: !Sub 'realworld-${Environment}-getArticle'
@@ -380,7 +382,7 @@ Resources:
     Properties:
       Code:
         S3Bucket: !Ref DeploymentBucket
-        S3Key: !Sub 'BackendCodePipeline/BackendZip'
+        S3Key: !Ref DeploymentArtifact
       Handler: src/Article.update
       Runtime: nodejs14.x
       FunctionName: !Sub 'realworld-${Environment}-updateArticle'
@@ -400,7 +402,7 @@ Resources:
     Properties:
       Code:
         S3Bucket: !Ref DeploymentBucket
-        S3Key: !Sub 'BackendCodePipeline/BackendZip'
+        S3Key: !Ref DeploymentArtifact
       Handler: src/Article.delete
       Runtime: nodejs14.x
       FunctionName: !Sub 'realworld-${Environment}-deleteArticle'
@@ -420,7 +422,7 @@ Resources:
     Properties:
       Code:
         S3Bucket: !Ref DeploymentBucket
-        S3Key: !Sub 'BackendCodePipeline/BackendZip'
+        S3Key: !Ref DeploymentArtifact
       Handler: src/Article.favorite
       Runtime: nodejs14.x
       FunctionName: !Sub 'realworld-${Environment}-favoriteArticle'
@@ -440,7 +442,7 @@ Resources:
     Properties:
       Code:
         S3Bucket: !Ref DeploymentBucket
-        S3Key: !Sub 'BackendCodePipeline/BackendZip'
+        S3Key: !Ref DeploymentArtifact
       Handler: src/Article.favorite
       Runtime: nodejs14.x
       FunctionName: !Sub 'realworld-${Environment}-unfavoriteArticle'
@@ -460,7 +462,7 @@ Resources:
     Properties:
       Code:
         S3Bucket: !Ref DeploymentBucket
-        S3Key: !Sub 'BackendCodePipeline/BackendZip'
+        S3Key: !Ref DeploymentArtifact
       Handler: src/Article.list
       Runtime: nodejs14.x
       FunctionName: !Sub 'realworld-${Environment}-listArticles'
@@ -480,7 +482,7 @@ Resources:
     Properties:
       Code:
         S3Bucket: !Ref DeploymentBucket
-        S3Key: !Sub 'BackendCodePipeline/BackendZip'
+        S3Key: !Ref DeploymentArtifact
       Handler: src/Article.getFeed
       Runtime: nodejs14.x
       FunctionName: !Sub 'realworld-${Environment}-getArticlesFeed'
@@ -500,7 +502,7 @@ Resources:
     Properties:
       Code:
         S3Bucket: !Ref DeploymentBucket
-        S3Key: !Sub 'BackendCodePipeline/BackendZip'
+        S3Key: !Ref DeploymentArtifact
       Handler: src/Article.getTags
       Runtime: nodejs14.x
       FunctionName: !Sub 'realworld-${Environment}-getTags'
@@ -520,7 +522,7 @@ Resources:
     Properties:
       Code:
         S3Bucket: !Ref DeploymentBucket
-        S3Key: !Sub 'BackendCodePipeline/BackendZip'
+        S3Key: !Ref DeploymentArtifact
       Handler: src/Comment.create
       Runtime: nodejs14.x
       FunctionName: !Sub 'realworld-${Environment}-createComment'
@@ -540,7 +542,7 @@ Resources:
     Properties:
       Code:
         S3Bucket: !Ref DeploymentBucket
-        S3Key: !Sub 'BackendCodePipeline/BackendZip'
+        S3Key: !Ref DeploymentArtifact
       Handler: src/Comment.get
       Runtime: nodejs14.x
       FunctionName: !Sub 'realworld-${Environment}-getComments'
@@ -560,7 +562,7 @@ Resources:
     Properties:
       Code:
         S3Bucket: !Ref DeploymentBucket
-        S3Key: !Sub 'BackendCodePipeline/BackendZip'
+        S3Key: !Ref DeploymentArtifact
       Handler: src/Comment.delete
       Runtime: nodejs14.x
       FunctionName: !Sub 'realworld-${Environment}-deleteComment'
@@ -580,7 +582,7 @@ Resources:
     Properties:
       Code:
         S3Bucket: !Ref DeploymentBucket
-        S3Key: !Sub 'BackendCodePipeline/BackendZip'
+        S3Key: !Ref DeploymentArtifact
       Handler: src/Util.ping
       Runtime: nodejs14.x
       FunctionName: !Sub 'realworld-${Environment}-ping'
@@ -600,7 +602,7 @@ Resources:
     Properties:
       Code:
         S3Bucket: !Ref DeploymentBucket
-        S3Key: !Sub 'BackendCodePipeline/BackendZip'
+        S3Key: !Ref DeploymentArtifact
       Handler: src/Util.purgeData
       Runtime: nodejs14.x
       FunctionName: !Sub 'realworld-${Environment}-purgeData'
