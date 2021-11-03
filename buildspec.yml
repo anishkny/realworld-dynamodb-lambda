@@ -18,9 +18,9 @@ artifacts:
   secondary-artifacts:
     BackendZip:
       files:
-      - backend.zip
+      - **/*
       name: BackendZip
-      discard-paths: yes
+      discard-paths: no
     BackendTemplate:
       files:
       - backend-cloudformation.yml
